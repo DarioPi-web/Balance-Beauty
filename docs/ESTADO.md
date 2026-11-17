@@ -28,6 +28,10 @@
 - Fotos: originales en `assets/products/`; variantes servidas con `node scripts/optimize-product-images.mjs` → `apps/web/public/img/products/` (loader `lib/image-loader.ts`).
 - 50 productos activos, 16 con foto. Marca mayoritaria: **Sulderm**. Hay productos nuevos (Mary & May) que no están en la base de junio → re‑exportar del sitio en vivo.
 
+## Entorno local
+
+Ver `docs/SETUP-LOCAL.md`. Doble clic en `iniciar-sitio.cmd` levanta `localhost:3000`. Falta (dueño): elegir Supabase en la nube (recomendado, 8 GB de RAM) o instalar WSL + Docker.
+
 ## Cómo verificar
 
 ```

@@ -28,6 +28,8 @@ Reconstrucción desde cero de **balancebeauty.com.ar**, hoy un WordPress 6.8 + W
 
 Archivos de soporte:
 
+- **[docs/SETUP-LOCAL.md](docs/SETUP-LOCAL.md) — cómo levantar el sitio en esta PC** (doble clic en `iniciar-sitio.cmd`).
+- [docs/ESTADO.md](docs/ESTADO.md) — punto de retorno: dónde quedó el desarrollo y qué sigue.
 - [CLAUDE.md](CLAUDE.md) — reglas del proyecto para sesiones de Claude Code.
 - [.env.example](.env.example) — variables de entorno necesarias.
 - [supabase/seed/legacy_products.csv](supabase/seed/legacy_products.csv) — catálogo exportado del WooCommerce actual (53 productos) para seed/migración.
