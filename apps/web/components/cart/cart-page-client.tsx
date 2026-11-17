@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import type { CartView } from "@/lib/cart/compute";
 import { CartContents } from "./cart-contents";
@@ -27,13 +28,13 @@ export function CartPageClient({ initial }: { initial: CartView }) {
             En el próximo paso vas a elegir envío o retiro y el medio de pago: tarjeta en cuotas,
             transferencia o QR con 10 % off.
           </p>
-          <button
-            type="button"
-            disabled
-            className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-leaf px-6 font-medium text-clinical opacity-70 disabled:cursor-not-allowed"
+          <Link
+            href="/checkout"
+            prefetch={false}
+            className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-leaf px-6 font-medium text-clinical transition-colors hover:bg-leaf-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf"
           >
-            Continuar al pago · muy pronto
-          </button>
+            Continuar al pago
+          </Link>
           <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
             <ShieldCheck className="h-4 w-4 text-leaf" aria-hidden="true" /> Compra segura. Tus
             datos viajan cifrados.

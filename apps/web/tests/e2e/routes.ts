@@ -4,6 +4,8 @@ export const PUBLIC_ROUTES = [
   "/tienda",
   "/rutina",
   "/carrito", // vacío
+  "/checkout", // carrito vacío
+  "/terminos",
 
   "/categoria/serums",
   "/preocupacion/manchas",

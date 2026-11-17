@@ -7,7 +7,9 @@
         "http://localhost:3000/",
         "http://localhost:3000/tienda",
         "http://localhost:3000/preocupacion/manchas",
-        "http://localhost:3000/producto/rosatopis-serum"
+        "http://localhost:3000/producto/rosatopis-serum",
+        "http://localhost:3000/carrito",
+        "http://localhost:3000/checkout"
       ],
       "numberOfRuns": 3,
       "settings": {
@@ -44,6 +46,16 @@
             "categories:accessibility": ["error", { "minScore": 0.95 }],
             "categories:seo": ["error", { "minScore": 0.95 }],
             "largest-contentful-paint": ["error", { "maxNumericValue": 3600 }],
+            "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
+            "total-blocking-time": ["error", { "maxNumericValue": 300 }],
+            "resource-summary:script:size": ["error", { "maxNumericValue": 195000 }]
+          }
+        },
+        {
+          "matchingUrlPattern": "http://localhost:3000/(carrito|checkout).*",
+          "assertions": {
+            "categories:performance": ["error", { "minScore": 0.85 }],
+            "categories:accessibility": ["error", { "minScore": 0.95 }],
             "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
             "total-blocking-time": ["error", { "maxNumericValue": 300 }],
             "resource-summary:script:size": ["error", { "maxNumericValue": 195000 }]

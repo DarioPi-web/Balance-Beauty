@@ -47,7 +47,7 @@ describe("buildPreferenceBody", () => {
   it("referencia, URLs de regreso, webhook y vencimiento", () => {
     expect(body.external_reference).toBe(order.id);
     expect(body.back_urls.success).toBe(
-      "https://balancebeauty.com.ar/checkout/resultado?estado=aprobado&pedido=1001",
+      `https://balancebeauty.com.ar/checkout/resultado?estado=aprobado&ref=${order.id}`,
     );
     expect(body.notification_url).toBe("https://balancebeauty.com.ar/api/webhooks/mercadopago");
     expect(body.auto_return).toBe("approved");

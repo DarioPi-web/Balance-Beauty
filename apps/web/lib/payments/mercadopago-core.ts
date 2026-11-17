@@ -17,8 +17,8 @@ export function buildPreferenceBody(order: CheckoutOrder, opts: { siteUrl: strin
     itemsTotal >= site.installments.promoMinAmount
       ? site.installments.promo
       : site.installments.standard;
-  const back = (estado: string) =>
-    `${base}/checkout/resultado?estado=${estado}&pedido=${order.number}`;
+  // ref = uuid del pedido (no adivinable): la página de resultado lo usa para leer el estado.
+  const back = (estado: string) => `${base}/checkout/resultado?estado=${estado}&ref=${order.id}`;
 
   return {
     items: [
@@ -44,7 +44,7 @@ export function buildPreferenceBody(order: CheckoutOrder, opts: { siteUrl: strin
     ],
     payer: {
       name: order.payer.fullName,
-      email: order.payer.email,
+      ...(order.payer.email ? { email: order.payer.email } : {}),
       ...(order.payer.dni ? { identification: { type: "DNI", number: order.payer.dni } } : {}),
     },
     external_reference: order.id,

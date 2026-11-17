@@ -1,33 +1,11 @@
 import { z } from "zod";
+import { PROVINCIAS } from "./provincias";
 
-/** Validación del checkout: la misma en el formulario (cliente) y en la Server Action (servidor). */
-
-export const PROVINCIAS = [
-  "Ciudad Autónoma de Buenos Aires",
-  "Buenos Aires",
-  "Catamarca",
-  "Chaco",
-  "Chubut",
-  "Córdoba",
-  "Corrientes",
-  "Entre Ríos",
-  "Formosa",
-  "Jujuy",
-  "La Pampa",
-  "La Rioja",
-  "Mendoza",
-  "Misiones",
-  "Neuquén",
-  "Río Negro",
-  "Salta",
-  "San Juan",
-  "San Luis",
-  "Santa Cruz",
-  "Santa Fe",
-  "Santiago del Estero",
-  "Tierra del Fuego",
-  "Tucumán",
-] as const;
+/**
+ * Validación del checkout (servidor: Server Action placeOrder). No importar desde componentes
+ * cliente: arrastra Zod al bundle. La lista de provincias está en ./provincias.
+ */
+export { PROVINCIAS };
 
 const trimmed = (min: number, max: number, msg: string) =>
   z.string().trim().min(min, msg).max(max, "Demasiado largo");
@@ -92,3 +70,79 @@ export const checkoutSchema = z
 
 export type CheckoutInput = z.input<typeof checkoutSchema>;
 export type CheckoutData = z.output<typeof checkoutSchema>;
+
+const str = (fd: FormData, k: string) => {
+  const v = fd.get(k);
+  return typeof v === "string" ? v : "";
+};
+
+/**
+ * FormData del formulario (campos planos) → objeto para checkoutSchema. Los valores son
+ * strings sin validar: el tipo de retorno es nominal y quien lo usa SIEMPRE pasa por safeParse.
+ */
+export function checkoutFromFormData(fd: FormData): CheckoutInput {
+  const shippingMethod = str(fd, "shippingMethod");
+  const common = {
+    postalCode: str(fd, "postalCode"),
+    city: str(fd, "city"),
+    province: str(fd, "province"),
+  };
+  const raw = {
+    email: str(fd, "email"),
+    fullName: str(fd, "fullName"),
+    phone: str(fd, "phone"),
+    dni: str(fd, "dni"),
+    shippingMethod,
+    address:
+      shippingMethod === "branch_pickup"
+        ? common
+        : {
+            ...common,
+            street: str(fd, "street"),
+            number: str(fd, "number"),
+            floorApt: str(fd, "floorApt"),
+            notes: str(fd, "notes"),
+          },
+    paymentMethod: str(fd, "paymentMethod"),
+    acceptTerms: fd.get("acceptTerms") === "on",
+    marketingOptIn: fd.get("marketingOptIn") === "on",
+  };
+  return raw as unknown as CheckoutInput;
+}
+
+/** Errores de Zod → { campo: mensaje } con el nombre del input (address.postalCode → postalCode). */
+export function checkoutFieldErrors(error: z.ZodError): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const issue of error.issues) {
+    const key = String(issue.path[issue.path.length - 1] ?? "form");
+    out[key] ??= issue.message;
+  }
+  return out;
+}
+
+/** Medio de pago del formulario → enum payment_method de la base. */
+export const PAYMENT_METHOD_DB = { mercadopago: "card", bank_transfer: "bank_transfer" } as const;
+
+/** Datos validados + líneas del carrito → JSON que recibe la RPC place_order. */
+export function toPlaceOrderPayload(data: CheckoutData, lines: { slug: string; qty: number }[]) {
+  const a = data.address as Record<string, string | undefined>;
+  return {
+    email: data.email,
+    full_name: data.fullName,
+    phone: data.phone,
+    dni: data.dni,
+    shipping_method: data.shippingMethod,
+    payment_method: PAYMENT_METHOD_DB[data.paymentMethod],
+    customer_note: a.notes || null,
+    marketing_opt_in: data.marketingOptIn,
+    address: {
+      street: a.street ?? null,
+      number: a.number ?? null,
+      floor_apt: a.floorApt || null,
+      city: a.city,
+      province: a.province,
+      postal_code: a.postalCode,
+    },
+    items: lines.map((l) => ({ slug: l.slug, qty: l.qty })),
+  };
+}
