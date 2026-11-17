@@ -91,8 +91,9 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] F4‑04 · **P0** · Checkout 1 página (contacto, envío, pago) con RHF + Zod, autocompletar si está logueado — 2d
 - [ ] F4‑05 · **P0** · Tarifas de envío por zona/CP desde `shipping_rates` + retiro en local — 0,5d
 - [ ] F4‑06 · **P0** · RPC `place_order()` transaccional con reserva de stock + tests SQL (pgTAP) — 1,5d
-- [ ] F4‑07 · **P0** · `PaymentProvider` + implementación de pasarela elegida (crear checkout/preferencia) — 2d
-- [ ] F4‑08 · **P0** · Webhook firmado + idempotente → `confirm_payment()` — 1d
+- [ ] F4‑07 · **P0** · `PaymentProvider` + implementación de pasarela elegida (crear checkout/preferencia) — 2d · 🟡 Mercado Pago Checkout Pro: `lib/payments/*` + tests; falta conectar a `place_order` y probar con credenciales TEST
+- [ ] F4‑08 · **P0** · Webhook firmado + idempotente → `confirm_payment()` — 1d · 🟡 `/api/webhooks/mercadopago` valida firma HMAC y re‑consulta el pago; falta `confirm_payment()` (requiere Supabase)
+- [ ] F4‑10 · **P0** · Validación del checkout (Zod, cliente + servidor): contacto, DNI, celular, CP/CPA, provincia — 0,5d · 🟡 `lib/validation/checkout.ts` + tests; falta formulario
 - [ ] F4‑09 · **P0** · Página `/checkout/resultado` (aprobado, pendiente, rechazado) con polling del estado — 0,5d
 - [ ] F4‑10 · **P0** · Flujo transferencia/QR: datos bancarios desde settings, subida de comprobante a bucket privado, vencimiento 48 h — 1d
 - [ ] F4‑11 · **P0** · Emails React Email: pedido recibido, pago aprobado, transferencia pendiente, enviado, cancelado — 1,5d

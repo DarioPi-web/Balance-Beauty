@@ -2,7 +2,7 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-18 · F3 catálogo (en curso)
+**Última actualización:** 2026-11-18 · F4 pagos con Mercado Pago (en curso)
 
 ## Dónde estamos
 
@@ -13,14 +13,20 @@
 | F2 Diseño           | ✅ Dirección B "Botánica clínica" aplicada (ADR‑017). Pendiente: wireframes/UI completa del resto de pantallas                                                                                                                                                                                                                                                    |
 | F3b WebGL           | ✅ Hero "Equilibrio" (ADR‑018, `docs/perf/webgl-hero.md`)                                                                                                                                                                                                                                                                                                         |
 | F3 Catálogo         | 🟡 Home, `/tienda` (filtros sin hidratar tarjetas), `/categoria/[slug]`, `/preocupacion/[slug]`, `/producto/[slug]` (84 páginas estáticas), sitemap, robots, JSON‑LD, imágenes AVIF pre‑generadas (ADR‑009). Datos desde `lib/catalog/fixture.json` (sin Docker). Perf en `docs/perf/fase-3-catalogo.md` (presupuestos de laboratorio ajustados: avisar al dueño) |
-| F4 Carrito/checkout | 🟡 Carrito completo (cookie firmada ADR‑019, mini‑carrito, `/carrito`, rutina al carrito). **Bloqueado:** checkout y pago → decisión de pasarela (Q‑01) y base de datos (Supabase)                                                                                                                                                                                |
+| F4 Carrito/checkout | 🟡 Carrito completo (cookie firmada ADR‑019, mini‑carrito, `/carrito`, rutina al carrito). Pasarela: **Mercado Pago Checkout Pro** (ADR‑002): preferencia, webhook con firma HMAC y validación del checkout hechos con tests. **Bloqueado:** credenciales TEST de MP y base de datos (Supabase) para pedidos                                                      |
 
 ## Próximos pasos (en orden)
 
 1. Cerrar F3: páginas de línea y de activos (S‑03, requieren contenido revisado por profesional), regresión visual (R‑08), View Transitions (F3‑13). Hechos: búsqueda, marcas, quiz `/rutina`, error.tsx, axe.
    - **Antes del checkout:** bajar JS inicial (home 193 KB, carrito 194 KB; tope 195 KB). Candidatos: unificar islas cliente del header/barra inferior, revisar íconos lucide y `cn`.
 2. Gate F3 → preguntar al dueño si deploy a staging (requiere cuentas).
-3. F4 carrito + checkout (requiere decisión de pasarela Q‑01).
+3. F4 checkout: formulario (usa `lib/validation/checkout.ts`), `/checkout/resultado`, `place_order` + `confirm_payment` en Supabase (TODO en `lib/orders/payment-events.ts`), prueba de punta a punta con credenciales TEST.
+
+## Pendientes del dueño
+
+- Credenciales **de prueba** de Mercado Pago (Public Key + Access Token TEST) y la clave secreta del webhook → van en `apps/web/.env.local`, nunca en el repo.
+- Elegir base: Supabase en la nube (São Paulo, recomendado) o WSL + Docker local.
+- Subir el repo a GitHub desde una PC con sesión iniciada (`subir-a-github.cmd`).
 
 ## Datos del catálogo
 
