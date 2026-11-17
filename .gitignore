@@ -37,3 +37,6 @@ archive.zip
 .DS_Store
 npm-debug.log*
 .pnpm-debug.log*
+
+# Historial de git enviado aparte
+*.bundle
