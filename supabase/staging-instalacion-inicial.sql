@@ -1,4 +1,4 @@
--- Balance Beauty - instalacion inicial en Supabase STAGING (zrkiuflpimebwuswjihv)
+-- Balance Beauty - instalacion inicial en Supabase (cualquier proyecto vacio). Staging actual: tblitemxzgeolktuieph (sa-east-1)
 -- Pegar todo en Dashboard > SQL Editor > New query > Run. Es una sola transaccion: si algo falla, no se aplica nada.
 -- Generado desde supabase/migrations + supabase/seed.sql. No editar a mano.
 begin;
