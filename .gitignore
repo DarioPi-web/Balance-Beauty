@@ -1,0 +1,39 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# builds
+.next/
+out/
+build/
+dist/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# env y secretos
+.env
+.env.*
+!.env.example
+*.pem
+
+# tests / reportes
+coverage/
+playwright-report/
+test-results/
+.lighthouseci/
+
+# vercel / supabase
+.vercel
+supabase/.branches
+supabase/.temp
+
+# legado: nunca versionar backups del WordPress
+archive.zip
+*.sql.gz
+*-db.gz
+
+# misc
+.DS_Store
+npm-debug.log*
+.pnpm-debug.log*
