@@ -2,6 +2,8 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
+import { notifyOrderPlaced } from "@/lib/orders/notifications";
 import { readCartLines, writeCartLines } from "@/lib/cart/server";
 import {
   checkoutServerKey,
@@ -103,6 +105,32 @@ export async function placeOrder(_prev: CheckoutState, fd: FormData): Promise<Ch
 
   const order = data as unknown as PlacedOrder;
   await writeCartLines([]);
+
+  // Emails después de responder: el cliente no espera a Resend (docs/11).
+  const payload = toPlaceOrderPayload(parsed.data, lines);
+  after(() =>
+    notifyOrderPlaced({
+      id: order.id,
+      number: order.number,
+      email: parsed.data.email,
+      full_name: parsed.data.fullName,
+      phone: parsed.data.phone,
+      payment_method: order.payment_method,
+      shipping_method: parsed.data.shippingMethod,
+      shipping_address: payload.address,
+      subtotal: order.subtotal,
+      discount_total: order.discount_total,
+      shipping_total: order.shipping_total,
+      total: order.total,
+      order_items: order.items.map((i) => ({
+        name: i.name,
+        quantity: i.qty,
+        unit_price: i.unit_price,
+      })),
+    }).catch((e) =>
+      console.error(JSON.stringify({ event: "email.order_placed.error", error: String(e) })),
+    ),
+  );
 
   let target = resultUrl(order.id);
   if (parsed.data.paymentMethod === "mercadopago") {

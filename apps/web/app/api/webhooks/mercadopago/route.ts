@@ -1,5 +1,7 @@
 import { checkMercadoPagoWebhook } from "@/lib/payments/mercadopago-core";
 import { isMercadoPagoConfigured, mercadoPago } from "@/lib/payments/mercadopago";
+import { after } from "next/server";
+import { notifyPaymentApproved } from "@/lib/orders/notifications";
 import { handlePaymentUpdate } from "@/lib/orders/payment-events";
 
 /**
@@ -34,7 +36,18 @@ export async function POST(request: Request) {
 
   try {
     const payment = await mercadoPago.getPayment(check.dataId);
-    await handlePaymentUpdate("mercadopago", payment);
+    const result = await handlePaymentUpdate("mercadopago", payment);
+    // Email solo la primera vez que el pedido pasa a pagado (los reintentos de MP no duplican).
+    if (result.changed && result.orderStatus === "paid" && payment.externalReference) {
+      const orderId = payment.externalReference;
+      after(() =>
+        notifyPaymentApproved(orderId).catch((e) =>
+          console.error(
+            JSON.stringify({ event: "email.payment_approved.error", error: String(e) }),
+          ),
+        ),
+      );
+    }
     return new Response("OK", { status: 200 });
   } catch (e) {
     console.error(

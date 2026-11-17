@@ -11,7 +11,7 @@ import { UUID_RE } from "./types";
 export async function handlePaymentUpdate(
   provider: "mercadopago",
   payment: ProviderPayment,
-): Promise<{ persisted: boolean; orderStatus?: string; reason?: string }> {
+): Promise<{ persisted: boolean; orderStatus?: string; reason?: string; changed?: boolean }> {
   const log = {
     event: "payment.update",
     provider,
@@ -41,7 +41,12 @@ export async function handlePaymentUpdate(
   });
   if (error) throw error; // el webhook responde 500 y Mercado Pago reintenta
 
-  const result = data as { ok: boolean; order_status?: string; reason?: string };
+  const result = data as { ok: boolean; order_status?: string; reason?: string; changed?: boolean };
   console.info(JSON.stringify({ ...log, result }));
-  return { persisted: true, orderStatus: result.order_status, reason: result.reason };
+  return {
+    persisted: true,
+    orderStatus: result.order_status,
+    reason: result.reason,
+    changed: Boolean(result.changed),
+  };
 }

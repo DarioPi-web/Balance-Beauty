@@ -21,12 +21,14 @@
 
 1. Cerrar F3: páginas de línea y de activos (S‑03, requieren contenido revisado por profesional), regresión visual (R‑08), View Transitions (F3‑13). Hechos: búsqueda, marcas, quiz `/rutina`, error.tsx, axe.
 2. ✅ JS inicial bajo el tope (2026‑11‑17): todas las rutas ≤ 190.507 bytes (home 185.743). Se quitó `sonner`/`next-themes` y el paquete `cn`; Lighthouse CI ahora sí ejecuta las aserciones (antes fallaba la config). Detalle en `docs/perf/fase-3-catalogo.md`.
-3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails (F4‑11). Anti‑spam ✅ (F4‑13, migración 6): `place_order(p_checkout, p_server_key)` exige `CHECKOUT_SERVER_KEY` (la base guarda solo el hash en `private.server_keys`; rotar = nueva clave en Vercel/.env.local + `update private.server_keys`), máx. 5 pedidos/h por IP (hash con sal) y 3 pendientes por email, honeypot `website` + token de tiempo firmado (2,5 s–2 h). Opcional a futuro: Cloudflare Turnstile (requiere cuenta del dueño).
+3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails 🟡 (F4‑11: pedido recibido, pago aprobado y aviso a la tienda con Resend + React Email; sin `RESEND_API_KEY` se registran en el log y no salen). Anti‑spam ✅ (F4‑13, migración 6): `place_order(p_checkout, p_server_key)` exige `CHECKOUT_SERVER_KEY` (la base guarda solo el hash en `private.server_keys`; rotar = nueva clave en Vercel/.env.local + `update private.server_keys`), máx. 5 pedidos/h por IP (hash con sal) y 3 pendientes por email, honeypot `website` + token de tiempo firmado (2,5 s–2 h). Opcional a futuro: Cloudflare Turnstile (requiere cuenta del dueño).
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 
 ## Pendientes del dueño
 
 - Credenciales **de prueba** de Mercado Pago (Public Key + Access Token TEST) y la clave secreta del webhook → van en `apps/web/.env.local` y en Vercel, nunca en el repo.
+- Cuenta de **Resend** + verificar el dominio balancebeauty.com.ar (SPF/DKIM/DMARC, F0‑07) → `RESEND_API_KEY`, `EMAIL_FROM` y `EMAIL_ADMIN_NOTIFICATIONS` (emails de la tienda separados por coma) en Vercel y `.env.local`.
+- **Datos bancarios** para transferencias → se guardan en `store_settings` (clave `bank_transfer`: holder, bank, cbu, alias, cuit) y salen en el email del pedido.
 - `SUPABASE_SERVICE_ROLE_KEY` del proyecto de São Paulo → cargarla en Vercel (sensitive) y en `.env.local`; la necesitan los pedidos (`place_order`/`confirm_payment`).
 - Para deploys con `deploy.yml`: crear un token en Vercel (Account Settings → Tokens) y cargarlo como secreto `VERCEL_TOKEN` en GitHub, junto a `VERCEL_ORG_ID=team_jbU1xy9jy1t9OU0V5Fvb7wsc` y `VERCEL_PROJECT_ID=prj_WR7J2CP7LEqoXjH9cd1G6wkJPO5t`. Opcional: vincular GitHub en Vercel (Account Settings → Login Connections) si se quiere ver el repo desde el panel.
 - Borrar el proyecto Supabase viejo `zrkiuflpimebwuswjihv` (us-west-2): ya está **pausado**; el borrado definitivo se hace en el panel (Project Settings → General → Delete project).

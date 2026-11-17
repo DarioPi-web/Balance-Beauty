@@ -96,7 +96,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [x] F4‑10 · **P0** · Validación del checkout (Zod en servidor) + formulario `/checkout` progresivo — 0,5d
 - [x] F4‑09 · **P0** · Página `/checkout/resultado` (aprobado, pendiente, rechazado) — 0,5d · `get_order_summary` por uuid; actualización manual (sin polling)
 - [ ] F4‑10b · **P0** · Flujo transferencia/QR: datos bancarios desde settings, subida de comprobante a bucket privado, vencimiento 48 h — 1d
-- [ ] F4‑11 · **P0** · Emails React Email: pedido recibido, pago aprobado, transferencia pendiente, enviado, cancelado — 1,5d
+- [ ] F4‑11 · **P0** · Emails React Email: pedido recibido, pago aprobado, transferencia pendiente, enviado, cancelado — 1,5d · 🟡 hechos: pedido recibido (con datos de transferencia), pago aprobado y aviso a la tienda (`apps/web/emails/`, `lib/email/send.ts`, envío con `after()`); faltan enviado y cancelado (requieren panel admin) y la cuenta de Resend
 - [ ] F4‑12 · **P0** · Cron `release_expired_reservations` (pg_cron) — 0,25d
 - [x] F4‑13 · **P1** · Rate limiting en acciones de checkout y login (Upstash) — 0,5d · ✅ clave de servidor en `place_order` (hash en `private.server_keys`), máx. 5 pedidos/h por IP (hash) y 3 pendientes por email, honeypot + token de tiempo firmado. Turnstile queda opcional
 - [ ] F4‑14 · **P1** · Eventos de analytics: view_item, add_to_cart, begin_checkout, purchase (GA4 + Meta CAPI) — 1d
