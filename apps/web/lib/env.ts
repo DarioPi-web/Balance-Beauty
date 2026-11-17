@@ -9,6 +9,8 @@ export const env = createEnv({
   server: {
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
     REVALIDATE_SECRET: z.string().min(16).optional(),
+    // Firma HMAC de la cookie del carrito (obligatoria en producción; ver lib/cart/server.ts)
+    CART_SECRET: z.string().min(32).optional(),
     CRON_SECRET: z.string().min(16).optional(),
     INTEGRATIONS_URL: z.url().optional(),
     INTEGRATIONS_HMAC_SECRET: z.string().min(32).optional(),
@@ -23,6 +25,7 @@ export const env = createEnv({
   runtimeEnv: {
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
+    CART_SECRET: process.env.CART_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
     INTEGRATIONS_URL: process.env.INTEGRATIONS_URL,
     INTEGRATIONS_HMAC_SECRET: process.env.INTEGRATIONS_HMAC_SECRET,

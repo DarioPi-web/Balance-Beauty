@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CreditCard, Landmark, Truck } from "lucide-react";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Breadcrumbs } from "@/components/shop/breadcrumbs";
 import { PriceBlock } from "@/components/shop/price-block";
 import { ProductCard } from "@/components/shop/product-card";
@@ -184,20 +185,19 @@ export default async function ProductoPage({ params }: PageProps<"/producto/[slu
               : "Sin stock por el momento"}
           </p>
 
-          {/* CTA: el carrito llega en F4. En mobile queda fijo sobre la barra inferior. */}
+          {/* CTA: en mobile queda fijo sobre la barra inferior. */}
           <div className="fixed inset-x-0 bottom-14 z-30 border-t bg-clinical/95 p-3 safe-bottom backdrop-blur md:static md:mt-6 md:border-0 md:bg-transparent md:p-0">
             {product.requiresReview ? (
               <p className="rounded-xl bg-rose-soft p-3 text-sm">
                 Este producto requiere asesoramiento antes de la compra. Consultanos por Instagram.
               </p>
             ) : (
-              <button
-                type="button"
-                disabled
-                className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-leaf px-6 text-base font-medium text-clinical opacity-80 disabled:cursor-not-allowed md:w-auto"
-              >
-                Agregar al carrito · muy pronto
-              </button>
+              <AddToCartButton
+                slug={product.slug}
+                disabled={!product.inStock}
+                label={product.inStock ? "Agregar al carrito" : "Sin stock"}
+                className="w-full md:w-auto"
+              />
             )}
           </div>
 

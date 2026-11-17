@@ -45,9 +45,12 @@ for (const route of PUBLIC_ROUTES) {
           .filter((el) => el.offsetParent !== null)
           .map((el) => {
             // Link estirado: el área táctil es la tarjeta contenedora (::after inset-0)
+            // Input visualmente oculto (sr-only) dentro de un <label>: el área táctil es el label
             const target = el.hasAttribute("data-stretched-link")
-              ? (el.closest("article") ?? el)
-              : el;
+              ? (el.closest("article") ?? el.closest("li") ?? el)
+              : el.matches("input") && el.closest("label")
+                ? el.closest("label")!
+                : el;
             const r = target.getBoundingClientRect();
             return {
               label: el.textContent?.trim() || el.getAttribute("aria-label") || el.tagName,

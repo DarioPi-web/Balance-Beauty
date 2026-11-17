@@ -85,8 +85,8 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 
 ## F4 — Carrito, checkout y pagos
 
-- [ ] F4‑01 · **P0** · Server Actions de carrito (add/update/remove) con validación de stock; cookie `cart_id` firmada — 1d
-- [ ] F4‑02 · **P0** · Mini‑cart (Sheet) + página `/carrito` con optimistic UI — 1d
+- [x] F4‑01 · Server Actions (agregar, varios, cantidad, quitar) con Zod; carrito en cookie firmada HMAC (ADR‑019), precios/stock recalculados en el servidor; tope 10 por producto y stock; 14 tests unitarios (incluye cookie manipulada). **Falta:** pasar a tabla `carts` + merge al loguear (con Supabase)
+- [x] F4‑02 · Mini‑carrito lateral (único, cargado al primer uso) + `/carrito` (prerender parcial) + contador en header y barra inferior (cookie legible, sin pedir al servidor) + "Agregar rutina al carrito"
 - [ ] F4‑03 · **P0** · `lib/pricing.ts`: subtotal, promos, cupón, descuento por medio de pago, envío — con tests unitarios — 1d
 - [ ] F4‑04 · **P0** · Checkout 1 página (contacto, envío, pago) con RHF + Zod, autocompletar si está logueado — 2d
 - [ ] F4‑05 · **P0** · Tarifas de envío por zona/CP desde `shipping_rates` + retiro en local — 0,5d
@@ -99,7 +99,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] F4‑12 · **P0** · Cron `release_expired_reservations` (pg_cron) — 0,25d
 - [ ] F4‑13 · **P1** · Rate limiting en acciones de checkout y login (Upstash) — 0,5d
 - [ ] F4‑14 · **P1** · Eventos de analytics: view_item, add_to_cart, begin_checkout, purchase (GA4 + Meta CAPI) — 1d
-- [ ] F4‑15 · **P0** · Barra de progreso en carrito hacia 12 cuotas ($150.000, configurable) y envío gratis — 0,5d
+- [ ] F4‑15 · **P0** · Barra de progreso hacia 12 cuotas ✅. **Falta:** envío gratis (requiere definir umbral, Q‑04)
 - [ ] F4‑16 · **P0** · Cotización de envío leyendo `shipping_rate_matrix` en Supabase; respaldo en vivo al VPS (HMAC, timeout 2,5 s) solo si el CP no está; último recurso `shipping_rates` — 1d
 - [ ] F4‑17 · **P0** · k6 de checkout (20 VU) y regresión de queries del checkout — 0,5d
 

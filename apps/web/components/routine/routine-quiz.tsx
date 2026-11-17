@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, RotateCcw } from "lucide-react";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductMedia } from "@/components/shop/product-media";
 import { formatARS, installmentAmount, priceWithPaymentDiscount } from "@/lib/pricing";
 import {
@@ -276,13 +277,11 @@ function RoutineResult({
           <p className="mt-1 text-sm text-muted-foreground">
             {n} cuotas sin interés de {formatARS(installmentAmount(total, n))}
           </p>
-          <button
-            type="button"
-            disabled
-            className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-leaf px-6 font-medium text-clinical opacity-80 disabled:cursor-not-allowed"
-          >
-            Agregar rutina al carrito · muy pronto
-          </button>
+          <AddToCartButton
+            slugs={steps.map((s) => s.product.slug)}
+            label="Agregar rutina al carrito"
+            className="mt-4 w-full"
+          />
         </div>
       ) : null}
 

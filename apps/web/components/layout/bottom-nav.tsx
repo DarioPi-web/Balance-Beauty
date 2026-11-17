@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, LayoutGrid, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SearchButton } from "@/components/search/search-button";
+import { CartButton } from "@/components/cart/cart-button";
 
 /**
  * Navegación inferior para celular y app instalada (R‑06, docs/15).
@@ -34,7 +35,7 @@ export function BottomNav() {
       aria-label="Navegación inferior"
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-clinical/95 safe-bottom backdrop-blur md:hidden"
     >
-      <ul className="mx-auto grid max-w-md grid-cols-4">
+      <ul className="mx-auto grid max-w-md grid-cols-5">
         {items.map(({ href, label, icon: Icon, match }) => {
           const active = match(pathname);
           return (
@@ -56,6 +57,12 @@ export function BottomNav() {
         <li>
           <SearchButton
             label="Buscar"
+            className="min-h-14 w-full flex-col gap-0.5 text-xs text-muted-foreground"
+          />
+        </li>
+        <li>
+          <CartButton
+            label="Carrito"
             className="min-h-14 w-full flex-col gap-0.5 text-xs text-muted-foreground"
           />
         </li>

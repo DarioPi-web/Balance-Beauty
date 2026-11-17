@@ -3,6 +3,8 @@ export const PUBLIC_ROUTES = [
   "/",
   "/tienda",
   "/rutina",
+  "/carrito", // vacío
+
   "/categoria/serums",
   "/preocupacion/manchas",
   "/producto/rosatopis-serum", // con fotos

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
+import { CartButton } from "@/components/cart/cart-button";
 import { SearchButton } from "@/components/search/search-button";
 import { site } from "@/lib/site";
 import { formatARS } from "@/lib/pricing";
@@ -49,15 +49,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-1">
           <SearchButton shortcut className="rounded-full text-clinical hover:bg-white/10" />
-          <button
-            type="button"
-            disabled
-            aria-label="Carrito (disponible muy pronto)"
-            title="El carrito llega en la próxima fase"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-clinical/80 disabled:cursor-not-allowed"
-          >
-            <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <CartButton className="rounded-full text-clinical hover:bg-white/10" />
         </div>
       </div>
     </header>
