@@ -67,7 +67,11 @@ export async function loadSupabase(): Promise<CatalogSnapshot> {
         .flatMap((c) => (c.concern ? [c.concern.slug] : [])),
       images: (p.product_images ?? [])
         .sort((a, b) => a.sort_order - b.sort_order)
-        .map((i) => ({ src: storage + i.storage_path, alt: i.alt ?? String(p.name) })),
+        // "/products/..." = imagen del sitio con variantes AVIF (ADR-009); si no, Supabase Storage.
+        .map((i) => ({
+          src: i.storage_path.startsWith("/") ? i.storage_path : storage + i.storage_path,
+          alt: i.alt ?? String(p.name),
+        })),
       requiresReview: Boolean(p.requires_prescription),
     };
   });
