@@ -9,6 +9,10 @@ Documentación de referencia en `docs/` (empezar por `README.md`). Antes de camb
 - `pnpm dev` · `pnpm build` · `pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm test:e2e`
 - `pnpm db:start` (Supabase local, requiere Docker) · `pnpm db:reset` · `pnpm db:diff <nombre>` · `pnpm db:types`
 
+## Retomar trabajo
+
+- **Leer primero `docs/ESTADO.md`** (punto de retorno) y actualizarlo en cada commit: fase actual, próximos pasos, pendientes del dueño.
+
 ## Deploy (ADR‑010) — regla dura
 
 - **Nunca desplegar automáticamente** ni ejecutar `vercel deploy`, `/deploy`, `supabase db push` o `deploy-vps.yml` por iniciativa propia.

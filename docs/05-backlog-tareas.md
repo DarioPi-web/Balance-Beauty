@@ -53,15 +53,18 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 
 ## F3 — Catálogo
 
-- [ ] F3‑01 · **P0** · Layout: Header (logo, mega menú, buscador, cuenta, mini‑cart), Footer (redes, links legales, arrepentimiento, libro de quejas, Data Fiscal) — 1,5d
-- [ ] F3‑02 · **P0** · Home: slider de banners desde tabla `banners` (desktop/mobile), barra de beneficios, destacados, video — 1,5d
-- [ ] F3‑03 · **P0** · `ProductCard` + `PriceTag` (lista, transferencia −10 %, sin impuestos nacionales) + `InstallmentsBadge` — 1d
-- [ ] F3‑04 · **P0** · `/tienda` y `/categoria/[slug]`: filtros por searchParams, orden, paginación, `generateMetadata` — 1,5d
-- [ ] F3‑05 · **P0** · `/producto/[slug]`: galería con zoom, stock, add‑to‑cart, relacionados, JSON‑LD Product, `generateStaticParams` — 2d
+- [ ] F3‑01 · **P0** · Header (logo, nav por preocupación, barra de promos, carrito deshabilitado) ✅ y Footer (preocupaciones, categorías, redes) ✅. **Falta:** buscador, cuenta, mini‑cart (F4) y links legales/arrepentimiento/Data Fiscal (F7)
+- [ ] F3‑02 · **P0** · Home con hero WebGL, beneficios, preocupaciones, destacados y categorías ✅. **Falta:** banners administrables desde la tabla `banners` (requiere Supabase)
+- [ ] F3‑03 · **P0** · `ProductCard` (container queries, link estirado, zoom a producto) + `PriceBlock` (lista, transferencia, cuotas 6/12 según monto) ✅. **Falta:** precio sin impuestos nacionales (Q contador)
+- [x] F3‑04 · `/tienda` (filtros por preocupación/categoría y orden en el cliente, estado en URL, grilla completa en el HTML) y `/categoria/[slug]` estáticas con metadata y JSON‑LD ItemList/Breadcrumb
+- [x] F3‑05 · `/producto/[slug]` (50 páginas estáticas): galería scroll‑snap, stock, CTA fija en mobile (carrito en F4), "requiere asesoramiento" para magistrales, relacionados, JSON‑LD Product/Breadcrumb
 - [ ] F3‑06 · **P0** · Búsqueda: RPC `search_products`, command palette con debounce, página `/buscar` — 1d
 - [ ] F3‑07 · **P1** · Caché por tags + endpoint/acción de revalidación — 0,5d
-- [ ] F3‑08 · **P1** · Estados vacíos, 404, skeletons, `error.tsx` — 0,5d
-- [ ] F3‑09 · **P0** · Navegación por preocupación y por línea (`/preocupacion/[slug]`, `/linea/[slug]`) — 1d
+- [ ] F3‑08 · **P1** · Estado vacío de filtros ✅ y 404 con noindex ✅. **Falta:** `error.tsx`
+- [ ] F3‑09 · **P0** · `/preocupacion/[slug]` ✅ (9 páginas). **Falta:** `/linea/[slug]` y `/marca/[slug]` (requiere Q‑25)
+- [x] F3‑15 · Capa de datos `lib/catalog` con fuente fixture (sin Docker) y Supabase (`CATALOG_SOURCE=supabase`), caché `"use cache"` + tag `catalog`; fotos nuevas identificadas para 16 productos
+- [x] F3‑16 · `sitemap.xml` (con imágenes) y `robots.txt` (bloquea privadas, permite buscadores e IAs)
+- [x] F3‑17 · Barra de navegación inferior en mobile/app instalada (R‑06 parcial: Inicio, Tienda, Mi piel)
 - [ ] F3‑10 · **P0** · Ficha: bloques Activos clave, Modo de uso AM/PM, Completá tu rutina, CTA sticky mobile, WhatsApp con mensaje prellenado — 1,5d
 - [ ] F3‑11 · **P1** · Quiz "Armá tu rutina" (5 pasos, reglas en tabla) + agregar rutina al carrito — 2d
 - [ ] F3‑12 · **P0** · Loader de imágenes propio (variantes AVIF/WebP pre‑generadas) — 0,5d

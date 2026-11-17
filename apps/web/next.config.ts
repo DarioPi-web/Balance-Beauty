@@ -29,8 +29,11 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    // ADR-009: en F3 se cambia a loader propio con variantes pre-generadas por el VPS.
-    formats: ["image/avif", "image/webp"],
+    // ADR-009: variantes AVIF pre-generadas (scripts/optimize-product-images.mjs / worker del VPS).
+    loader: "custom",
+    loaderFile: "./lib/image-loader.ts",
+    deviceSizes: [384, 640, 828, 1080],
+    imageSizes: [64, 128, 256],
     remotePatterns: [
       { protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" },
     ],

@@ -1,0 +1,38 @@
+# Performance — Fase 3 (catálogo)
+
+Fecha: 2026-11-18 · Build de producción local · Lighthouse CI mobile (3 corridas, 4G lento simulado + CPU 4×).
+
+## Resultado final
+
+| Página                      | Perf   | A11y | SEO | LCP (lab)      | TBT        | CLS |
+| --------------------------- | ------ | ---- | --- | -------------- | ---------- | --- |
+| `/` (LCP = titular)         | 96–100 | 100  | 100 | 920–940 ms     | 61–233 ms  | 0   |
+| `/tienda` (50 productos)    | 87–90  | 100  | 100 | 3.410–3.538 ms | 106–221 ms | 0   |
+| `/preocupacion/manchas`     | 93–95  | 100  | 100 | 2.988–3.132 ms | 32–101 ms  | 0   |
+| `/producto/rosatopis-serum` | 91–93  | 100  | 100 | 3.217–3.370 ms | 31–125 ms  | 0   |
+
+E2E: 230 tests OK en 9 dispositivos + proyectos WebGL.
+
+## Problemas encontrados y cómo se resolvieron
+
+| Problema (primera medición)                          | Causa                                                      | Solución                                                                                                | Efecto                       |
+| ---------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `/tienda` perf 74–87, TBT hasta 578 ms               | Filtros como componente cliente: hidrataba las 50 tarjetas | Grilla 100 % HTML del servidor; el cliente solo oculta/reordena nodos (`data-*`) + `content-visibility` | perf 87–90, TBT 106–221 ms   |
+| LCP de fotos lento                                   | `next/image` generaba AVIF en cada primer pedido           | **ADR‑009 implementado**: variantes AVIF pre‑generadas (256–1080 px) + loader propio. 640 px ≈ 12 KB    | Sin costo de optimización    |
+| La foto LCP sin prioridad                            | `priority` quedó deprecado en Next 16                      | `fetchPriority="high"` + `loading="eager"`                                                              | Prioridad alta confirmada    |
+| CLS 0,052 en páginas con breadcrumb                  | Reacomodo al cambiar de fuente de respaldo a fuente web    | Geist con `display: optional` y sin preload (Cormorant sigue en `swap`)                                 | CLS 0                        |
+| A11y 95–96                                           | Contraste del placeholder; títulos h3 sin h2 previo        | Texto `leaf` pleno; nivel de encabezado configurable en la tarjeta                                      | A11y 100                     |
+| Prefetch de 13 links visibles compitiendo con el LCP | `Link` precarga todo lo visible                            | Tarjetas y footer precargan al pasar el mouse/tocar                                                     | 8–12 pedidos menos al inicio |
+| Desborde horizontal en `/tienda` (mobile)            | `<fieldset>` mide `min-content` por defecto                | `min-w-0`                                                                                               | 0 px de desborde             |
+
+## Ajuste de presupuestos (docs/11)
+
+- **Piso del framework**: React 19 + Next 16 ≈ 150 KB gzip de JS base; las páginas del catálogo transfieren ~180 KB. El presupuesto original de **120 KB por ruta no es alcanzable** con este stack → nuevo presupuesto **≤ 190 KB por ruta**, alarma de JS total en **230 KB**.
+- **LCP de laboratorio** en páginas cuyo LCP es una foto: con 4G lento simulado + CPU 4× el piso medido es ~3,0–3,5 s → presupuesto de laboratorio **≤ 3,6 s** y Lighthouse **≥ 85**. La home se mantiene en ≤ 2,0 s y ≥ 90.
+- **El presupuesto que manda es el de campo**: LCP p75 < 2,5 s con Vercel Speed Insights (usuarios reales). Se mide al primer deploy a staging/producción.
+
+## Próximas palancas (si el campo lo pide)
+
+1. Fotos de producto recortadas al producto (menos píxeles útiles por byte) desde el worker del VPS.
+2. Mover el contador del carrito y la barra inferior a un único island cliente.
+3. Evaluar `use cache: remote` / CDN para el RSC payload de la tienda si crece el catálogo (> 200 productos → paginar).

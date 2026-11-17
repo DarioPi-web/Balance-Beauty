@@ -15,9 +15,9 @@
   },
   "size-limit": [
     {
-      "name": "JS total cliente (baseline F1: 188,6 KB gzip) — docs/11",
+      "name": "JS total cliente, todas las rutas (F3: 218 KB gzip) — alarma de regresión, docs/11",
       "path": ".next/static/chunks/**/*.js",
-      "limit": "200 KB",
+      "limit": "230 KB",
       "gzip": true
     }
   ],

@@ -8,10 +8,13 @@ import "./globals.css";
 
 // Tipografías de la dirección "B · Botánica clínica" (ADR-017).
 // Geist: UI, textos y precios. Cormorant Garamond: titulares (armoniza con la serif del logo).
+// display "optional": si la fuente no llega en ~100 ms se queda la de respaldo (ajustada por
+// next/font) y no hay reacomodo del texto → CLS 0. En visitas siguientes ya está en caché.
 const sans = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
+  preload: false, // no compite con la imagen LCP; queda en caché para la próxima visita
 });
 
 const display = Cormorant_Garamond({
