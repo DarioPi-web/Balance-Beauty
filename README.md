@@ -28,6 +28,7 @@ Reconstrucción desde cero de **balancebeauty.com.ar**, hoy un WordPress 6.8 + W
 
 Archivos de soporte:
 
+- **[docs/CONTEXTO.md](docs/CONTEXTO.md) — leer primero: qué es, stack, infraestructura (Supabase São Paulo, Vercel, GitHub), credenciales y cómo arrancar en cualquier PC.**
 - **[docs/SETUP-LOCAL.md](docs/SETUP-LOCAL.md) — cómo levantar el sitio en esta PC** (doble clic en `iniciar-sitio.cmd`).
 - [docs/ESTADO.md](docs/ESTADO.md) — punto de retorno: dónde quedó el desarrollo y qué sigue.
 - [CLAUDE.md](CLAUDE.md) — reglas del proyecto para sesiones de Claude Code.

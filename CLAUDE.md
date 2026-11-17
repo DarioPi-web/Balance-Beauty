@@ -11,7 +11,8 @@ Documentación de referencia en `docs/` (empezar por `README.md`). Antes de camb
 
 ## Retomar trabajo
 
-- **Leer primero `docs/ESTADO.md`** (punto de retorno) y actualizarlo en cada commit: fase actual, próximos pasos, pendientes del dueño.
+- **Leer primero `docs/CONTEXTO.md`** (stack, infraestructura e identificadores) y **`docs/ESTADO.md`** (punto de retorno); actualizar ESTADO en cada commit: fase actual, próximos pasos, pendientes del dueño.
+- Supabase staging: proyecto `tblitemxzgeolktuieph` en sa-east-1 (São Paulo). Vercel: región `gru1`.
 
 ## Deploy (ADR‑010) — regla dura
 

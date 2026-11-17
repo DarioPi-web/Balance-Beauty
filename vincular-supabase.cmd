@@ -1,7 +1,7 @@
 @echo off
 REM ============================================================
 REM  Balance Beauty - vincula el proyecto de Supabase y crea las tablas.
-REM  Proyecto: zrkiuflpimebwuswjihv (staging)
+REM  Proyecto: tblitemxzgeolktuieph (staging, Sao Paulo)
 REM  1) Inicia sesion en Supabase (se abre el navegador).
 REM  2) Vincula el proyecto: pide la contrasena de la base de datos
 REM     (la que elegiste al crear el proyecto). No queda en ningun archivo del repo.
@@ -11,7 +11,7 @@ REM ============================================================
 title Balance Beauty - vincular Supabase
 cd /d "%~dp0"
 set "PATH=%ProgramFiles%\nodejs;%APPDATA%\npm;%PATH%"
-set "REF=zrkiuflpimebwuswjihv"
+set "REF=tblitemxzgeolktuieph"
 
 where pnpm >nul 2>nul || (echo [ERROR] Falta pnpm. Ejecuta primero instalar-entorno.cmd & pause & exit /b 1)
 

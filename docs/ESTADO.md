@@ -2,14 +2,16 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-18 · F4 pagos con Mercado Pago (en curso)
+**Última actualización:** 2026-11-17 · Infraestructura en São Paulo (Supabase staging listo; Vercel en configuración) · F4 pagos en curso
+
+> Contexto general (stack, identificadores, credenciales): [CONTEXTO.md](CONTEXTO.md).
 
 ## Dónde estamos
 
 | Fase                | Estado                                                                                                                                                                                                                                                                                                                                                            |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | F0 Descubrimiento   | Plan completo en `docs/`. Preguntas abiertas en `docs/06`                                                                                                                                                                                                                                                                                                         |
-| F1 Fundación        | ✅ código y CI. Falta (dueño): Docker Desktop, cuentas GitHub/Vercel/Supabase                                                                                                                                                                                                                                                                                     |
+| F1 Fundación        | ✅ código y CI. GitHub `DarioPi-web/Balance-Beauty`. **Supabase staging en sa-east-1** (`tblitemxzgeolktuieph`): 4 migraciones + catálogo (50 productos, 6 marcas, 16 con foto), advisors de seguridad resueltos. Vercel: proyecto en región `gru1` (ver abajo). Docker local no hace falta                                                                       |
 | F2 Diseño           | ✅ Dirección B "Botánica clínica" aplicada (ADR‑017). Pendiente: wireframes/UI completa del resto de pantallas                                                                                                                                                                                                                                                    |
 | F3b WebGL           | ✅ Hero "Equilibrio" (ADR‑018, `docs/perf/webgl-hero.md`)                                                                                                                                                                                                                                                                                                         |
 | F3 Catálogo         | 🟡 Home, `/tienda` (filtros sin hidratar tarjetas), `/categoria/[slug]`, `/preocupacion/[slug]`, `/producto/[slug]` (84 páginas estáticas), sitemap, robots, JSON‑LD, imágenes AVIF pre‑generadas (ADR‑009). Datos desde `lib/catalog/fixture.json` (sin Docker). Perf en `docs/perf/fase-3-catalogo.md` (presupuestos de laboratorio ajustados: avisar al dueño) |
@@ -24,13 +26,21 @@
 
 ## Pendientes del dueño
 
-- Credenciales **de prueba** de Mercado Pago (Public Key + Access Token TEST) y la clave secreta del webhook → van en `apps/web/.env.local`, nunca en el repo.
-- Elegir base: Supabase en la nube (São Paulo, recomendado) o WSL + Docker local.
-- Subir el repo a GitHub desde una PC con sesión iniciada (`subir-a-github.cmd`).
+- Credenciales **de prueba** de Mercado Pago (Public Key + Access Token TEST) y la clave secreta del webhook → van en `apps/web/.env.local` y en Vercel, nunca en el repo.
+- `SUPABASE_SERVICE_ROLE_KEY` del proyecto de São Paulo → cargarla en Vercel (sensitive) y en `.env.local`; la necesitan los pedidos (`place_order`/`confirm_payment`).
+- Aprobar el acceso del conector de Vercel a la cuenta (enlace de un solo uso que genera la sesión).
+- Decidir si se borra el proyecto Supabase viejo `zrkiuflpimebwuswjihv` (us-west-2, sin uso).
+
+## Pendientes técnicos de la base
+
+- Advisors de rendimiento (informativos): 6 claves foráneas sin índice (`cart_items.product_id`, `order_items.product_id`, `orders.coupon_id`, `product_prices.product_id`, `related_products.related_id`, `categories.parent_id`) y políticas "admin all" superpuestas con las públicas. Resolver antes de producción (índices + políticas de admin separadas por acción).
+- Habilitar el hook `custom_access_token_hook` en Supabase Auth cuando se implemente el login.
 
 ## Datos del catálogo
 
-- Fuente actual: `CATALOG_SOURCE` sin definir → fixture generado con `node scripts/generate-catalog-fixture.mjs <uploads>` desde `supabase/seed/legacy_products.csv` + fotos identificadas (`scripts/catalog-mapping.mjs`).
+- En esta PC `CATALOG_SOURCE=supabase` (lee staging en São Paulo; build y páginas verificadas). Sin `.env.local` se usa el fixture.
+- Sincronizar cambios del fixture a la base: `node scripts/generate-catalog-sync-sql.mjs` → aplicar `supabase/staging-sync-catalogo.sql` (idempotente).
+- Fixture generado con `node scripts/generate-catalog-fixture.mjs <uploads>` desde `supabase/seed/legacy_products.csv` + fotos identificadas (`scripts/catalog-mapping.mjs`).
 - Fotos: originales en `assets/products/`; variantes servidas con `node scripts/optimize-product-images.mjs` → `apps/web/public/img/products/` (loader `lib/image-loader.ts`).
 - 50 productos activos, 16 con foto. Marca mayoritaria: **Sulderm**. Hay productos nuevos (Mary & May) que no están en la base de junio → re‑exportar del sitio en vivo.
 
