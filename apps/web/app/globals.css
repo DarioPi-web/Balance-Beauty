@@ -61,6 +61,29 @@
   --ease-in-out-fluid: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* Safe areas (notch, isla dinámica, barra de gestos) — requiere viewport-fit=cover (docs/15) */
+@utility safe-x {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+@utility safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Variantes para el modo app instalada (Agregar a inicio) */
+@custom-variant standalone (@media (display-mode: standalone));
+@custom-variant browser (@media (display-mode: browser));
+
+@media (display-mode: standalone) {
+  body {
+    overscroll-behavior-y: none; /* sin rebote: se siente nativa */
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

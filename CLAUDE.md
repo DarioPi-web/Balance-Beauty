@@ -23,6 +23,18 @@ Documentación de referencia en `docs/` (empezar por `README.md`). Antes de camb
 - Respetar presupuestos de bundle y Lighthouse; WebGL solo en `components/webgl/`, cargado post‑LCP, con tiers y `prefers-reduced-motion`.
 - Nada que espere a un tercero > 2,5 s en Vercel: va al servicio de integraciones del VPS (`apps/integrations`) con fallback.
 
+## Responsive y app instalable (docs/15)
+
+- Mobile‑first, sin scroll horizontal de 280 px a 1920 px; objetivos táctiles ≥ 44 px; texto ≥ 16 px; `dvh` en vez de `vh`; safe areas con `safe-x/top/bottom`.
+- Cada ruta pública nueva se agrega a `apps/web/tests/e2e/routes.ts` para que la matriz de dispositivos la pruebe. `pnpm --filter web test:e2e` (requiere `pnpm build`).
+- No romper el manifest ni los íconos (`app/manifest.ts`, `app/icons`, `app/apple-icon.tsx`): el test de PWA lo valida.
+
+## SEO y posicionamiento en IAs (docs/16)
+
+- Todo contenido indexable debe estar en el HTML del servidor (los bots de IA no ejecutan JS). Nada de texto clave solo en componentes cliente.
+- Cada página nueva: `generateMetadata`, canonical, JSON‑LD coherente con el texto visible, enlaces internos a producto/activo/preocupación.
+- Keywords objetivo y página asignada: tablas de docs/16 §4 y `docs/seo/keywords-autocomplete-ar.csv`.
+
 ## Reglas
 
 - Server‑first: leer datos en Server Components; mutar con Server Actions en `actions/`, siempre validando con Zod y verificando sesión/rol dentro de la acción.

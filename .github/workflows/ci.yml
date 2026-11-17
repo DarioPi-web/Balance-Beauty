@@ -75,3 +75,12 @@ jobs:
         with:
           name: lighthouse
           path: apps/web/.lighthouseci
+      - name: Navegadores de Playwright
+        run: pnpm --filter web exec playwright install --with-deps chromium webkit firefox
+      - name: E2E multi-dispositivo (responsive + PWA)
+        run: pnpm --filter web test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report

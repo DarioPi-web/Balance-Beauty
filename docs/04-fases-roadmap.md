@@ -17,6 +17,8 @@ F5 Cuenta                                       ████                    
 F6 Admin                                ████████████████                    🚦
 F7 Contenido+SEO                                        ████████            🚦
 P  Performance        ─ ─ ─ ─ ─ continuo en cada fase ─ ─ ─ ─ ─ ████        (auditoría final)
+R  Responsive + PWA   ─ ─ ─ ─ ─ continuo: tests en 10 dispositivos en cada PR ─ ─ (docs/15)
+S  SEO + IAs          ── keywords ✅ · estructura F3 · contenido ola 1 F7 · olas 2–3 post‑lanzamiento (docs/16)
 F8 QA+Lanzamiento                                               ████████    🚦🚦 (staging final → producción)
 F9 Post‑lanzam.                                                         ►
 ```
@@ -86,6 +88,21 @@ Contenido faltante, fotos nuevas, migración de imágenes (vía worker del VPS),
 ## P — Performance y costos (continuo + auditoría semana 12)
 
 En cada fase: reporte `docs/perf/fase-N.md`. Auditoría final: WebPageTest desde AR, k6 completo, Advisors de Supabase, revisión de _Usage_ de Vercel y Supabase, Spend Management.
+
+## S — SEO y posicionamiento en IAs (transversal, docs/16)
+
+- F0: validar volúmenes en Keyword Planner; confirmar marcas por producto (Q‑25) y local físico (Q‑26).
+- F3: rutas de preocupación/activos/guías/marcas, metadata, JSON‑LD, reglas de indexación de filtros.
+- F7: robots/sitemaps/IndexNow, Search Console + Bing, Merchant Center, contenido ola 1 con revisión profesional.
+- Post‑lanzamiento: olas 2–3 de contenido, panel mensual de 25 preguntas en IAs, reputación externa.
+
+## R — Responsive y app instalable (transversal, docs/15)
+
+- F1: matriz de dispositivos y base PWA (manifest, íconos, iOS) ✅.
+- F3: bottom navigation, modo app, container queries, regresión visual.
+- F4/F5: pago y login probados con la app instalada.
+- F7: prompt de instalación, service worker offline, splash iOS.
+- Cada gate con UI incluye prueba en dispositivos reales (iPhone, Android, in‑app de Instagram/TikTok).
 
 ## F8 — QA, legal y lanzamiento (semanas 12–14)
 

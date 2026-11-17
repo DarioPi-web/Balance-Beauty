@@ -23,6 +23,8 @@ Reconstrucción desde cero de **balancebeauty.com.ar**, hoy un WordPress 6.8 + W
 | 12  | [Deploy y entornos](docs/12-deploy-y-entornos.md)                            | **Sin deploys automáticos**: gate de fin de fase y aprobación del dueño                                |
 | 13  | [VPS Contabo — integraciones](docs/13-vps-contabo-integraciones.md)          | Servicio de integraciones (Andreani, Correo Argentino, colas, imágenes, backups)                       |
 | 14  | [Frontend, UX/UI y WebGL](docs/14-frontend-ux-ui-webgl.md)                   | Investigación del nicho, concepto creativo, UX por página, WebGL y motion                              |
+| 15  | [Responsive y app instalable](docs/15-responsive-y-app-instalable.md)        | Reglas responsive, matriz de dispositivos con tests, PWA para Android/iOS                              |
+| 16  | [SEO y posicionamiento en IAs](docs/16-seo-y-posicionamiento-en-ia.md)       | Frameworks y SEO, Google + IAs (GEO), keywords por nivel, plan de contenido, KPIs                      |
 
 Archivos de soporte:
 

@@ -3,6 +3,7 @@ import { Fraunces, Inter_Tight } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
+import { brand } from "@/lib/brand";
 import "./globals.css";
 
 // Tipografías PROVISIONALES (docs/14 §2) hasta aprobar el style tile en F2.
@@ -27,13 +28,23 @@ export const metadata: Metadata = {
     default: "Balance Beauty — Dermocosmética",
     template: "%s | Balance Beauty",
   },
-  description:
-    "Dermocosmética para cada necesidad de tu piel. 12 cuotas sin interés, 10 % off por transferencia y envíos a todo el país.",
-  openGraph: { locale: "es_AR", type: "website", siteName: "Balance Beauty" },
+  description: brand.description,
+  applicationName: brand.name,
+  openGraph: { locale: "es_AR", type: "website", siteName: brand.name },
+  // iOS: al "Agregar a inicio" abre a pantalla completa, con nombre corto (docs/15 §4).
+  appleWebApp: {
+    capable: true,
+    title: brand.shortName,
+    statusBarStyle: "default",
+  },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4efe9",
+  themeColor: brand.colors.porcelain,
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover", // usa toda la pantalla (notch / isla dinámica) con safe areas en CSS
 };
 
 const isProd = process.env.VERCEL_ENV === "production";
@@ -41,7 +52,7 @@ const isProd = process.env.VERCEL_ENV === "production";
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es-AR" className={`${sans.variable} ${display.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-dvh flex-col safe-x">
         {children}
         <Toaster />
         {isProd ? (

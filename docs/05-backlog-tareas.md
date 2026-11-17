@@ -180,6 +180,44 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] P‑08 · **P0** · Spend Management de Vercel + alertas de uso de Supabase; revisión mensual de _Usage_ — 0,25d
 - [ ] P‑09 · **P1** · Firewall de Vercel: bloquear rutas de WordPress y bots agresivos — 0,25d
 
+## R — Responsive y app instalable (ver [15](15-responsive-y-app-instalable.md))
+
+- [x] R‑01 · **P0** · Playwright con matriz de 9 dispositivos (+ Firefox HD en CI): sin scroll horizontal, H1 visible, texto ≥ 16 px, objetivos táctiles ≥ 44 px
+- [x] R‑02 · **P0** · `app/manifest.ts` (standalone, es-AR, colores, atajos) + íconos 192/512/maskable y `apple-icon` generados en build
+- [x] R‑03 · **P0** · Metadatos iOS (`appleWebApp`), `viewport-fit=cover`, utilidades `safe-x/top/bottom` y variante `standalone:`
+- [x] R‑04 · **P0** · Test de PWA (manifest, íconos 200, meta iOS) en Android e iPhone
+- [ ] R‑05 · **P0** · Reemplazar íconos provisorios (monograma) por el logo vectorial (Q‑12) — F2
+- [ ] R‑06 · **P0** · Bottom navigation mobile/standalone (Inicio · Tienda · Buscar · Carrito · Cuenta) y botón "atrás" en modo app — F3
+- [ ] R‑07 · **P0** · Container queries en ProductCard/PriceBlock/filtros; tipografía fluida con `clamp()` — F3
+- [ ] R‑08 · **P1** · Regresión visual (`toHaveScreenshot`) por dispositivo, activada con el diseño aprobado — F3
+- [ ] R‑09 · **P1** · axe por página en mobile y desktop — F3
+- [ ] R‑10 · **P1** · Prompt de instalación propio (Android `beforeinstallprompt`, guía iOS) tras 2.ª visita/compra + eventos de analytics — F7
+- [ ] R‑11 · **P1** · Service worker mínimo: offline page, assets inmutables, sin cachear HTML con precios — F7
+- [ ] R‑12 · **P1** · Splash screens iOS (`apple-touch-startup-image`) y `screenshots` del manifest con el diseño final — F7
+- [ ] R‑13 · **P0** · Prueba en dispositivos reales (iPhone Safari + app instalada, Android Chrome + app instalada, in‑app de Instagram y TikTok) en cada gate con UI
+- [ ] R‑14 · **P0** · Pago y login en modo app instalada (regreso desde la pasarela, OTP en lugar de magic link) — F4/F5
+- [ ] R‑15 · **P2** · Notificaciones push (iOS 16.4+ instalada, Android) — fase 2
+
+## S — SEO y posicionamiento en IAs (ver [16](16-seo-y-posicionamiento-en-ia.md))
+
+- [x] S‑01 · Investigación de keywords AR: 482 búsquedas reales clasificadas por intención + ranking relativo → [seo/keywords-autocomplete-ar.csv](seo/keywords-autocomplete-ar.csv)
+- [ ] S‑02 · **P0** · Validar volúmenes absolutos en Google Keyword Planner (Niveles A/B) y ajustar prioridades — F0/F7
+- [ ] S‑03 · **P0** · Rutas `/preocupacion/[slug]`, `/activos/[slug]`, `/aprende/[slug]` (MDX estático), `/marca/[slug]` — F3
+- [ ] S‑04 · **P0** · `generateMetadata` con plantilla por tipo de página; títulos de ficha "[Producto] [Marca] [tamaño] — [beneficio]" — F3
+- [ ] S‑05 · **P0** · JSON‑LD: Organization (`sameAs`), WebSite, Product/Offer (envío, devoluciones), Brand, BreadcrumbList, ItemList, FAQPage, Article con autor — F3/F7
+- [ ] S‑06 · **P0** · Reglas de indexación de filtros (noindex + canonical) y landings curadas indexables — F3
+- [ ] S‑07 · **P0** · `robots.ts` con política de bots de búsqueda e IA (§3) + `sitemap.ts` dividido con imágenes — F7
+- [ ] S‑08 · **P1** · `llms.txt` simple (baja prioridad) — F7
+- [ ] S‑09 · **P0** · Search Console + Bing Webmaster Tools + IndexNow al publicar/editar productos — F7
+- [ ] S‑10 · **P0** · Feed de Google Merchant Center desde el VPS (listados gratuitos de Shopping) — F7/V
+- [ ] S‑11 · **P1** · Google Business Profile (si hay local/consultorio) + estrategia de reseñas post‑compra — F7
+- [ ] S‑12 · **P0** · Contenido ola 1: 53 fichas completas, 9 preocupaciones, 10 activos (con revisión profesional) — F7
+- [ ] S‑13 · **P1** · Contenido ola 2: 6 guías de rutina + 5 comparativas — mes 1–2 post‑lanzamiento
+- [ ] S‑14 · **P1** · Contenido ola 3: glosario A‑Z (30–40 activos) + landings de marca — mes 2–4
+- [ ] S‑15 · **P1** · Panel mensual de 25 preguntas en ChatGPT, Gemini, Perplexity, Google AI y Claude → `docs/seo/panel-ia.md`
+- [ ] S‑16 · **P1** · GA4: canal "IA" (referrers chatgpt.com, perplexity.ai, gemini.google.com, copilot, claude.ai)
+- [ ] S‑17 · **P2** · Reputación externa: notas en medios/blogs de belleza AR, YouTube/TikTok con links, presencia opcional en Mercado Libre
+
 ## GATE — Cierre de fase (repetir en cada fase)
 
 - [ ] GATE‑N · Checklist de [12](12-deploy-y-entornos.md): P0 cerradas, CI verde, reporte de performance, migraciones revisadas, changelog, impacto en costos → **preguntar al dueño** "¿Deploy a staging?" → validación → "¿Promovemos a producción?"
