@@ -39,7 +39,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 
 - [ ] F2‑00 · **P0** · Benchmark de 10 referencias comentadas + 5 entrevistas/encuestas a clientas por Instagram — 2d
 - [ ] F2‑06 · **P0** · Journey map + arquitectura de información (preocupaciones, producto, línea) — 1d
-- [x] F2‑01 · **P0** · 2 style tiles con logo y fotos reales (`/estilos`) → elegida **B · Botánica clínica** (ADR‑017)
+- [x] F2‑01 · **P0** · 2 style tiles con logo y fotos reales (página `/estilos`, retirada tras la elección; disponible en el commit `338aceb`) → elegida **B · Botánica clínica** (ADR‑017)
 - [ ] F2‑02 · **P0** · Wireframes mobile‑first: home, listado, ficha, quiz, carrito, checkout, cuenta, seguimiento — 2,5d
 - [ ] F2‑07 · **P0** · **Spike WebGL** "Equilibrio" (3 días): prototipo del shader, medido en Android gama media e iPhone; go/no‑go — 3d
 - [ ] F2‑03 · **P0** · UI final alta fidelidad + prototipo navegable — 4d
@@ -70,14 +70,14 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 
 ## F3b — WebGL y motion
 
-- [ ] W‑01 · **P1** · `components/webgl/`: canvas R3F con `next/dynamic` (ssr:false), montaje post‑LCP, póster AVIF como LCP — 1d
-- [ ] W‑02 · **P1** · Shader "Equilibrio" (metaballs/SDF, refracción, iridiscencia) + interacción cursor/scroll/giroscopio — 3d
-- [ ] W‑03 · **P1** · Tiers con `detect-gpu`, `prefers-reduced-motion`, `saveData`, WebView sin WebGL2 → fallback CSS — 1d
-- [ ] W‑04 · **P1** · Pausa fuera de vista / pestaña oculta, `frameloop="demand"`, DPR ≤ 1,5 — 0,5d
+- [x] W‑01 · `components/webgl/`: canvas WebGL2 (ADR‑018) cargado en idle tras `load`, chunk aparte de 2,8 KB; el LCP es el titular en HTML y el póster CSS es el fallback
+- [x] W‑02 · Shader "Equilibrio" (metaballs gaussianas, normal analítica, refracción, iridiscencia, grano) + cursor (desktop) y scroll. Giroscopio descartado (iOS pide permiso)
+- [x] W‑03 · Tiers propios: movimiento reducido, ahorro de datos, 2G, sin WebGL2 → póster; táctil/≤4 núcleos/≤3 GB → 0,75× y 30 fps
+- [x] W‑04 · Pausa fuera de vista / pestaña oculta; degradación automática si el frame supera 40 ms; compilación paralela de shaders
 - [ ] W‑05 · **P1** · Bloque "Activo protagonista": color/viscosidad por activo sincronizado con GSAP ScrollTrigger — 1,5d
 - [ ] W‑06 · **P2** · Distorsión líquida en hover de tarjetas (desktop, OGL o R3F) — 1d
 - [ ] W‑07 · **P1** · Microinteracciones con Motion (mini‑cart, chips, agregar al carrito, toasts) — 1d
-- [ ] W‑08 · **P0** · Test Playwright de FPS y long tasks + `size-limit` del chunk WebGL (≤ 180 KB gzip) — 0,5d
+- [x] W‑08 · Tests Playwright (proyectos "WebGL desktop/Android" que corren al final): activación, FPS, tareas largas, fallback con movimiento reducido, canvas decorativo → [perf/webgl-hero.md](perf/webgl-hero.md)
 
 ## F4 — Carrito, checkout y pagos
 

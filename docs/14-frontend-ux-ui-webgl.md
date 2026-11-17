@@ -45,7 +45,7 @@ El nombre **Balance** es el concepto. La piel sana es un sistema en equilibrio (
 
 ### Dirección visual — APROBADA: "B · Botánica clínica" (ADR‑017)
 
-Elegida entre dos style tiles (`/estilos`). Inspirada en el verde de las plantas de las fotos de producto y el logo crema de tres hojas.
+Elegida entre dos style tiles (página `/estilos`, retirada; ver commit `338aceb`). Inspirada en el verde de las plantas de las fotos de producto y el logo crema de tres hojas.
 
 | Token         | Valor     | Uso                                                              |
 | ------------- | --------- | ---------------------------------------------------------------- |

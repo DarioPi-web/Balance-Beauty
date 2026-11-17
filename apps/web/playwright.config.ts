@@ -1,10 +1,46 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices, type Project } from "@playwright/test";
 
 /**
  * Matriz de dispositivos (docs/15 §2). Corre contra el build de producción local:
  * `pnpm build` y luego `pnpm test:e2e`. Nunca contra producción.
  */
 const PORT = Number(process.env.E2E_PORT ?? 3100);
+
+// Las mediciones de WebGL corren en un proyecto aparte, DESPUÉS del resto, para no
+// competir por CPU con los demás navegadores (en headless el render es por software).
+const WEBGL_SPEC = /webgl\.spec\.ts/;
+
+const deviceProjects: Project[] = [
+  // Móviles iOS (WebKit = motor de Safari)
+  { name: "iPhone SE", use: { ...devices["iPhone SE"] } },
+  { name: "iPhone 15 Pro", use: { ...devices["iPhone 15 Pro"] } },
+  { name: "iPhone 15 Pro Max", use: { ...devices["iPhone 15 Pro Max"] } },
+  // Móviles Android (Chromium)
+  { name: "Pixel 7", use: { ...devices["Pixel 7"] } },
+  { name: "Galaxy S8", use: { ...devices["Galaxy S8"] } },
+  {
+    name: "Galaxy Fold cerrado",
+    use: {
+      ...devices["Galaxy S8"],
+      viewport: { width: 280, height: 653 },
+      screen: { width: 280, height: 653 },
+    },
+  },
+  // Tablets
+  { name: "iPad Mini", use: { ...devices["iPad Mini"] } },
+  { name: "iPad Pro 11 landscape", use: { ...devices["iPad Pro 11 landscape"] } },
+  // Desktop
+  { name: "Desktop Chrome", use: { ...devices["Desktop Chrome"] } },
+  // Firefox solo en CI (Linux): en esta PC Windows no logra lanzarse (spawn UNKNOWN).
+  ...(process.env.CI || process.env.E2E_FIREFOX
+    ? [
+        {
+          name: "Desktop HD Firefox",
+          use: { ...devices["Desktop Firefox"], viewport: { width: 1920, height: 1080 } },
+        },
+      ]
+    : []),
+].map((p) => ({ ...p, testIgnore: WEBGL_SPEC }));
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -17,6 +53,8 @@ export default defineConfig({
     trace: "retain-on-failure",
     locale: "es-AR",
     timezoneId: "America/Argentina/Buenos_Aires",
+    // Sin WebGL por defecto: headless lo renderiza por CPU. webgl.spec.ts lo reactiva.
+    contextOptions: { reducedMotion: "reduce" },
   },
   webServer: {
     command: `pnpm start --port ${PORT}`,
@@ -25,34 +63,20 @@ export default defineConfig({
     timeout: 60_000,
   },
   projects: [
-    // Móviles iOS (WebKit = motor de Safari)
-    { name: "iPhone SE", use: { ...devices["iPhone SE"] } },
-    { name: "iPhone 15 Pro", use: { ...devices["iPhone 15 Pro"] } },
-    { name: "iPhone 15 Pro Max", use: { ...devices["iPhone 15 Pro Max"] } },
-    // Móviles Android (Chromium)
-    { name: "Pixel 7", use: { ...devices["Pixel 7"] } },
-    { name: "Galaxy S8", use: { ...devices["Galaxy S8"] } },
+    ...deviceProjects,
     {
-      name: "Galaxy Fold cerrado",
-      use: {
-        ...devices["Galaxy S8"],
-        viewport: { width: 280, height: 653 },
-        screen: { width: 280, height: 653 },
-      },
+      name: "WebGL desktop",
+      testMatch: WEBGL_SPEC,
+      use: { ...devices["Desktop Chrome"] },
+      dependencies: deviceProjects.map((p) => p.name!),
+      fullyParallel: false,
     },
-    // Tablets
-    { name: "iPad Mini", use: { ...devices["iPad Mini"] } },
-    { name: "iPad Pro 11 landscape", use: { ...devices["iPad Pro 11 landscape"] } },
-    // Desktop
-    { name: "Desktop Chrome", use: { ...devices["Desktop Chrome"] } },
-    // Firefox solo en CI (Linux): en esta PC Windows no logra lanzarse (spawn UNKNOWN).
-    ...(process.env.CI || process.env.E2E_FIREFOX
-      ? [
-          {
-            name: "Desktop HD Firefox",
-            use: { ...devices["Desktop Firefox"], viewport: { width: 1920, height: 1080 } },
-          },
-        ]
-      : []),
+    {
+      name: "WebGL Android",
+      testMatch: WEBGL_SPEC,
+      use: { ...devices["Pixel 7"] },
+      dependencies: ["WebGL desktop"],
+      fullyParallel: false,
+    },
   ],
 });

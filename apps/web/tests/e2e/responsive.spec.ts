@@ -5,7 +5,7 @@ for (const route of PUBLIC_ROUTES) {
   test.describe(`responsive ${route}`, () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(route);
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
     });
 
     test("sin scroll horizontal", async ({ page }) => {

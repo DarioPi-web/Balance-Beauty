@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { EquilibriumCanvas } from "@/components/webgl/equilibrium-canvas";
 import { formatARS, installmentAmount, priceWithPaymentDiscount } from "@/lib/pricing";
 
 /**
@@ -15,8 +16,8 @@ export default function Home() {
           <Image
             src="/brand/logo-crema.webp"
             alt="Balance"
-            width={1080}
-            height={790}
+            width={60}
+            height={44}
             priority
             className="h-11 w-auto"
           />
@@ -27,14 +28,19 @@ export default function Home() {
       </header>
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center gap-10 px-5 py-16 sm:py-24">
-        <div className="relative isolate overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_30%_35%,#cfe0d5_0_22%,transparent_23%),radial-gradient(circle_at_70%_65%,#efcfca_0_20%,transparent_21%),linear-gradient(135deg,#eef3ef,#fbfcfa)] px-6 py-14 sm:px-12 sm:py-20">
+        {/*
+          Hero "Equilibrio": el póster CSS (mismas gotas, estáticas) es lo que se ve primero y
+          el fallback; el canvas WebGL aparece encima cuando la página ya cargó (docs/14 §5).
+        */}
+        <div className="relative isolate flex min-h-[560px] flex-col overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_58%_74%,#cfe0d5cc_0,transparent_32%),radial-gradient(circle_at_40%_82%,#efcfcacc_0,transparent_28%),linear-gradient(135deg,#eef3ef,#fbfcfa)] px-6 pt-12 pb-64 sm:min-h-[520px] sm:px-12 sm:py-20 md:justify-center md:bg-[radial-gradient(circle_at_78%_44%,#cfe0d5cc_0,transparent_30%),radial-gradient(circle_at_66%_58%,#efcfcacc_0,transparent_26%),linear-gradient(135deg,#eef3ef,#fbfcfa)]">
+          <EquilibriumCanvas className="absolute inset-0 -z-10 h-full w-full" />
           <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase">
             Nueva tienda · muy pronto
           </p>
-          <h1 className="mt-3 font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-[0.98] font-semibold text-balance">
+          <h1 className="mt-3 font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-[0.98] font-semibold text-balance md:max-w-[55%]">
             Tu piel, en equilibrio.
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+          <p className="mt-5 max-w-xl text-lg text-muted-foreground md:max-w-[50%]">
             Estamos construyendo la nueva tienda. Muy pronto vas a poder elegir por preocupación de
             tu piel y armar tu rutina.
           </p>
