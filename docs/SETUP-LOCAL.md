@@ -13,6 +13,14 @@ Proyecto en `C:\dev\balance-beauty` (ruta corta a propósito: Windows limita las
 | Playwright (Chromium, WebKit, Firefox) | 1.65                | Tests en 9 dispositivos                                        |
 | Supabase CLI                           | 3.2 (devDependency) | Migraciones y tipos (requiere Docker o un proyecto en la nube) |
 
+## Instalar en otra PC
+
+1. Descomprimir el proyecto en **`C:\dev\balance-beauty`** (ruta corta: es importante).
+2. Doble clic en **`instalar-entorno.cmd`**: instala Git, Node 22 y pnpm si faltan (puede pedir permiso de administrador), instala dependencias y, opcionalmente, los navegadores de prueba.
+3. Doble clic en **`iniciar-sitio.cmd`** → http://localhost:3000.
+
+Para mantener las dos PCs sincronizadas: repositorio privado en GitHub (`git pull` / `git push`). Hasta tenerlo, cada copia es independiente.
+
 ## Levantar el sitio
 
 - **Doble clic en `iniciar-sitio.cmd`** (raíz del proyecto): instala dependencias si faltan, levanta `localhost:3000` y abre el navegador.
