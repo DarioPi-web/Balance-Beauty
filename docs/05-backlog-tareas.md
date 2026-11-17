@@ -39,14 +39,14 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 
 - [ ] F2‑00 · **P0** · Benchmark de 10 referencias comentadas + 5 entrevistas/encuestas a clientas por Instagram — 2d
 - [ ] F2‑06 · **P0** · Journey map + arquitectura de información (preocupaciones, producto, línea) — 1d
-- [ ] F2‑01 · **P0** · Moodboard + 2 style tiles (paleta, tipografía, foto, motion) → elegir uno — 1,5d
+- [x] F2‑01 · **P0** · 2 style tiles con logo y fotos reales (`/estilos`) → elegida **B · Botánica clínica** (ADR‑017)
 - [ ] F2‑02 · **P0** · Wireframes mobile‑first: home, listado, ficha, quiz, carrito, checkout, cuenta, seguimiento — 2,5d
 - [ ] F2‑07 · **P0** · **Spike WebGL** "Equilibrio" (3 días): prototipo del shader, medido en Android gama media e iPhone; go/no‑go — 3d
 - [ ] F2‑03 · **P0** · UI final alta fidelidad + prototipo navegable — 4d
 - [ ] F2‑04 · **P1** · UI de cuenta y admin (basado en shadcn re‑estilizado) — 1d
 - [ ] F2‑08 · **P0** · Especificación de motion (tokens, coreografías, reduced‑motion) — 1d
 - [ ] F2‑09 · **P1** · Guía de voz y tono + microcopy de checkout y errores — 1d
-- [ ] F2‑05 · **P0** · Tokens en Tailwind (`@theme`), tipografía fluida, `next/font` — 0,5d
+- [x] F2‑05 · **P0** · Tokens de la dirección B en Tailwind (`@theme`), Cormorant Garamond + Geist con `next/font`, manifest/íconos/barra de estado en verde hoja
 - [ ] F2‑10 · **P1** · Storybook (o `/design-system`) + tests visuales Playwright — 1d
 - [ ] F2‑11 · **P1** · Test de usabilidad con 5 usuarias sobre el prototipo y ajustes — 1,5d
 - [ ] F2‑12 · **P1** · Briefing y sesión de fotos de producto + texturas (cliente/proveedor) — externo

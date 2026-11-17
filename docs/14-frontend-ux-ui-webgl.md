@@ -43,19 +43,23 @@ El nombre **Balance** es el concepto. La piel sana es un sistema en equilibrio (
 - **Lenguaje**: clínico pero cálido. Precisión (porcentajes, activos, pasos) + calidez rioplatense en el tono ("tu piel", "te ayudamos a elegir").
 - **Composición**: mucho aire, grillas asimétricas editoriales en contenido; grillas estrictas y previsibles en catálogo y checkout.
 
-### Dirección visual (propuesta a validar en moodboard, Q‑12)
+### Dirección visual — APROBADA: "B · Botánica clínica" (ADR‑017)
 
-| Token         | Propuesta                     | Uso                                           |
-| ------------- | ----------------------------- | --------------------------------------------- |
-| `--porcelain` | `#F4EFE9`                     | Fondo principal (cálido, no blanco puro)      |
-| `--ink`       | `#1E1B18`                     | Texto, UI                                     |
-| `--clay`      | `#C9A48A`                     | Acentos cálidos, piel                         |
-| `--sage`      | `#8FA391`                     | Señales "clínicas", badges de activo          |
-| `--serum`     | `#E8B04B` (con transparencia) | Highlights, precio con descuento, gotas WebGL |
-| `--alert`     | `#B4462F`                     | Errores, sin stock                            |
+Elegida entre dos style tiles (`/estilos`). Inspirada en el verde de las plantas de las fotos de producto y el logo crema de tres hojas.
 
-- Contraste AA verificado en todas las combinaciones texto/fondo.
-- **Tipografía**: display serif con carácter para titulares (p. ej. _Fraunces_ o _Instrument Serif_) + grotesk neutra y muy legible para UI y precios (p. ej. _Inter Tight_ o _Geist_), cargadas con `next/font` (self‑hosted, subset latin, `display: swap`). Cifras tabulares en precios.
+| Token         | Valor     | Uso                                                              |
+| ------------- | --------- | ---------------------------------------------------------------- |
+| `--clinical`  | `#F7F8F5` | Fondo principal                                                  |
+| `--leaf`      | `#1E3A2F` | Marca: header con logo, botones primarios, barra de estado (PWA) |
+| `--mist`      | `#E3EBE5` | Superficies, chips de preocupación                               |
+| `--rose`      | `#D9A7A0` | Acentos y promos (solo como fondo, con texto grafito)            |
+| `--rose-soft` | `#F3E3E0` | Resaltado del precio con transferencia                           |
+| `--graphite`  | `#14231C` | Texto                                                            |
+| `--alert`     | `#B4462F` | Errores, sin stock                                               |
+
+- Contraste: grafito/clínico 15:1, clínico/verde 11:1, texto secundario `#4D5B54` 6,9:1 (AA).
+- **Tipografía**: _Cormorant Garamond_ 500/600 para titulares (armoniza con la serif del logo) + _Geist_ para UI, textos y precios (cifras tabulares), con `next/font`.
+- **WebGL**: las gotas del hero toman verde niebla y rosa empolvado; el bloque "activo protagonista" cambia de tono por activo.
 - **Fotografía**: producto sobre fondos de color plano de la paleta + macro de texturas (gota, crema extendida). Sesión de fotos unificada = mayor impacto visual que cualquier efecto (ver Q‑08: 15 productos sin imagen).
 - **Iconografía**: línea fina custom para preocupaciones (acné, manchas…) y momentos (AM/PM).
 

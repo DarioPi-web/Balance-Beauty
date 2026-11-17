@@ -1,23 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter_Tight } from "next/font/google";
+import { Cormorant_Garamond, Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
 import { brand } from "@/lib/brand";
 import "./globals.css";
 
-// Tipografías PROVISIONALES (docs/14 §2) hasta aprobar el style tile en F2.
-const sans = Inter_Tight({
+// Tipografías de la dirección "B · Botánica clínica" (ADR-017).
+// Geist: UI, textos y precios. Cormorant Garamond: titulares (armoniza con la serif del logo).
+const sans = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
-const display = Fraunces({
+const display = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["500", "600"],
   display: "swap",
-  axes: ["opsz"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: brand.colors.porcelain,
+  themeColor: brand.colors.leaf,
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover", // usa toda la pantalla (notch / isla dinámica) con safe areas en CSS

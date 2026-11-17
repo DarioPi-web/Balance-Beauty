@@ -35,6 +35,12 @@ Documentación de referencia en `docs/` (empezar por `README.md`). Antes de camb
 - Cada página nueva: `generateMetadata`, canonical, JSON‑LD coherente con el texto visible, enlaces internos a producto/activo/preocupación.
 - Keywords objetivo y página asignada: tablas de docs/16 §4 y `docs/seo/keywords-autocomplete-ar.csv`.
 
+## Design system (ADR‑017, docs/14 §2)
+
+- Dirección "B · Botánica clínica". Usar tokens, nunca hex sueltos: `bg-leaf`, `text-graphite`, `bg-mist`, `bg-rose-soft`, `bg-clinical`; `font-display` (Cormorant Garamond) para titulares, Geist para el resto.
+- `rose` solo como fondo con texto grafito (no tiene contraste como color de texto).
+- Si en `pnpm dev` no aparecen clases nuevas de Tailwind, borrar `apps/web/.next` y reiniciar (caché persistente de Turbopack); el build de producción no tiene ese problema.
+
 ## Reglas
 
 - Server‑first: leer datos en Server Components; mutar con Server Actions en `actions/`, siempre validando con Zod y verificando sesión/rol dentro de la acción.

@@ -48,11 +48,13 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   /* Marca */
-  --color-porcelain: var(--porcelain);
-  --color-ink: var(--ink);
-  --color-clay: var(--clay);
-  --color-sage: var(--sage);
-  --color-serum: var(--serum);
+  --color-clinical: var(--clinical);
+  --color-leaf: var(--leaf);
+  --color-leaf-hover: var(--leaf-hover);
+  --color-mist: var(--mist);
+  --color-rose: var(--rose);
+  --color-rose-soft: var(--rose-soft);
+  --color-graphite: var(--graphite);
   --color-alert: var(--alert);
   --font-display: var(--font-display);
 
@@ -96,35 +98,39 @@
 }
 
 /*
- * Tokens de marca PROVISIONALES (docs/14 §2). Se reemplazan al aprobar el style tile en F2.
- * porcelain #F4EFE9 · ink #1E1B18 · clay #C9A48A · sage #8FA391 · serum #E8B04B · alert #B4462F
+ * Design system — dirección "B · Botánica clínica" (aprobada en F2-01, ADR-017).
+ * clinical #F7F8F5 · leaf #1E3A2F · mist #E3EBE5 · rose #D9A7A0 · graphite #14231C · alert #B4462F
+ * Contraste: graphite/clinical 15:1, clinical/leaf 11:1, muted/clinical 6,9:1 (AA ok).
+ * "rose" solo como fondo de acento (con texto graphite), nunca como color de texto.
  */
 :root {
-  --porcelain: #f4efe9;
-  --ink: #1e1b18;
-  --clay: #c9a48a;
-  --sage: #8fa391;
-  --serum: #e8b04b;
+  --clinical: #f7f8f5;
+  --leaf: #1e3a2f;
+  --leaf-hover: #2a4d3f;
+  --mist: #e3ebe5;
+  --rose: #d9a7a0;
+  --rose-soft: #f3e3e0;
+  --graphite: #14231c;
   --alert: #b4462f;
 
-  --background: var(--porcelain);
-  --foreground: var(--ink);
-  --card: #fbf8f5;
-  --card-foreground: var(--ink);
-  --popover: #fbf8f5;
-  --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: var(--porcelain);
-  --secondary: #ebe3da;
-  --secondary-foreground: var(--ink);
-  --muted: #ebe3da;
-  --muted-foreground: #5f5750;
-  --accent: #e7ece7;
-  --accent-foreground: var(--ink);
+  --background: var(--clinical);
+  --foreground: var(--graphite);
+  --card: #ffffff;
+  --card-foreground: var(--graphite);
+  --popover: #ffffff;
+  --popover-foreground: var(--graphite);
+  --primary: var(--leaf);
+  --primary-foreground: var(--clinical);
+  --secondary: var(--mist);
+  --secondary-foreground: var(--graphite);
+  --muted: var(--mist);
+  --muted-foreground: #4d5b54;
+  --accent: var(--rose-soft);
+  --accent-foreground: var(--graphite);
   --destructive: var(--alert);
-  --border: #ded4c9;
-  --input: #ded4c9;
-  --ring: var(--clay);
+  --border: #d5ded8;
+  --input: #d5ded8;
+  --ring: var(--leaf);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

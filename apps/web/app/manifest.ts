@@ -15,8 +15,8 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     display_override: ["standalone", "minimal-ui"],
     orientation: "portrait",
-    background_color: brand.colors.porcelain,
-    theme_color: brand.colors.porcelain,
+    background_color: brand.colors.clinical, // splash de Android
+    theme_color: brand.colors.leaf, // barra de estado / título en modo app
     categories: ["shopping", "beauty", "health"],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
