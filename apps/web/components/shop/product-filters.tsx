@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import type { SortKey, Taxon } from "@/lib/catalog/types";
 import { FiltersView } from "./filters-view";
@@ -28,14 +28,26 @@ export function ProductFilters({
     (p) => (!category || p.c.includes(category)) && (!concern || p.k.includes(concern)),
   ).length;
 
+  // Recuerda si alguna vez se tocó el DOM: en la carga sin filtros no se hace NADA
+  // (evita recalcular el layout de 50 tarjetas en el arranque → TBT).
+  const touched = useRef(false);
+
   useEffect(() => {
+    const active = Boolean(category || concern || sort !== "recomendados");
+    if (!active && !touched.current) return;
+    touched.current = true;
+
     const grid = document.getElementById("product-grid");
     if (!grid) return;
     const items = Array.from(grid.querySelectorAll<HTMLElement>("[data-product]"));
     for (const el of items) {
       const cats = el.dataset.categories?.split(" ") ?? [];
       const cons = el.dataset.concerns?.split(" ") ?? [];
-      el.hidden = !((!category || cats.includes(category)) && (!concern || cons.includes(concern)));
+      const hide = !(
+        (!category || cats.includes(category)) &&
+        (!concern || cons.includes(concern))
+      );
+      if (el.hidden !== hide) el.hidden = hide;
     }
     const key = (el: HTMLElement) => {
       switch (sort) {
@@ -55,7 +67,10 @@ export function ProductFilters({
             (a.dataset.name ?? "").localeCompare(b.dataset.name ?? "", "es"),
           )
         : [...items].sort((a, b) => key(a) - key(b));
-    sorted.forEach((el, i) => (el.style.order = String(i)));
+    sorted.forEach((el, i) => {
+      const order = sort === "recomendados" ? "" : String(i);
+      if (el.style.order !== order) el.style.order = order;
+    });
     document.getElementById("product-empty")?.toggleAttribute("hidden", total > 0);
   }, [category, concern, sort, total]);
 

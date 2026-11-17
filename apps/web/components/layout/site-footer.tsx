@@ -1,13 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { listCategories, listConcerns } from "@/lib/catalog";
+import { listBrands, listCategories, listConcerns } from "@/lib/catalog";
 import { site } from "@/lib/site";
 
 export async function SiteFooter() {
-  const [categories, concerns] = await Promise.all([listCategories(), listConcerns()]);
+  const [categories, concerns, brands] = await Promise.all([
+    listCategories(),
+    listConcerns(),
+    listBrands(),
+  ]);
   return (
     <footer className="mt-16 bg-leaf pb-20 text-clinical md:pb-0">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-5">
         <div>
           <Image
             src="/brand/logo-crema.webp"
@@ -27,6 +31,10 @@ export async function SiteFooter() {
         <FooterList
           title="Categorías"
           items={categories.map((c) => ({ href: `/categoria/${c.slug}`, label: c.name }))}
+        />
+        <FooterList
+          title="Marcas"
+          items={brands.map((b) => ({ href: `/marca/${b.slug}`, label: b.name }))}
         />
         <FooterList
           title="Seguinos"

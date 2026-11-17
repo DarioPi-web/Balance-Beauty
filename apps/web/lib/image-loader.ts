@@ -22,3 +22,12 @@ export default function imageLoader({
   // Otros assets estáticos (logo): se sirven tal cual.
   return `${src}?w=${width}`;
 }
+
+/**
+ * URL pública de una foto para compartir/indexar (sitemap, JSON-LD, Open Graph):
+ * JPEG de 1000 px, el formato más compatible con WhatsApp, Facebook y Merchant Center.
+ */
+export function publicImageUrl(src: string) {
+  const m = src.match(/^\/products\/([^/]+)\/([^/]+)\.webp$/);
+  return m ? `/img/products/${m[1]}/${m[2]}-share.jpg` : src;
+}

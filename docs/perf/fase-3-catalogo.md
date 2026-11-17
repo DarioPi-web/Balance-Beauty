@@ -25,6 +25,20 @@ E2E: 230 tests OK en 9 dispositivos + proyectos WebGL.
 | Prefetch de 13 links visibles compitiendo con el LCP | `Link` precarga todo lo visible                            | Tarjetas y footer precargan al pasar el mouse/tocar                                                     | 8–12 pedidos menos al inicio |
 | Desborde horizontal en `/tienda` (mobile)            | `<fieldset>` mide `min-content` por defecto                | `min-w-0`                                                                                               | 0 px de desborde             |
 
+## Segunda medición (búsqueda + marcas, 5 corridas por URL)
+
+| Página                      | Perf (mediana) | TBT (mediana) | JS inicial |
+| --------------------------- | -------------- | ------------- | ---------- |
+| `/`                         | 100            | 80 ms         | 186 KB     |
+| `/tienda`                   | 89–90          | 128 ms        | 183 KB     |
+| `/preocupacion/manchas`     | 94             | 30 ms         | 183 KB     |
+| `/producto/rosatopis-serum` | 93             | 29 ms         | 183 KB     |
+
+- En esta PC aparecen corridas aisladas con TBT 1,5–2 s **en todas las páginas, incluida la home** (que en el resto da 30–80 ms): ruido del sistema. Lighthouse CI evalúa la **corrida mediana** (`aggregationMethod: median-run`).
+- El diálogo de búsqueda (cmdk, ~40 KB) se descarga solo al tocar la lupa: no suma al JS inicial.
+- Control de peso: el JS **inicial por ruta** lo verifica Lighthouse CI (≤ 195 KB); `size-limit` queda como alarma del total de chunks incluidos los diferidos (270 KB).
+- Lección: no correr `lhci` con el servidor de desarrollo ocupando el puerto 3000 (mide el modo dev). Usar `--collect.startServerCommand="pnpm start --port 3200"`.
+
 ## Ajuste de presupuestos (docs/11)
 
 - **Piso del framework**: React 19 + Next 16 ≈ 150 KB gzip de JS base; las páginas del catálogo transfieren ~180 KB. El presupuesto original de **120 KB por ruta no es alcanzable** con este stack → nuevo presupuesto **≤ 190 KB por ruta**, alarma de JS total en **230 KB**.

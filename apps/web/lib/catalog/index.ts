@@ -42,12 +42,44 @@ export async function getConcern(slug: string) {
   return (await snapshot()).concerns.find((c) => c.slug === slug) ?? null;
 }
 
-export async function listProducts(filter?: { category?: string; concern?: string }) {
+export const brandSlug = (name: string) =>
+  name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+/** Marcas derivadas de los productos (hasta tener la tabla brands poblada, Q‑25). */
+export async function listBrands(): Promise<Taxon[]> {
+  const { products } = await snapshot();
+  const counts = new Map<string, number>();
+  for (const p of products) if (p.brand) counts.set(p.brand, (counts.get(p.brand) ?? 0) + 1);
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "es"))
+    .map(([name], i) => ({
+      slug: brandSlug(name),
+      name,
+      description: `Productos ${name} disponibles en Balance Beauty, con envío a todo el país.`,
+      order: i,
+    }));
+}
+
+export async function getBrand(slug: string) {
+  return (await listBrands()).find((b) => b.slug === slug) ?? null;
+}
+
+export async function listProducts(filter?: {
+  category?: string;
+  concern?: string;
+  brand?: string;
+}) {
   const { products } = await snapshot();
   return products.filter(
     (p) =>
       (!filter?.category || p.categories.includes(filter.category)) &&
-      (!filter?.concern || p.concerns.includes(filter.concern)),
+      (!filter?.concern || p.concerns.includes(filter.concern)) &&
+      (!filter?.brand || (p.brand !== null && brandSlug(p.brand) === filter.brand)),
   );
 }
 

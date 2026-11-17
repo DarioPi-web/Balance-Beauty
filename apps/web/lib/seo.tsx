@@ -1,6 +1,7 @@
 import type { Product } from "@/lib/catalog/types";
 import { site } from "@/lib/site";
 import { brand } from "@/lib/brand";
+import { publicImageUrl } from "@/lib/image-loader";
 
 /** JSON‑LD seguro (escapa "<" para evitar cortar el <script>). */
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
@@ -60,7 +61,7 @@ export function productLd(p: Product) {
     sku: p.sku,
     ...(p.brand ? { brand: { "@type": "Brand", name: p.brand } } : {}),
     ...(p.description ? { description: p.description.slice(0, 500) } : {}),
-    image: p.images.map((i) => absoluteUrl(i.src)),
+    image: p.images.map((i) => absoluteUrl(publicImageUrl(i.src))),
     url: absoluteUrl(`/producto/${p.slug}`),
     offers: {
       "@type": "Offer",

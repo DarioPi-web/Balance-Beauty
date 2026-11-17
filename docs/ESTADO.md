@@ -17,7 +17,7 @@
 
 ## Próximos pasos (en orden)
 
-1. Cerrar F3: búsqueda (`search_products`), landings de activos/marca (S‑03), regresión visual (R‑08), axe (R‑09).
+1. Cerrar F3: quiz "Armá tu rutina" (F3‑11), páginas de línea y de activos (S‑03, requieren contenido revisado), regresión visual (R‑08). Hechos: búsqueda, marcas, error.tsx, axe.
 2. Gate F3 → preguntar al dueño si deploy a staging (requiere cuentas).
 3. F4 carrito + checkout (requiere decisión de pasarela Q‑01).
 

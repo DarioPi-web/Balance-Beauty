@@ -66,10 +66,41 @@ test.describe("catálogo", () => {
     await expect(page.getByRole("button", { name: /Agregar al carrito/ })).toHaveCount(0);
   });
 
+  test("búsqueda: sinónimos, teclado y navegación al producto", async ({ page }) => {
+    await page.goto("/tienda");
+    await page.getByRole("button", { name: "Buscar productos" }).first().click();
+    const input = page.getByPlaceholder(/Buscar: manchas/);
+    await expect(input).toBeVisible();
+    await input.fill("rojeces"); // sinónimo → rosácea / ROSATOPIC
+    const option = page.getByRole("option", { name: /ROSATOPIC Serum/ });
+    await expect(option).toBeVisible();
+    await option.click();
+    await expect(page).toHaveURL(/\/producto\/rosatopis-serum$/);
+  });
+
+  test("página de marca lista sus productos", async ({ page }) => {
+    await page.goto("/marca/sulderm");
+    await expect(page.getByRole("heading", { level: 1, name: "Sulderm" })).toBeVisible();
+    await expect(page.locator("main article")).not.toHaveCount(0);
+  });
+
+  test("imágenes para compartir (JSON-LD/OG) existen y son JPEG", async ({ page, request }) => {
+    await page.goto("/producto/rosatopis-serum");
+    const og = await page.locator('meta[property="og:image"]').first().getAttribute("content");
+    expect(og).toMatch(/-share\.jpg$/);
+    // og:image es absoluta (dominio de NEXT_PUBLIC_SITE_URL); se pide la ruta al servidor de prueba
+    const res = await request.get(new URL(og!).pathname);
+    expect(res.ok()).toBe(true);
+    expect(res.headers()["content-type"]).toContain("image/jpeg");
+  });
+
   test("sitemap y robots", async ({ request }) => {
     const sitemap = await (await request.get("/sitemap.xml")).text();
     expect(sitemap).toContain("/producto/rosatopis-serum");
     expect(sitemap).toContain("/preocupacion/manchas");
+    expect(sitemap).toContain("/marca/sulderm");
+    expect(sitemap).toContain("-share.jpg");
+    expect(sitemap).not.toMatch(/\/products\/[^<]+\.webp/); // nada de rutas internas rotas
     const robots = await (await request.get("/robots.txt")).text();
     expect(robots).toMatch(/Disallow: \/checkout/);
     expect(robots).toMatch(/Sitemap: /);

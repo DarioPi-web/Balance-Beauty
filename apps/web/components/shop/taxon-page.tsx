@@ -11,7 +11,7 @@ export function TaxonPage({
   products,
   concerns,
 }: {
-  kind: "categoria" | "preocupacion";
+  kind: "categoria" | "preocupacion" | "marca";
   taxon: Taxon;
   products: Product[];
   concerns: Taxon[];
@@ -27,7 +27,7 @@ export function TaxonPage({
     <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
       <Breadcrumbs items={crumbs} />
       <p className="mt-3 text-xs tracking-[0.18em] text-muted-foreground uppercase">
-        {kind === "preocupacion" ? "Preocupación" : "Categoría"}
+        {kind === "preocupacion" ? "Preocupación" : kind === "marca" ? "Marca" : "Categoría"}
       </p>
       <h1 className="mt-1 font-display text-4xl font-semibold sm:text-5xl">{taxon.name}</h1>
       <p className="mt-2 max-w-2xl text-lg text-muted-foreground">{taxon.description}</p>

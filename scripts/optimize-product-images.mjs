@@ -23,6 +23,17 @@ for (const slug of readdirSync(src)) {
   for (const file of readdirSync(join(src, slug))) {
     const { name } = parse(file);
     mkdirSync(join(out, slug), { recursive: true });
+    // JPEG compatible para Open Graph (WhatsApp/Facebook), JSON-LD y Merchant Center.
+    const share = join(out, slug, `${name}-share.jpg`);
+    if (!existsSync(share)) {
+      await sharp(join(src, slug, file))
+        .resize({ width: 1000, withoutEnlargement: true })
+        .flatten({ background: "#f7f8f5" })
+        .jpeg({ quality: 78, mozjpeg: true })
+        .toFile(share);
+      made++;
+      bytes += statSync(share).size;
+    }
     for (const w of WIDTHS) {
       const dest = join(out, slug, `${name}-${w}.avif`);
       if (existsSync(dest)) continue;

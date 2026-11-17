@@ -7,6 +7,7 @@ import { PriceBlock } from "@/components/shop/price-block";
 import { ProductCard } from "@/components/shop/product-card";
 import { ProductMedia } from "@/components/shop/product-media";
 import {
+  brandSlug,
   getProduct,
   listCategories,
   listConcerns,
@@ -14,6 +15,7 @@ import {
   relatedProducts,
 } from "@/lib/catalog";
 import { JsonLd, breadcrumbLd, productLd } from "@/lib/seo";
+import { publicImageUrl } from "@/lib/image-loader";
 import { site } from "@/lib/site";
 
 export async function generateStaticParams() {
@@ -39,7 +41,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      images: p.images.slice(0, 1).map((i) => ({ url: i.src, alt: i.alt })),
+      images: p.images.slice(0, 1).map((i) => ({ url: publicImageUrl(i.src), alt: i.alt })),
     },
   };
 }
@@ -74,7 +76,12 @@ export default async function ProductoPage({ params }: PageProps<"/producto/[slu
         <section aria-label="Fotos del producto" className="md:sticky md:top-32 md:self-start">
           {product.images.length ? (
             <>
-              <ul className="-mx-4 flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+              {/* Enfocable: con teclado se desplaza con las flechas (WCAG 2.1.1, axe scrollable-region-focusable) */}
+              <ul
+                tabIndex={0}
+                aria-label={`Fotos de ${product.name}: deslizá para ver más`}
+                className="-mx-4 flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto px-4 focus-visible:ring-2 focus-visible:ring-leaf focus-visible:outline-none sm:mx-0 sm:px-0"
+              >
                 {product.images.map((img, i) => (
                   <li
                     key={img.src}
@@ -126,9 +133,12 @@ export default async function ProductoPage({ params }: PageProps<"/producto/[slu
 
         <section aria-labelledby="h-producto">
           {product.brand ? (
-            <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">
+            <Link
+              href={`/marca/${brandSlug(product.brand)}`}
+              className="inline-flex min-h-11 min-w-11 items-center text-xs tracking-[0.18em] text-muted-foreground uppercase hover:text-graphite"
+            >
               {product.brand}
-            </p>
+            </Link>
           ) : null}
           <h1
             id="h-producto"

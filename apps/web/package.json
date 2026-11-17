@@ -15,9 +15,9 @@
   },
   "size-limit": [
     {
-      "name": "JS total cliente, todas las rutas (F3: 218 KB gzip) — alarma de regresión, docs/11",
+      "name": "JS total de TODOS los chunks, incluidos los diferidos (búsqueda ~40 KB, WebGL ~3 KB) — alarma de crecimiento; el JS inicial por ruta lo controla Lighthouse CI",
       "path": ".next/static/chunks/**/*.js",
-      "limit": "230 KB",
+      "limit": "270 KB",
       "gzip": true
     }
   ],
@@ -48,6 +48,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@lhci/cli": "^0.16.1",
     "@next/bundle-analyzer": "^16.4.6",
     "@playwright/test": "^1.65.1",
