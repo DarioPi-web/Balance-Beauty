@@ -39,5 +39,5 @@ Servidor local: `pnpm --filter web dev --port 3000` (si no aparecen clases nueva
 ## Reglas que no se rompen
 
 - Nunca deployar sin aprobación explícita del dueño (ADR‑010).
-- Presupuestos de performance de `docs/11` (Lighthouse ≥ 90, TBT < 200 ms, JS total < 200 KB).
+- Presupuestos de performance de `docs/11` y `apps/web/lighthouserc.json` (home ≥ 90 / LCP < 2 s; catálogo ≥ 85 / LCP lab < 3,6 s; CLS < 0,05; JS total < 230 KB; campo: LCP p75 < 2,5 s).
 - Commits con `git -c user.name="dariopi2012" -c user.email=…` (sin identidad global en la máquina).
