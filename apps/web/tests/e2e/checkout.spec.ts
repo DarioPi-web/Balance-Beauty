@@ -41,6 +41,21 @@ test.describe("checkout", () => {
     await expect(page.getByLabel("Nombre y apellido")).toHaveValue("Ana Pérez");
   });
 
+  test("un bot que completa el honeypot no crea pedidos", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "Desktop Chrome", "una vez alcanza");
+    await addToCart(page, "agua-micelar");
+    await page.goto("/checkout");
+    test.skip(!(await page.locator("form").count()), "Checkout sin Supabase en este entorno");
+    // Un bot completa el campo directo en el DOM (no está visible para una persona).
+    await page.locator('input[name="website"]').evaluate((el: HTMLInputElement) => {
+      el.value = "http://spam.example";
+    });
+    await page.getByRole("radio", { name: /Transferencia/ }).check();
+    await page.getByRole("button", { name: "Confirmar pedido" }).click();
+    await expect(page.locator("main").getByRole("alert")).toContainText("No pudimos procesar");
+    await expect(page).toHaveURL(/\/checkout$/);
+  });
+
   // Crea un pedido de verdad en Supabase staging: solo con E2E_ORDERS=1.
   test("pedido completo por transferencia", async ({ page }, testInfo) => {
     test.skip(
@@ -60,6 +75,7 @@ test.describe("checkout", () => {
     await page.getByLabel("Código postal").fill("C1425ABC");
     await page.getByRole("radio", { name: /Transferencia/ }).check();
     await page.getByRole("checkbox", { name: /Acepto/ }).check();
+    await page.waitForTimeout(2_600); // el token anti-bots exige ≥ 2,5 s desde que cargó el formulario
     await page.getByRole("button", { name: "Confirmar pedido" }).click();
 
     await expect(page).toHaveURL(/\/checkout\/resultado\?ref=/);

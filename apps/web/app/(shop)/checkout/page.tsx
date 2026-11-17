@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
 import { ShieldCheck } from "lucide-react";
 import { Breadcrumbs } from "@/components/shop/breadcrumbs";
 import { CheckoutForm } from "@/components/checkout/checkout-form";
 import { readCart } from "@/lib/cart/server";
-import { isSupabaseConfigured, listShippingRates } from "@/lib/orders/server";
+import { checkoutServerKey, isSupabaseConfigured, listShippingRates } from "@/lib/orders/server";
+import { createFormToken } from "@/lib/security/form-guard";
 import { isMercadoPagoConfigured } from "@/lib/payments/mercadopago";
 import { formatARS } from "@/lib/pricing";
 import { site } from "@/lib/site";
@@ -33,7 +35,9 @@ async function CheckoutFromCookie() {
     );
   }
 
-  if (!isSupabaseConfigured() || rates.length === 0) {
+  const serverKey = checkoutServerKey();
+  await connection(); // el token usa la hora actual: este render es por request, nunca prerender
+  if (!isSupabaseConfigured() || !serverKey || rates.length === 0) {
     return (
       <p role="status" className="rounded-2xl border bg-card p-6">
         El checkout no está disponible en este momento. Escribinos por{" "}
@@ -52,6 +56,7 @@ async function CheckoutFromCookie() {
         rates={rates}
         transferPercent={site.transferDiscountPercent}
         cardEnabled={isMercadoPagoConfigured()}
+        formToken={createFormToken(serverKey)}
       />
       <aside
         className="h-fit rounded-2xl border bg-card p-5 lg:sticky lg:top-32"

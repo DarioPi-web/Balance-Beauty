@@ -18,6 +18,8 @@ export const env = createEnv({
       .regex(/^(TEST|APP_USR)-/)
       .optional(),
     MERCADOPAGO_WEBHOOK_SECRET: z.string().min(16).optional(),
+    // Habilita la RPC place_order (la base guarda solo su hash en private.server_keys).
+    CHECKOUT_SERVER_KEY: z.string().min(32).optional(),
     INTEGRATIONS_URL: z.url().optional(),
     INTEGRATIONS_HMAC_SECRET: z.string().min(32).optional(),
     INTEGRATIONS_TIMEOUT_MS: z.coerce.number().int().positive().default(2500),
@@ -35,6 +37,7 @@ export const env = createEnv({
     CRON_SECRET: process.env.CRON_SECRET,
     MERCADOPAGO_ACCESS_TOKEN: process.env.MERCADOPAGO_ACCESS_TOKEN,
     MERCADOPAGO_WEBHOOK_SECRET: process.env.MERCADOPAGO_WEBHOOK_SECRET,
+    CHECKOUT_SERVER_KEY: process.env.CHECKOUT_SERVER_KEY,
     INTEGRATIONS_URL: process.env.INTEGRATIONS_URL,
     INTEGRATIONS_HMAC_SECRET: process.env.INTEGRATIONS_HMAC_SECRET,
     INTEGRATIONS_TIMEOUT_MS: process.env.INTEGRATIONS_TIMEOUT_MS,

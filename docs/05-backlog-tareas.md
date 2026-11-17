@@ -98,7 +98,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] F4‑10b · **P0** · Flujo transferencia/QR: datos bancarios desde settings, subida de comprobante a bucket privado, vencimiento 48 h — 1d
 - [ ] F4‑11 · **P0** · Emails React Email: pedido recibido, pago aprobado, transferencia pendiente, enviado, cancelado — 1,5d
 - [ ] F4‑12 · **P0** · Cron `release_expired_reservations` (pg_cron) — 0,25d
-- [ ] F4‑13 · **P1** · Rate limiting en acciones de checkout y login (Upstash) — 0,5d
+- [x] F4‑13 · **P1** · Rate limiting en acciones de checkout y login (Upstash) — 0,5d · ✅ clave de servidor en `place_order` (hash en `private.server_keys`), máx. 5 pedidos/h por IP (hash) y 3 pendientes por email, honeypot + token de tiempo firmado. Turnstile queda opcional
 - [ ] F4‑14 · **P1** · Eventos de analytics: view_item, add_to_cart, begin_checkout, purchase (GA4 + Meta CAPI) — 1d
 - [ ] F4‑15 · **P0** · Barra de progreso hacia 12 cuotas ✅. **Falta:** envío gratis (requiere definir umbral, Q‑04)
 - [ ] F4‑16 · **P0** · Cotización de envío leyendo `shipping_rate_matrix` en Supabase; respaldo en vivo al VPS (HMAC, timeout 2,5 s) solo si el CP no está; último recurso `shipping_rates` — 1d

@@ -1,8 +1,15 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { readCartLines, writeCartLines } from "@/lib/cart/server";
-import { getOrderSummary, isSupabaseConfigured, toCheckoutOrder } from "@/lib/orders/server";
+import {
+  checkoutServerKey,
+  getOrderSummary,
+  isSupabaseConfigured,
+  toCheckoutOrder,
+} from "@/lib/orders/server";
+import { checkFormToken, HONEYPOT_FIELD, hashClientIp } from "@/lib/security/form-guard";
 import type { PlacedOrder } from "@/lib/orders/types";
 import { isMercadoPagoConfigured, mercadoPago } from "@/lib/payments/mercadopago";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -29,7 +36,24 @@ const resultUrl = (id: string, estado?: string) =>
  */
 export async function placeOrder(_prev: CheckoutState, fd: FormData): Promise<CheckoutState> {
   const values: Record<string, string> = {};
-  for (const [k, v] of fd.entries()) if (typeof v === "string" && !k.startsWith("$")) values[k] = v;
+  for (const [k, v] of fd.entries())
+    if (typeof v === "string" && !k.startsWith("$") && k !== HONEYPOT_FIELD && k !== "formToken")
+      values[k] = v;
+
+  const serverKey = checkoutServerKey();
+  if (!isSupabaseConfigured() || !serverKey) {
+    return { error: "El checkout no está disponible en este entorno.", values };
+  }
+
+  // Anti-bots: honeypot completado o formulario enviado demasiado rápido / con token inválido.
+  const token = checkFormToken(fd.get("formToken"), serverKey);
+  if (String(fd.get(HONEYPOT_FIELD) ?? "") !== "" || token === "invalid") {
+    console.warn(JSON.stringify({ event: "checkout.bot_blocked", reason: token }));
+    return { error: "No pudimos procesar el pedido. Recargá la página y probá de nuevo.", values };
+  }
+  if (token === "expired") {
+    return { error: "La página estuvo abierta mucho tiempo. Recargala para seguir.", values };
+  }
 
   const parsed = checkoutSchema.safeParse(checkoutFromFormData(fd));
   if (!parsed.success) {
@@ -39,9 +63,6 @@ export async function placeOrder(_prev: CheckoutState, fd: FormData): Promise<Ch
       values,
     };
   }
-  if (!isSupabaseConfigured()) {
-    return { error: "El checkout no está disponible en este entorno.", values };
-  }
   if (parsed.data.paymentMethod === "mercadopago" && !isMercadoPagoConfigured()) {
     return {
       error: "El pago con tarjeta todavía no está habilitado. Elegí transferencia bancaria.",
@@ -50,12 +71,23 @@ export async function placeOrder(_prev: CheckoutState, fd: FormData): Promise<Ch
     };
   }
 
+  // Ninguna persona completa todo el formulario en menos de 2,5 s (se chequea recién acá para
+  // que un envío apurado con errores igual muestre los campos a corregir).
+  if (token === "too_fast") {
+    console.warn(JSON.stringify({ event: "checkout.bot_blocked", reason: token }));
+    return { error: "No pudimos procesar el pedido. Recargá la página y probá de nuevo.", values };
+  }
+
   const lines = await readCartLines();
   if (lines.length === 0) return { error: "Tu carrito está vacío.", values };
 
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc("place_order", {
-    p_checkout: toPlaceOrderPayload(parsed.data, lines),
+    p_checkout: {
+      ...toPlaceOrderPayload(parsed.data, lines),
+      client_ip_hash: hashClientIp(await headers(), serverKey),
+    },
+    p_server_key: serverKey,
   });
   if (error) {
     if (error.hint === "checkout") return { error: error.message, values };

@@ -19,6 +19,8 @@ type Props = {
   rates: Rate[];
   transferPercent: number;
   cardEnabled: boolean;
+  /** Token de tiempo firmado en el servidor (lib/security/form-guard). */
+  formToken: string;
 };
 
 const field =
@@ -26,7 +28,7 @@ const field =
 const label = "block text-sm font-medium text-graphite";
 
 /** Formulario de checkout: progresivo (funciona sin JS) y validado de nuevo en el servidor. */
-export function CheckoutForm({ subtotal, rates, transferPercent, cardEnabled }: Props) {
+export function CheckoutForm({ subtotal, rates, transferPercent, cardEnabled, formToken }: Props) {
   const [state, action, pending] = useActionState<CheckoutState, FormData>(placeOrder, {});
   const v = state.values ?? {};
   const err = state.fieldErrors ?? {};
@@ -75,6 +77,14 @@ export function CheckoutForm({ subtotal, rates, transferPercent, cardEnabled }: 
 
   return (
     <form action={action} className="grid gap-8" noValidate>
+      <input type="hidden" name="formToken" value={formToken} />
+      {/* Honeypot: invisible para personas y lectores de pantalla; los bots suelen completarlo. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label>
+          No completar
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
+      </div>
       {state.error ? (
         <p
           role="alert"

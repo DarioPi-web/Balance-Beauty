@@ -6,6 +6,12 @@ import { UUID_RE, type OrderSummary } from "./types";
 export const isSupabaseConfigured = () =>
   Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
+/** Clave que habilita place_order (la base guarda su hash). Sin ella el checkout queda cerrado. */
+export const checkoutServerKey = (): string | null => {
+  const k = process.env.CHECKOUT_SERVER_KEY;
+  return k && k.length >= 32 ? k : null;
+};
+
 export type ShippingRate = {
   method: "home_delivery" | "branch_pickup";
   price: number;

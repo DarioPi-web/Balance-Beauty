@@ -21,7 +21,7 @@
 
 1. Cerrar F3: páginas de línea y de activos (S‑03, requieren contenido revisado por profesional), regresión visual (R‑08), View Transitions (F3‑13). Hechos: búsqueda, marcas, quiz `/rutina`, error.tsx, axe.
 2. ✅ JS inicial bajo el tope (2026‑11‑17): todas las rutas ≤ 190.507 bytes (home 185.743). Se quitó `sonner`/`next-themes` y el paquete `cn`; Lighthouse CI ahora sí ejecuta las aserciones (antes fallaba la config). Detalle en `docs/perf/fase-3-catalogo.md`.
-3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails (F4‑11); rate limiting / Turnstile en `place_order` (F4‑13; hoy un anónimo puede crear pedidos).
+3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails (F4‑11). Anti‑spam ✅ (F4‑13, migración 6): `place_order(p_checkout, p_server_key)` exige `CHECKOUT_SERVER_KEY` (la base guarda solo el hash en `private.server_keys`; rotar = nueva clave en Vercel/.env.local + `update private.server_keys`), máx. 5 pedidos/h por IP (hash con sal) y 3 pendientes por email, honeypot `website` + token de tiempo firmado (2,5 s–2 h). Opcional a futuro: Cloudflare Turnstile (requiere cuenta del dueño).
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 
 ## Pendientes del dueño

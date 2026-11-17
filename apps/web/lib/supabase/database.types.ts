@@ -488,6 +488,7 @@ export type Database = {
           total: number
           updated_at: string
           user_id: string | null
+          client_ip_hash: string | null
         }
         Insert: {
           admin_note?: string | null
@@ -1274,7 +1275,7 @@ export type Database = {
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       get_order_summary: { Args: { p_order_id: string }; Returns: Json }
       is_admin: { Args: never; Returns: boolean }
-      place_order: { Args: { p_checkout: Json }; Returns: Json }
+      place_order: { Args: { p_checkout: Json; p_server_key: string }; Returns: Json }
       release_expired_reservations: { Args: never; Returns: number }
       search_products: {
         Args: { max_results?: number; q: string }
