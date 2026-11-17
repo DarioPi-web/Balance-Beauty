@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/toast";
 import { addManyToCart, addToCart } from "@/actions/cart";
 import { cn } from "@/lib/utils";
 import { cartStore } from "./cart-store";

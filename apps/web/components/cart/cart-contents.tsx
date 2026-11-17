@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTransition } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/toast";
 import { removeFromCart, setCartQty } from "@/actions/cart";
 import { ProductMedia } from "@/components/shop/product-media";
 import type { CartView } from "@/lib/cart/compute";

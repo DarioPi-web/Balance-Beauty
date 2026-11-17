@@ -20,7 +20,7 @@
 ## Próximos pasos (en orden)
 
 1. Cerrar F3: páginas de línea y de activos (S‑03, requieren contenido revisado por profesional), regresión visual (R‑08), View Transitions (F3‑13). Hechos: búsqueda, marcas, quiz `/rutina`, error.tsx, axe.
-2. **Bajar JS inicial (Lighthouse CI falla hoy).** Corrección de medición 2026‑11‑17: los "193 KB" reportados antes eran **KiB**. En bytes (lo que verifica `resource-summary:script:size` ≤ 195.000): home 197.792, carrito 198.600, checkout 202.500, producto 195.700 — ya excedido desde el commit del carrito; el checkout no agregó JS a las rutas existentes (comparado contra el commit anterior). Candidatos: unificar islas cliente del header/barra inferior, íconos lucide, `cn`, chunk de rutina en la home.
+2. ✅ JS inicial bajo el tope (2026‑11‑17): todas las rutas ≤ 190.507 bytes (home 185.743). Se quitó `sonner`/`next-themes` y el paquete `cn`; Lighthouse CI ahora sí ejecuta las aserciones (antes fallaba la config). Detalle en `docs/perf/fase-3-catalogo.md`.
 3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails (F4‑11); rate limiting / Turnstile en `place_order` (F4‑13; hoy un anónimo puede crear pedidos).
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 

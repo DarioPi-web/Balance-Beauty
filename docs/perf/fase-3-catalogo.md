@@ -39,6 +39,23 @@ E2E: 230 tests OK en 9 dispositivos + proyectos WebGL.
 - Control de peso: el JS **inicial por ruta** lo verifica Lighthouse CI (≤ 195 KB); `size-limit` queda como alarma del total de chunks incluidos los diferidos (270 KB).
 - Lección: no correr `lhci` con el servidor de desarrollo ocupando el puerto 3000 (mide el modo dev). Usar `--collect.startServerCommand="pnpm start --port 3200"`.
 
+## Actualización 2026‑11‑17 (checkout, F4)
+
+- **Corrección de unidades:** varias cifras previas se leyeron en KiB desde el informe de Lighthouse; la aserción `resource-summary:script:size ≤ 195000` es en **bytes**. Además, la aserción de Lighthouse CI **no se estaba ejecutando** (error de config: `aggregationMethod` junto a `assertMatrix`); ahora va dentro de cada entrada de la matriz y se verifica.
+- **Recortes:** `sonner` + `next-themes` reemplazados por `components/ui/toast.tsx` (~11 KB menos por ruta); paquete `cn` reemplazado por `clsx` + `tailwind-merge` (~1 KB más).
+- **Resultado (bytes transferidos, mediana de 3):**
+
+| Página                      | Perf | JS inicial (bytes) |
+| --------------------------- | ---- | ------------------ |
+| `/`                         | 99   | 185.743            |
+| `/carrito`                  | 99   | 186.560            |
+| `/checkout`                 | 97   | 190.507            |
+| `/producto/rosatopis-serum` | 92   | 183.633            |
+| `/preocupacion/manchas`     | 93   | 182.127            |
+| `/tienda`                   | 90   | 182.127            |
+
+- `size-limit` (total de chunks, incluidos diferidos): alarma subida a **280 KB** por el código del checkout que solo se descarga en esa ruta (272,5 KB hoy).
+
 ## Ajuste de presupuestos (docs/11)
 
 - **Piso del framework**: React 19 + Next 16 ≈ 150 KB gzip de JS base; las páginas del catálogo transfieren ~180 KB. El presupuesto original de **120 KB por ruta no es alcanzable** con este stack → nuevo presupuesto **≤ 190 KB por ruta**, alarma de JS total en **230 KB**.
