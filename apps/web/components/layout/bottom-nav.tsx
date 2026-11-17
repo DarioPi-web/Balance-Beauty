@@ -20,10 +20,10 @@ const items = [
       p.startsWith("/tienda") || p.startsWith("/categoria") || p.startsWith("/producto"),
   },
   {
-    href: "/preocupacion/manchas",
-    label: "Mi piel",
+    href: "/rutina",
+    label: "Mi rutina",
     icon: Sparkles,
-    match: (p: string) => p.startsWith("/preocupacion"),
+    match: (p: string) => p.startsWith("/rutina") || p.startsWith("/preocupacion"),
   },
 ];
 

@@ -40,10 +40,10 @@ export default async function Home() {
             Ver la tienda
           </Link>
           <Link
-            href="#preocupaciones"
+            href="/rutina"
             className="inline-flex min-h-11 items-center rounded-full border border-graphite px-6 text-sm font-medium"
           >
-            Comprar por preocupación
+            Armá tu rutina
           </Link>
         </div>
       </section>

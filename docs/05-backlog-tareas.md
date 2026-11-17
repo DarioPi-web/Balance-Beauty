@@ -67,7 +67,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [x] F3‑16 · `sitemap.xml` (con imágenes) y `robots.txt` (bloquea privadas, permite buscadores e IAs)
 - [x] F3‑17 · Barra de navegación inferior en mobile/app instalada (R‑06 parcial: Inicio, Tienda, Mi piel)
 - [ ] F3‑10 · **P0** · Ficha: bloques Activos clave, Modo de uso AM/PM, Completá tu rutina, CTA sticky mobile, WhatsApp con mensaje prellenado — 1,5d
-- [ ] F3‑11 · **P1** · Quiz "Armá tu rutina" (5 pasos, reglas en tabla) + agregar rutina al carrito — 2d
+- [x] F3‑11 · Quiz "Armá tu rutina" (`/rutina`): 4 pasos (piel, preocupación, simple/completa, presupuesto), reglas explicables en `lib/routine.ts` (7 tests), excluye productos con asesoramiento y sin stock, resultado compartible por URL (validada), total con transferencia y cuotas. **Falta:** "Agregar rutina al carrito" (F4)
 - [ ] F3‑12 · **P0** · Loader de imágenes propio (variantes AVIF/WebP pre‑generadas) — 0,5d
 - [ ] F3‑13 · **P1** · View Transitions listado ↔ ficha con fallback — 0,5d
 - [ ] F3‑14 · **P1** · Facade para embeds de Instagram/YouTube (sin scripts de terceros hasta interacción) — 0,5d

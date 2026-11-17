@@ -7,6 +7,7 @@ import { formatARS } from "@/lib/pricing";
 
 const nav = [
   { href: "/tienda", label: "Tienda" },
+  { href: "/rutina", label: "Armá tu rutina" },
   { href: "/preocupacion/manchas", label: "Manchas" },
   { href: "/preocupacion/acne", label: "Acné" },
   { href: "/preocupacion/antiedad", label: "Antiedad" },

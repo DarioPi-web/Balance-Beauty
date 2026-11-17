@@ -17,7 +17,8 @@
 
 ## Próximos pasos (en orden)
 
-1. Cerrar F3: quiz "Armá tu rutina" (F3‑11), páginas de línea y de activos (S‑03, requieren contenido revisado), regresión visual (R‑08). Hechos: búsqueda, marcas, error.tsx, axe.
+1. Cerrar F3: páginas de línea y de activos (S‑03, requieren contenido revisado por profesional), regresión visual (R‑08), View Transitions (F3‑13). Hechos: búsqueda, marcas, quiz `/rutina`, error.tsx, axe.
+   - Vigilar: JS inicial de la home 192 KB (tope 195 KB en Lighthouse CI).
 2. Gate F3 → preguntar al dueño si deploy a staging (requiere cuentas).
 3. F4 carrito + checkout (requiere decisión de pasarela Q‑01).
 

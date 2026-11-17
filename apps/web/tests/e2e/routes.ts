@@ -2,6 +2,7 @@
 export const PUBLIC_ROUTES = [
   "/",
   "/tienda",
+  "/rutina",
   "/categoria/serums",
   "/preocupacion/manchas",
   "/producto/rosatopis-serum", // con fotos
