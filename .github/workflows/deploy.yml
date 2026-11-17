@@ -1,0 +1,70 @@
+# Deploy MANUAL con aprobación (ADR-010, docs/12).
+# Se dispara solo a mano (Actions → Deploy → Run workflow). Los environments
+# "staging" y "production" deben tener "Required reviewers" = dueño del proyecto.
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Destino"
+        required: true
+        type: choice
+        options: [staging, production]
+      run_migrations:
+        description: "Aplicar migraciones de Supabase"
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target }}
+    timeout-minutes: 30
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm add -g vercel
+
+      - name: Migraciones de Supabase
+        if: ${{ inputs.run_migrations }}
+        uses: supabase/setup-cli@v1
+      - if: ${{ inputs.run_migrations }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase link --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}"
+          supabase db push
+
+      - name: Build y deploy (staging → preview protegida)
+        if: ${{ inputs.target == 'staging' }}
+        working-directory: apps/web
+        run: |
+          vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+          vercel build --token="$VERCEL_TOKEN"
+          url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+          echo "### Staging: $url (commit ${GITHUB_SHA})" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build y deploy (producción)
+        if: ${{ inputs.target == 'production' }}
+        working-directory: apps/web
+        run: |
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          vercel build --prod --token="$VERCEL_TOKEN"
+          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "### Producción: $url (commit ${GITHUB_SHA})" >> "$GITHUB_STEP_SUMMARY"

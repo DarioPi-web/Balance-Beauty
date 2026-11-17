@@ -1,0 +1,35 @@
+# Deploy MANUAL del servicio de integraciones al VPS Contabo (docs/13). Se completa en la fase V.
+name: Deploy VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Stack"
+        required: true
+        type: choice
+        options: [staging, production]
+      image_tag:
+        description: "Tag de imagen en GHCR (por defecto el SHA actual)"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: vps-${{ inputs.target }}
+    timeout-minutes: 15
+    steps:
+      - name: Snapshot previo y actualización vía SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          script: |
+            set -euo pipefail
+            cd /srv/balance-beauty/${{ inputs.target }}
+            export IMAGE_TAG="${{ inputs.image_tag || github.sha }}"
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker compose ps
