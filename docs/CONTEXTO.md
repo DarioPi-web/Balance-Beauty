@@ -22,15 +22,15 @@ E‑commerce de dermocosmética **Balance Beauty** (balancebeauty.com.ar, Argent
 
 ## Infraestructura (identificadores, no secretos)
 
-| Recurso             | Valor                                                                                                         |
-| ------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Repositorio         | https://github.com/DarioPi-web/Balance-Beauty (privado), rama `main`                                          |
-| Supabase staging    | proyecto `tblitemxzgeolktuieph` · región **sa-east-1 (São Paulo)** · https://tblitemxzgeolktuieph.supabase.co |
-| Supabase org        | `keljjwvnsscwqligleil` (plan gratuito)                                                                        |
-| Supabase anterior   | `zrkiuflpimebwuswjihv` (us-west-2) — **en desuso**, reemplazado por el de São Paulo                           |
-| Supabase producción | todavía no existe (se crea al pasar a producción, también en sa-east-1)                                       |
-| Vercel              | proyecto `balance-beauty`, región de funciones `gru1`, root `apps/web` (ver ESTADO.md)                        |
-| VPS                 | Contabo Cloud VPS 20 (6 vCPU, 12 GB RAM, 200 GB SSD, región EU, Linux) — docs/13                              |
+| Recurso             | Valor                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Repositorio         | https://github.com/DarioPi-web/Balance-Beauty (privado), rama `main`                                                                                                                                                                                                                                                                                                  |
+| Supabase staging    | proyecto `tblitemxzgeolktuieph` · región **sa-east-1 (São Paulo)** · https://tblitemxzgeolktuieph.supabase.co                                                                                                                                                                                                                                                         |
+| Supabase org        | `keljjwvnsscwqligleil` (plan gratuito)                                                                                                                                                                                                                                                                                                                                |
+| Supabase anterior   | `zrkiuflpimebwuswjihv` (us-west-2) — **en desuso**, reemplazado por el de São Paulo                                                                                                                                                                                                                                                                                   |
+| Supabase producción | todavía no existe (se crea al pasar a producción, también en sa-east-1)                                                                                                                                                                                                                                                                                               |
+| Vercel              | proyecto `balance-beauty` (`prj_WR7J2CP7LEqoXjH9cd1G6wkJPO5t`), cuenta `team_jbU1xy9jy1t9OU0V5Fvb7wsc` (`dariopi2012-7192`), funciones en `gru1`, Node 22, root `apps/web`, **sin repo Git vinculado** (deploys solo manuales con `.github/workflows/deploy.yml`, ADR‑010). Variables cargadas: Supabase URL/publishable, `CATALOG_SOURCE`, `CART_SECRET` (sensitive) |
+| VPS                 | Contabo Cloud VPS 20 (6 vCPU, 12 GB RAM, 200 GB SSD, región EU, Linux) — docs/13                                                                                                                                                                                                                                                                                      |
 
 ## Dónde viven las credenciales
 

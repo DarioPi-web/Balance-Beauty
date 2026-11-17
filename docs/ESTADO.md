@@ -2,20 +2,20 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-17 · Infraestructura en São Paulo (Supabase staging listo; Vercel en configuración) · F4 pagos en curso
+**Última actualización:** 2026-11-17 · Infraestructura en São Paulo (Supabase staging y proyecto Vercel listos, sin deploys) · F4 pagos en curso
 
 > Contexto general (stack, identificadores, credenciales): [CONTEXTO.md](CONTEXTO.md).
 
 ## Dónde estamos
 
-| Fase                | Estado                                                                                                                                                                                                                                                                                                                                                            |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F0 Descubrimiento   | Plan completo en `docs/`. Preguntas abiertas en `docs/06`                                                                                                                                                                                                                                                                                                         |
-| F1 Fundación        | ✅ código y CI. GitHub `DarioPi-web/Balance-Beauty`. **Supabase staging en sa-east-1** (`tblitemxzgeolktuieph`): 4 migraciones + catálogo (50 productos, 6 marcas, 16 con foto), advisors de seguridad resueltos. Vercel: proyecto en región `gru1` (ver abajo). Docker local no hace falta                                                                       |
-| F2 Diseño           | ✅ Dirección B "Botánica clínica" aplicada (ADR‑017). Pendiente: wireframes/UI completa del resto de pantallas                                                                                                                                                                                                                                                    |
-| F3b WebGL           | ✅ Hero "Equilibrio" (ADR‑018, `docs/perf/webgl-hero.md`)                                                                                                                                                                                                                                                                                                         |
-| F3 Catálogo         | 🟡 Home, `/tienda` (filtros sin hidratar tarjetas), `/categoria/[slug]`, `/preocupacion/[slug]`, `/producto/[slug]` (84 páginas estáticas), sitemap, robots, JSON‑LD, imágenes AVIF pre‑generadas (ADR‑009). Datos desde `lib/catalog/fixture.json` (sin Docker). Perf en `docs/perf/fase-3-catalogo.md` (presupuestos de laboratorio ajustados: avisar al dueño) |
-| F4 Carrito/checkout | 🟡 Carrito completo (cookie firmada ADR‑019, mini‑carrito, `/carrito`, rutina al carrito). Pasarela: **Mercado Pago Checkout Pro** (ADR‑002): preferencia, webhook con firma HMAC y validación del checkout hechos con tests. **Bloqueado:** credenciales TEST de MP y base de datos (Supabase) para pedidos                                                      |
+| Fase                | Estado                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F0 Descubrimiento   | Plan completo en `docs/`. Preguntas abiertas en `docs/06`                                                                                                                                                                                                                                                                                                                     |
+| F1 Fundación        | ✅ código y CI. GitHub `DarioPi-web/Balance-Beauty`. **Supabase staging en sa-east-1** (`tblitemxzgeolktuieph`): 4 migraciones + catálogo (50 productos, 6 marcas, 16 con foto), advisors de seguridad resueltos. Vercel: proyecto `balance-beauty` en `gru1`, Node 22, variables cargadas, sin Git vinculado y **sin deploys** (ver CONTEXTO.md). Docker local no hace falta |
+| F2 Diseño           | ✅ Dirección B "Botánica clínica" aplicada (ADR‑017). Pendiente: wireframes/UI completa del resto de pantallas                                                                                                                                                                                                                                                                |
+| F3b WebGL           | ✅ Hero "Equilibrio" (ADR‑018, `docs/perf/webgl-hero.md`)                                                                                                                                                                                                                                                                                                                     |
+| F3 Catálogo         | 🟡 Home, `/tienda` (filtros sin hidratar tarjetas), `/categoria/[slug]`, `/preocupacion/[slug]`, `/producto/[slug]` (84 páginas estáticas), sitemap, robots, JSON‑LD, imágenes AVIF pre‑generadas (ADR‑009). Datos desde `lib/catalog/fixture.json` (sin Docker). Perf en `docs/perf/fase-3-catalogo.md` (presupuestos de laboratorio ajustados: avisar al dueño)             |
+| F4 Carrito/checkout | 🟡 Carrito completo (cookie firmada ADR‑019, mini‑carrito, `/carrito`, rutina al carrito). Pasarela: **Mercado Pago Checkout Pro** (ADR‑002): preferencia, webhook con firma HMAC y validación del checkout hechos con tests. **Bloqueado:** credenciales TEST de MP y base de datos (Supabase) para pedidos                                                                  |
 
 ## Próximos pasos (en orden)
 
@@ -28,7 +28,7 @@
 
 - Credenciales **de prueba** de Mercado Pago (Public Key + Access Token TEST) y la clave secreta del webhook → van en `apps/web/.env.local` y en Vercel, nunca en el repo.
 - `SUPABASE_SERVICE_ROLE_KEY` del proyecto de São Paulo → cargarla en Vercel (sensitive) y en `.env.local`; la necesitan los pedidos (`place_order`/`confirm_payment`).
-- Aprobar el acceso del conector de Vercel a la cuenta (enlace de un solo uso que genera la sesión).
+- Para deploys con `deploy.yml`: crear un token en Vercel (Account Settings → Tokens) y cargarlo como secreto `VERCEL_TOKEN` en GitHub, junto a `VERCEL_ORG_ID=team_jbU1xy9jy1t9OU0V5Fvb7wsc` y `VERCEL_PROJECT_ID=prj_WR7J2CP7LEqoXjH9cd1G6wkJPO5t`. Opcional: vincular GitHub en Vercel (Account Settings → Login Connections) si se quiere ver el repo desde el panel.
 - Decidir si se borra el proyecto Supabase viejo `zrkiuflpimebwuswjihv` (us-west-2, sin uso).
 
 ## Pendientes técnicos de la base
