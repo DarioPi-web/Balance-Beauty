@@ -6,10 +6,6 @@ import { defineConfig, devices, type Project } from "@playwright/test";
  */
 const PORT = Number(process.env.E2E_PORT ?? 3100);
 
-// Las mediciones de WebGL corren en un proyecto aparte, DESPUÉS del resto, para no
-// competir por CPU con los demás navegadores (en headless el render es por software).
-const WEBGL_SPEC = /webgl\.spec\.ts/;
-
 const deviceProjects: Project[] = [
   // Móviles iOS (WebKit = motor de Safari)
   { name: "iPhone SE", use: { ...devices["iPhone SE"] } },
@@ -40,7 +36,7 @@ const deviceProjects: Project[] = [
         },
       ]
     : []),
-].map((p) => ({ ...p, testIgnore: WEBGL_SPEC }));
+];
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -53,7 +49,8 @@ export default defineConfig({
     trace: "retain-on-failure",
     locale: "es-AR",
     timezoneId: "America/Argentina/Buenos_Aires",
-    // Sin WebGL por defecto: headless lo renderiza por CPU. webgl.spec.ts lo reactiva.
+    // Por defecto "reducir movimiento": sin animaciones ni video de fondo (tests estables).
+    // tests/e2e/video.spec.ts lo desactiva para probar el video del hero.
     contextOptions: { reducedMotion: "reduce" },
   },
   webServer: {
@@ -62,21 +59,5 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },
-  projects: [
-    ...deviceProjects,
-    {
-      name: "WebGL desktop",
-      testMatch: WEBGL_SPEC,
-      use: { ...devices["Desktop Chrome"] },
-      dependencies: deviceProjects.map((p) => p.name!),
-      fullyParallel: false,
-    },
-    {
-      name: "WebGL Android",
-      testMatch: WEBGL_SPEC,
-      use: { ...devices["Pixel 7"] },
-      dependencies: ["WebGL desktop"],
-      fullyParallel: false,
-    },
-  ],
+  projects: deviceProjects,
 });

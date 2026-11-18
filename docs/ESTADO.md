@@ -25,6 +25,12 @@
 3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails 🟡 (F4‑11: pedido recibido, pago aprobado y aviso a la tienda con Resend + React Email; sin `RESEND_API_KEY` se registran en el log y no salen). Anti‑spam ✅ (F4‑13, migración 6): `place_order(p_checkout, p_server_key)` exige `CHECKOUT_SERVER_KEY` (la base guarda solo el hash en `private.server_keys`; rotar = nueva clave en Vercel/.env.local + `update private.server_keys`), máx. 5 pedidos/h por IP (hash con sal) y 3 pendientes por email, honeypot `website` + token de tiempo firmado (2,5 s–2 h). Opcional a futuro: Cloudflare Turnstile (requiere cuenta del dueño).
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 
+## Sesión 2026‑11‑18 (sin verificar del todo)
+
+- Header nuevo (referencia del sitio anterior), páginas Promociones/Contacto/Mayorista/Preguntas frecuentes, video de marca como fondo del hero (reemplaza WebGL), `/admin/integraciones` (migración 8, Vault), servicio `apps/integrations` (Hono + Andreani, 9 tests).
+- Admin: `dariopi2012@gmail.com` con rol admin.
+- **Pendiente:** confirmar la suite E2E completa (la última corrida tenía 45 fallas de 44 px en la barra superior, ya corregidas), Lighthouse de la home con el video, regenerar capturas visuales (`VISUAL=1 … --update-snapshots`), push a GitHub.
+
 ## Pendientes del dueño
 
 - **Cuenta de administrador:** crearla en Supabase → Authentication → Users → Add user → Create new user (email + contraseña propia, "Auto Confirm User") y pasarle el email a Claude, que le asigna el rol `admin` con `update public.profiles set role = 'admin' where id = (select id from auth.users where email = '…')`. Ingresar en `/ingresar`.

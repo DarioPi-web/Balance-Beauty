@@ -1,6 +1,7 @@
 import { checkMercadoPagoWebhook } from "@/lib/payments/mercadopago-core";
 import { isMercadoPagoConfigured, mercadoPago } from "@/lib/payments/mercadopago";
 import { after } from "next/server";
+import { getIntegrationSetting } from "@/lib/settings/integrations";
 import { notifyPaymentApproved } from "@/lib/orders/notifications";
 import { handlePaymentUpdate } from "@/lib/orders/payment-events";
 
@@ -10,8 +11,8 @@ import { handlePaymentUpdate } from "@/lib/orders/payment-events";
  * 4) actualiza el pedido de forma idempotente. Responde rápido: MP reintenta ante errores 5xx.
  */
 export async function POST(request: Request) {
-  const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
-  if (!secret || !isMercadoPagoConfigured()) {
+  const secret = await getIntegrationSetting("mercadopago_webhook_secret");
+  if (!secret || !(await isMercadoPagoConfigured())) {
     return new Response("Pagos no configurados", { status: 503 });
   }
 

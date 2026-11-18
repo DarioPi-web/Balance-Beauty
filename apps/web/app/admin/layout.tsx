@@ -35,6 +35,9 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
           <Link href="/admin/pedidos" className="inline-flex min-h-11 items-center">
             Pedidos
           </Link>
+          <Link href="/admin/integraciones" className="inline-flex min-h-11 items-center">
+            Integraciones
+          </Link>
           <Link href="/" className="inline-flex min-h-11 items-center" prefetch={false}>
             Ver tienda
           </Link>

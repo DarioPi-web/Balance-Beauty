@@ -1,22 +1,31 @@
 import "server-only";
 import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
 import { buildPreferenceBody, mapMercadoPagoStatus } from "./mercadopago-core";
+import { getIntegrationSetting } from "@/lib/settings/integrations";
 import type { CheckoutOrder, PaymentProvider, ProviderPayment } from "./types";
 
-/** Adaptador de Mercado Pago (Checkout Pro) sobre el SDK oficial. Solo servidor. */
-function client() {
-  const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
-  if (!accessToken) throw new Error("MERCADOPAGO_ACCESS_TOKEN no configurado");
+/**
+ * Adaptador de Mercado Pago (Checkout Pro) sobre el SDK oficial. Solo servidor.
+ * Credenciales desde /admin/integraciones (respaldo: variables de entorno).
+ */
+async function client() {
+  const accessToken = await getIntegrationSetting("mercadopago_access_token");
+  if (!accessToken) throw new Error("Mercado Pago: falta el Access Token");
   return new MercadoPagoConfig({ accessToken, options: { timeout: 5000 } });
 }
 
-export const isMercadoPagoConfigured = () =>
-  Boolean(process.env.MERCADOPAGO_ACCESS_TOKEN && process.env.MERCADOPAGO_WEBHOOK_SECRET);
+export async function isMercadoPagoConfigured() {
+  const [token, secret] = await Promise.all([
+    getIntegrationSetting("mercadopago_access_token"),
+    getIntegrationSetting("mercadopago_webhook_secret"),
+  ]);
+  return Boolean(token && secret);
+}
 
 export const mercadoPago: PaymentProvider = {
   async createCheckout(order: CheckoutOrder) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-    const pref = await new Preference(client()).create({
+    const pref = await new Preference(await client()).create({
       body: buildPreferenceBody(order, { siteUrl }),
       requestOptions: { idempotencyKey: `pref-${order.id}` },
     });
@@ -26,7 +35,7 @@ export const mercadoPago: PaymentProvider = {
   },
 
   async getPayment(id: string): Promise<ProviderPayment> {
-    const p = await new Payment(client()).get({ id });
+    const p = await new Payment(await client()).get({ id });
     return {
       providerPaymentId: String(p.id),
       status: mapMercadoPagoStatus(p.status),

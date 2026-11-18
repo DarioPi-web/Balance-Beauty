@@ -5,7 +5,7 @@ import { expect, test } from "@playwright/test";
  * antialiasing): se generan y comparan en la misma máquina con VISUAL=1.
  *   Generar/actualizar:  VISUAL=1 pnpm exec playwright test tests/e2e/visual.spec.ts --update-snapshots
  *   Comparar:            VISUAL=1 pnpm exec playwright test tests/e2e/visual.spec.ts
- * El hero WebGL se enmascara (es animado) y las animaciones CSS se congelan.
+ * El hero (video de fondo) se enmascara y las animaciones CSS se congelan.
  */
 const ROUTES = [
   { name: "home", path: "/" },
@@ -31,7 +31,7 @@ test.describe("regresión visual", () => {
         fullPage: true,
         animations: "disabled",
         caret: "hide",
-        mask: [page.locator("canvas")],
+        mask: [page.locator("video"), page.locator("section").first().locator("picture")],
         maxDiffPixelRatio: 0.01,
       });
     });

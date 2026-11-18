@@ -65,7 +65,7 @@ export async function placeOrder(_prev: CheckoutState, fd: FormData): Promise<Ch
       values,
     };
   }
-  if (parsed.data.paymentMethod === "mercadopago" && !isMercadoPagoConfigured()) {
+  if (parsed.data.paymentMethod === "mercadopago" && !(await isMercadoPagoConfigured())) {
     return {
       error: "El pago con tarjeta todavía no está habilitado. Elegí transferencia bancaria.",
       fieldErrors: { paymentMethod: "Por ahora solo transferencia" },
@@ -161,7 +161,7 @@ export async function retryPayment(fd: FormData): Promise<void> {
   if (!summary || summary.status !== "pending_payment" || summary.payment_method !== "card") {
     redirect(resultUrl(ref));
   }
-  if (!isMercadoPagoConfigured()) redirect(resultUrl(ref, "error-pago"));
+  if (!(await isMercadoPagoConfigured())) redirect(resultUrl(ref, "error-pago"));
 
   let target: string;
   try {

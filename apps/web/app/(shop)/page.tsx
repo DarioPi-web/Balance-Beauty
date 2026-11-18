@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { EquilibriumCanvas } from "@/components/webgl/equilibrium-canvas";
+import { HeroVideo } from "@/components/home/hero-video";
 import { ConcernChips } from "@/components/shop/concern-chips";
 import { ProductCard } from "@/components/shop/product-card";
 import { listCategories, listConcerns, listProducts, sortProducts } from "@/lib/catalog";
@@ -20,28 +20,56 @@ export default async function Home() {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-14 px-4 pt-6 pb-10 sm:px-6 sm:pt-10">
       {/*
-        Hero "Equilibrio": el póster CSS es lo primero que se ve y el fallback;
-        el canvas WebGL aparece encima cuando la página ya cargó (docs/14 §5).
+        Hero con video de marca de fondo: el póster (<picture>, primer cuadro del video) pinta
+        primero y es el LCP; el video se suma después de la carga (components/home/hero-video).
       */}
-      <section className="relative isolate flex min-h-[520px] flex-col overflow-hidden rounded-3xl bg-[radial-gradient(circle_at_58%_74%,#cfe0d5cc_0,transparent_32%),radial-gradient(circle_at_40%_82%,#efcfcacc_0,transparent_28%),linear-gradient(135deg,#eef3ef,#fbfcfa)] px-6 pt-10 pb-60 sm:px-12 md:min-h-[500px] md:justify-center md:bg-[radial-gradient(circle_at_78%_44%,#cfe0d5cc_0,transparent_30%),radial-gradient(circle_at_66%_58%,#efcfcacc_0,transparent_26%),linear-gradient(135deg,#eef3ef,#fbfcfa)] md:py-20">
-        <EquilibriumCanvas className="absolute inset-0 -z-10 h-full w-full" />
-        <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase">Dermocosmética</p>
+      <section className="relative isolate flex min-h-[540px] flex-col justify-end overflow-hidden rounded-3xl bg-graphite px-6 pt-16 pb-10 text-clinical sm:px-12 md:min-h-[560px] md:justify-center md:py-20">
+        <picture>
+          <source
+            type="image/avif"
+            srcSet="/video/hero-poster-768.avif 768w, /video/hero-poster-1280.avif 1280w"
+            sizes="(min-width: 1152px) 1152px, 100vw"
+          />
+          <img
+            src="/video/hero-poster-1280.jpg"
+            alt=""
+            width={1280}
+            height={720}
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 -z-20 h-full w-full object-cover"
+          />
+        </picture>
+        <HeroVideo
+          sources={[
+            { src: "/video/hero-1080.webm", type: "video/webm", media: "(min-width: 768px)" },
+            { src: "/video/hero-720.webm", type: "video/webm" },
+            { src: "/video/hero-1080.mp4", type: "video/mp4", media: "(min-width: 768px)" },
+            { src: "/video/hero-720.mp4", type: "video/mp4" },
+          ]}
+        />
+        {/* Velo para que el texto se lea sobre cualquier cuadro del video (contraste AA). */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-[5] bg-gradient-to-t from-graphite/85 via-graphite/40 to-transparent md:bg-gradient-to-r md:from-graphite/75 md:via-graphite/25 md:to-transparent"
+        />
+        <p className="text-xs tracking-[0.2em] text-clinical/85 uppercase">Dermocosmética</p>
         <h1 className="mt-3 font-display text-[clamp(2.5rem,9vw,4.5rem)] leading-[0.98] font-semibold text-balance md:max-w-[55%]">
           Tu piel, en equilibrio.
         </h1>
-        <p className="mt-5 max-w-xl text-lg text-muted-foreground md:max-w-[50%]">
+        <p className="mt-5 max-w-xl text-lg text-clinical/90 md:max-w-[50%]">
           Elegí por lo que necesita tu piel: manchas, acné, rosácea, hidratación o antiedad.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <Link
             href="/tienda"
-            className="inline-flex min-h-11 items-center rounded-full bg-leaf px-6 text-sm font-medium text-clinical transition-colors hover:bg-leaf-hover"
+            className="inline-flex min-h-11 items-center rounded-full bg-clinical px-6 text-sm font-medium text-graphite transition-colors hover:bg-mist"
           >
             Ver la tienda
           </Link>
           <Link
             href="/rutina"
-            className="inline-flex min-h-11 items-center rounded-full border border-graphite px-6 text-sm font-medium"
+            className="inline-flex min-h-11 items-center rounded-full border border-clinical px-6 text-sm font-medium text-clinical hover:bg-white/10"
           >
             Armá tu rutina
           </Link>

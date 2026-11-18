@@ -6,6 +6,10 @@ export const PUBLIC_ROUTES = [
   "/carrito", // vacío
   "/checkout", // carrito vacío
   "/terminos",
+  "/promociones",
+  "/contacto",
+  "/mayorista",
+  "/preguntas-frecuentes",
 
   "/categoria/serums",
   "/preocupacion/manchas",

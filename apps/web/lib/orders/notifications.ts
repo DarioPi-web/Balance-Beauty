@@ -9,6 +9,7 @@ import type { BankDetails } from "@/emails/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
 import { sendEmail } from "@/lib/email/send";
+import { getIntegrationSetting } from "@/lib/settings/integrations";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { toEmailOrder, type OrderForEmail } from "./email-mapping";
@@ -43,7 +44,7 @@ export async function notifyOrderPlaced(order: OrderForEmail) {
       }),
     );
   }
-  const admins = (process.env.EMAIL_ADMIN_NOTIFICATIONS ?? "")
+  const admins = ((await getIntegrationSetting("email_admin_notifications")) ?? "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);

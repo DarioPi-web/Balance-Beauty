@@ -55,7 +55,7 @@ async function CheckoutFromCookie() {
         subtotal={cart.subtotal}
         rates={rates}
         transferPercent={site.transferDiscountPercent}
-        cardEnabled={isMercadoPagoConfigured()}
+        cardEnabled={await isMercadoPagoConfigured()}
         formToken={createFormToken(serverKey)}
       />
       <aside

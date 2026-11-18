@@ -1282,7 +1282,10 @@ export type Database = {
         }
         Returns: Json
       }
+      admin_integration_status: { Args: never; Returns: Json }
+      admin_set_integration_secret: { Args: { p_name: string; p_value: string }; Returns: Json }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
+      get_integration_secrets: { Args: { p_server_key: string }; Returns: Json }
       get_order_summary: { Args: { p_order_id: string }; Returns: Json }
       is_admin: { Args: never; Returns: boolean }
       place_order: { Args: { p_checkout: Json; p_server_key: string }; Returns: Json }

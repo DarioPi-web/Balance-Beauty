@@ -2,6 +2,7 @@ import "server-only";
 import { render } from "@react-email/components";
 import type { ReactElement } from "react";
 import { Resend } from "resend";
+import { getIntegrationSetting } from "@/lib/settings/integrations";
 
 /**
  * Envío de emails transaccionales con Resend (docs/02, ADR de emails).
@@ -25,7 +26,7 @@ export async function sendEmail(input: {
   const to = Array.isArray(input.to) ? input.to : [input.to];
   const log = { event: "email", tag: input.tag, to: to.map(mask), subject: input.subject };
 
-  const key = process.env.RESEND_API_KEY;
+  const key = await getIntegrationSetting("resend_api_key");
   if (!key) {
     console.info(JSON.stringify({ ...log, sent: false, reason: "sin RESEND_API_KEY" }));
     return { sent: false, reason: "not_configured" };
@@ -39,7 +40,7 @@ export async function sendEmail(input: {
     const resend = new Resend(key);
     const res = await Promise.race([
       resend.emails.send({
-        from: process.env.EMAIL_FROM || DEFAULT_FROM,
+        from: (await getIntegrationSetting("email_from")) || DEFAULT_FROM,
         to,
         subject: input.subject,
         html,
