@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 
 /**
  * Avisos mínimos (reemplaza a sonner: ~9 KB menos de JS inicial, docs/11).
@@ -46,7 +46,7 @@ export function Toaster() {
       {list.map((t) => (
         <p
           key={t.id}
-          className={cn(
+          className={cx(
             "pointer-events-auto rounded-full px-5 py-3 text-sm font-medium shadow-lg",
             t.kind === "success" ? "bg-leaf text-clinical" : "bg-alert text-white",
           )}

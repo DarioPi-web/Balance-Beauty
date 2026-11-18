@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   reactStrictMode: true,
   poweredByHeader: false,
+  // experimental.inlineCss: medido y descartado (2026-11-18). Duplica el CSS 3 veces en el HTML
+  // (style + 2× payload RSC): documento 17 → 75 KB gz, TBT 140 → 346 ms. Ver docs/11.
   turbopack: {
     rules: {
       "*.css": {
@@ -41,6 +43,18 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      // Archivos de /public (sin hash en el nombre): 7 días frescos + 30 de revalidación en
+      // segundo plano. Vercel por defecto revalida en cada visita (max-age=0). Si se reemplaza
+      // un archivo, cambiarle el nombre (p. ej. hero-720-av1-v2.mp4).
+      {
+        source: "/:dir(video|brand|img)/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=2592000",
+          },
+        ],
+      },
       // Staging (previews manuales) nunca se indexa.
       ...(process.env.VERCEL_ENV === "preview"
         ? [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }]

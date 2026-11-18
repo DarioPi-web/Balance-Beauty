@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* Escaneo explícito: solo código (no fixture.json, tests, docs ni Markdown) → CSS más chico. */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+@source "../lib/**/*.{ts,tsx}";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 

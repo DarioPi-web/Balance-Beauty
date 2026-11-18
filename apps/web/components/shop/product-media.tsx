@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import type { ProductImage } from "@/lib/catalog/types";
 import { cn } from "@/lib/utils";
 
@@ -22,15 +22,22 @@ export function ProductMedia({
   className?: string;
 }) {
   if (image) {
+    // getImageProps + <img> nativo: mismo HTML/srcset que <Image> pero sin el componente
+    // cliente de next/image (≈ 9 KB gz menos de JS en cada página del catálogo).
+    const { props } = getImageProps({
+      src: image.src,
+      alt: image.alt,
+      fill: true,
+      sizes,
+      // Next 16: para la imagen LCP, fetchPriority + eager (priority quedó deprecado)
+      ...(priority ? { fetchPriority: "high" as const, loading: "eager" as const } : {}),
+    });
     return (
       <div className={cn("relative overflow-hidden bg-mist", className)}>
-        <Image
-          src={image.src}
+        {/* eslint-disable-next-line @next/next/no-img-element -- props de getImageProps */}
+        <img
+          {...props}
           alt={image.alt}
-          fill
-          sizes={sizes}
-          // Next 16: para la imagen LCP, fetchPriority + eager (priority quedó deprecado)
-          {...(priority ? { fetchPriority: "high" as const, loading: "eager" as const } : {})}
           className={cn(
             "object-cover transition-transform duration-500 ease-out",
             zoom && "origin-[50%_62%] scale-[1.45] group-hover:scale-[1.55]",

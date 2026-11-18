@@ -123,3 +123,27 @@ Los reportes de cada fase se guardan en `docs/perf/fase-N.md` (tabla antes/despu
 - [ ] F4: `place_order` < 300 ms p95; k6 de checkout.
 - [ ] F6: dashboard con vista materializada; listas con keyset.
 - [ ] F8: WebPageTest desde AR, Advisors de Supabase en verde, Spend Management configurado.
+
+## Optimización 2026‑11‑18 (medida, mismo equipo y condiciones)
+
+| Cambio                                                                                                     | Efecto                                                                          |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `ProductMedia` y logo del footer con `getImageProps` + `<img>` (sin el componente cliente de `next/image`) | −9 KB gz de JS en todas las páginas del catálogo, mismo HTML/srcset             |
+| `cx()` (`lib/cx.ts`, solo `clsx`) en los componentes cliente del header, bottom nav y toasts               | tailwind-merge (−8,5 KB gz) sale del JS inicial; queda solo en chunks diferidos |
+| 21 componentes shadcn sin uso eliminados (`components/ui`) + escaneo de Tailwind solo de código            | CSS 18,7 → 12,5 KB gz (−33 %)                                                   |
+| Video del hero en **AV1** primero (`hero-720-av1.mp4` 674 KB, `hero-1080-av1.mp4` 820 KB)                  | −43 % / −54 % vs VP9 con **mejor** SSIM (0,981 / 0,983 vs 0,970 / 0,975)        |
+| `Cache-Control` 7 días + SWR 30 días para `/video`, `/brand`, `/img`                                       | visitas repetidas sin revalidar cada archivo                                    |
+
+Resultado: JS inicial de la home 167 → 153 KB gz; LCP de laboratorio home 3,6 → 3,3–3,4 s,
+fichas 3,57 → 3,3 s, carrito/checkout 1,22 → 0,92 s.
+
+**Descartado:** `experimental.inlineCss`. Next 16 duplica el CSS 3 veces en el HTML (`<style>` +
+2× payload RSC): documento 17 → 75 KB gz, TBT 140 → 346 ms, score 89 → 81.
+
+**Reglas nuevas:**
+
+- Componentes cliente con `cx()` no resuelven conflictos: el que llama define display, tamaño,
+  justify y gap completos (ver `SearchButton`/`CartButton`). Si hace falta que "la última gane", `cn()`.
+- Si se reemplaza un archivo de `/public/video|brand|img`, cambiarle el nombre (cache de 7 días).
+- Lighthouse local depende de la CPU: si `benchmarkIndex` < ~2000 (PC en ahorro de energía o con
+  otros programas), el TBT simulado se duplica; repetir con la PC libre antes de concluir.

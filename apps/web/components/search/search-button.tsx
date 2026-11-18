@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 
 // El diálogo (cmdk + índice) se descarga recién al abrirlo: 0 KB en la carga inicial.
 const SearchDialog = dynamic(() => import("./search-dialog"), { ssr: false });
@@ -49,7 +49,11 @@ export function SearchButton({
           setOpen(true);
         }}
         onPointerEnter={() => setMounted(true)} // precarga el chunk al pasar el mouse
-        className={cn("inline-flex min-h-11 min-w-11 items-center justify-center gap-1", className)}
+        // Sin tailwind-merge: el que llama define display/tamaño/justify/gap completos (sin pisar).
+        className={cx(
+          "items-center",
+          className ?? "inline-flex min-h-11 min-w-11 justify-center gap-1",
+        )}
       >
         <Search className="h-5 w-5" aria-hidden="true" />
         {label ? <span>{label}</span> : null}

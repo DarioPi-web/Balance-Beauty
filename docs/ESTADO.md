@@ -27,6 +27,8 @@
 
 ## Sesión 2026‑11‑18
 
+- ✅ Optimización (tarde): JS inicial home 167 → 153 KB gz, CSS −33 %, video AV1 (−43/−54 %), cache de `/public`, 21 componentes shadcn sin uso eliminados (se recuperan con `shadcn add`). Detalle y lo descartado en docs/11 §Optimización 2026‑11‑18. E2E 575/575, visual 15/15, Lighthouse CI en verde.
+
 - Header nuevo (referencia del sitio anterior), páginas Promociones/Contacto/Mayorista/Preguntas frecuentes, video de marca como fondo del hero (reemplaza WebGL), `/admin/integraciones` (migración 8, Vault), servicio `apps/integrations` (Hono + Andreani, 9 tests).
 - Admin: `dariopi2012@gmail.com` con rol admin.
 - ✅ Verificado: E2E completo 575 ok / 0 fallas (9 dispositivos; el header ya no desborda en 280–320 px: en < 340 px queda solo la hoja del logo y "Mi cuenta" se oculta en < 380 px), Lighthouse CI en verde en las 6 URLs, capturas visuales regeneradas, bundle 272 KB / 280 KB.

@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { toast } from "@/components/ui/toast";
 import { addManyToCart, addToCart } from "@/actions/cart";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 import { cartStore } from "./cart-store";
 
 /** Agrega un producto (o varios: rutina) y abre el mini-carrito con el resultado. */
@@ -40,7 +40,7 @@ export function AddToCartButton({
       onClick={onClick}
       disabled={disabled || pending}
       aria-busy={pending}
-      className={cn(
+      className={cx(
         "inline-flex min-h-12 items-center justify-center rounded-full bg-leaf px-6 text-base font-medium text-clinical transition-colors hover:bg-leaf-hover disabled:cursor-not-allowed disabled:opacity-60",
         className,
       )}

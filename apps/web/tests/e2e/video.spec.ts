@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 // Video de fondo del hero: el póster pinta primero, el video llega después de la carga,
 // corre muteado en bucle con la variante adecuada al ancho, y respeta "reducir movimiento".
 const ONLY = ["iPhone 15 Pro", "Pixel 7", "Desktop Chrome"];
-const VIDEO_RE = /\/video\/hero-\d+\.(mp4|webm)/;
+const VIDEO_RE = /\/video\/hero-\d+(-av1)?\.(mp4|webm)/;
 
 test.describe("video de fondo del hero", () => {
   test.beforeEach(({ browserName }, testInfo) => {
@@ -16,7 +16,10 @@ test.describe("video de fondo del hero", () => {
     );
   });
 
-  test("póster primero, después el video muteado en bucle", async ({ browser }, testInfo) => {
+  test("póster primero, después el video muteado en bucle", async ({
+    browser,
+    browserName,
+  }, testInfo) => {
     const context = await browser.newContext({
       ...testInfo.project.use,
       reducedMotion: "no-preference",
@@ -35,6 +38,8 @@ test.describe("video de fondo del hero", () => {
     await expect.poll(() => videoRequests.length, { timeout: 15_000 }).toBeGreaterThan(0);
     const width = page.viewportSize()!.width;
     expect(videoRequests[0]).toContain(width >= 768 ? "hero-1080" : "hero-720");
+    // Chromium decodifica AV1: tiene que elegir la variante liviana, no VP9/H.264.
+    if (browserName === "chromium") expect(videoRequests[0]).toContain("-av1");
 
     const video = hero.locator("video");
     await expect

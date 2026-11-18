@@ -27,6 +27,13 @@ test.describe("regresión visual", () => {
       await page.goto(r.path);
       await page.waitForLoadState("networkidle");
       await page.evaluate(() => document.fonts.ready);
+      // Las fotos con loading="lazy" fuera de pantalla se piden durante la captura de página
+      // completa y la vuelven inestable: se fuerzan a cargar y se espera que decodifiquen.
+      await page.evaluate(async () => {
+        const imgs = [...document.images];
+        imgs.forEach((img) => (img.loading = "eager"));
+        await Promise.all(imgs.map((img) => img.decode().catch(() => {})));
+      });
       await expect(page).toHaveScreenshot(`${r.name}.png`, {
         fullPage: true,
         animations: "disabled",

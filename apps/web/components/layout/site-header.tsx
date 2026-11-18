@@ -111,11 +111,11 @@ export async function SiteHeader() {
         <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-2 sm:gap-3 sm:px-6 md:py-3">
           <div className="flex items-center">
             {/* Mobile: lupa. Desktop: buscador en forma de pastilla (abre el mismo diálogo). */}
-            <SearchButton className="rounded-full text-clinical hover:bg-white/10 md:hidden" />
+            <SearchButton className="inline-flex min-h-11 min-w-11 justify-center gap-1 rounded-full text-clinical hover:bg-white/10 md:hidden" />
             <SearchButton
               shortcut
               label="Buscar productos"
-              className="hidden w-60 justify-start gap-3 rounded-full bg-clinical px-5 text-base text-graphite/70 shadow-sm hover:text-graphite md:inline-flex"
+              className="hidden min-h-11 w-60 justify-start gap-3 rounded-full bg-clinical px-5 text-base text-graphite/70 shadow-sm hover:text-graphite md:inline-flex"
             />
           </div>
 
@@ -128,7 +128,7 @@ export async function SiteHeader() {
           </Link>
 
           <div className="flex items-center justify-end gap-1 sm:gap-2 md:gap-3">
-            <CartButton className="rounded-full text-clinical hover:bg-white/10 md:h-12 md:w-12 md:border md:border-clinical/80" />
+            <CartButton className="inline-flex min-h-11 min-w-11 justify-center gap-1 rounded-full text-clinical hover:bg-white/10 md:h-12 md:w-12 md:border md:border-clinical/80" />
             <Link
               href="/ingresar"
               prefetch={false}

@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { ShoppingBag } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 import { cartStore, useCartCount, useCartState } from "./cart-store";
 
 // Un único mini-carrito para toda la página; se descarga recién al primer uso.
@@ -26,9 +26,10 @@ export function CartButton({ className, label }: { className?: string; label?: s
         count ? `Carrito: ${count} ${count === 1 ? "producto" : "productos"}` : "Carrito vacío"
       }
       aria-haspopup="dialog"
-      className={cn(
-        "relative inline-flex min-h-11 min-w-11 items-center justify-center gap-1",
-        className,
+      // Sin tailwind-merge: el que llama define display/tamaño/justify/gap completos (sin pisar).
+      className={cx(
+        "relative items-center",
+        className ?? "inline-flex min-h-11 min-w-11 justify-center gap-1",
       )}
     >
       <span className="relative inline-flex">

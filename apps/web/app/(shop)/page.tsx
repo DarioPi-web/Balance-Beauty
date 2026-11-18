@@ -41,7 +41,15 @@ export default async function Home() {
           />
         </picture>
         <HeroVideo
+          // AV1 primero (≈ 45–55 % más liviano que VP9 con mejor SSIM); el `codecs` hace que
+          // los navegadores sin AV1 lo salteen sin descargarlo. Luego VP9 y H.264 (Safari viejo).
           sources={[
+            {
+              src: "/video/hero-1080-av1.mp4",
+              type: 'video/mp4; codecs="av01.0.08M.08"',
+              media: "(min-width: 768px)",
+            },
+            { src: "/video/hero-720-av1.mp4", type: 'video/mp4; codecs="av01.0.05M.08"' },
             { src: "/video/hero-1080.webm", type: "video/webm", media: "(min-width: 768px)" },
             { src: "/video/hero-720.webm", type: "video/webm" },
             { src: "/video/hero-1080.mp4", type: "video/mp4", media: "(min-width: 768px)" },

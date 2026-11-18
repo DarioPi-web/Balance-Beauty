@@ -1,7 +1,14 @@
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import Link from "next/link";
 import { listBrands, listCategories, listConcerns } from "@/lib/catalog";
 import { site } from "@/lib/site";
+
+const { props: logo } = getImageProps({
+  src: "/brand/logo-crema.webp",
+  alt: "Balance",
+  width: 72,
+  height: 53,
+});
 
 export async function SiteFooter() {
   const [categories, concerns, brands] = await Promise.all([
@@ -13,13 +20,8 @@ export async function SiteFooter() {
     <footer className="mt-16 bg-leaf pb-20 text-clinical md:pb-0">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-5">
         <div>
-          <Image
-            src="/brand/logo-crema.webp"
-            alt="Balance"
-            width={72}
-            height={53}
-            className="h-12 w-auto"
-          />
+          {/* eslint-disable-next-line @next/next/no-img-element -- props de getImageProps, sin JS cliente */}
+          <img {...logo} alt="Balance" className="h-12 w-auto" />
           <p className="mt-4 max-w-xs text-sm text-clinical/80">
             Dermocosmética para cada necesidad de tu piel. Envíos a todo el país.
           </p>

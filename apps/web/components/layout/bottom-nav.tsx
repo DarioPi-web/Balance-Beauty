@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LayoutGrid, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 import { SearchButton } from "@/components/search/search-button";
 import { CartButton } from "@/components/cart/cart-button";
 
@@ -43,7 +43,7 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={cn(
+                className={cx(
                   "flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs",
                   active ? "font-semibold text-leaf" : "text-muted-foreground",
                 )}
@@ -57,13 +57,13 @@ export function BottomNav() {
         <li>
           <SearchButton
             label="Buscar"
-            className="min-h-14 w-full flex-col gap-0.5 text-xs text-muted-foreground"
+            className="inline-flex min-h-14 w-full flex-col justify-center gap-0.5 text-xs text-muted-foreground"
           />
         </li>
         <li>
           <CartButton
             label="Carrito"
-            className="min-h-14 w-full flex-col gap-0.5 text-xs text-muted-foreground"
+            className="inline-flex min-h-14 w-full flex-col justify-center gap-0.5 text-xs text-muted-foreground"
           />
         </li>
       </ul>
