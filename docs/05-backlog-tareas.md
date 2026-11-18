@@ -59,17 +59,17 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [x] F3‑04 · `/tienda` (filtros por preocupación/categoría y orden en el cliente, estado en URL, grilla completa en el HTML) y `/categoria/[slug]` estáticas con metadata y JSON‑LD ItemList/Breadcrumb
 - [x] F3‑05 · `/producto/[slug]` (50 páginas estáticas): galería scroll‑snap, stock, CTA fija en mobile (carrito en F4), "requiere asesoramiento" para magistrales, relacionados, JSON‑LD Product/Breadcrumb
 - [x] F3‑06 · Búsqueda instantánea en el cliente (`lib/search.ts`: acentos, sinónimos del rubro, prefijos, AND) + índice estático `/api/search-index` + diálogo cmdk cargado al tocar la lupa (header, barra inferior, atajos `/` y Ctrl+K). La RPC `search_products` queda para > 500 productos
-- [ ] F3‑07 · **P1** · Caché por tags + endpoint/acción de revalidación — 0,5d
+- [x] F3‑07 · **P1** · Caché por tags + endpoint/acción de revalidación — 0,5d · `POST /api/revalidate` (Bearer `REVALIDATE_SECRET`, tags `catalog`/`shipping`)
 - [x] F3‑08 · Estado vacío de filtros, 404 con noindex y `error.tsx` con reintento
 - [ ] F3‑09 · **P0** · `/preocupacion/[slug]` ✅ (9) y `/marca/[slug]` ✅ (6 marcas derivadas del catálogo, enlazadas desde ficha, footer y sitemap). **Falta:** `/linea/[slug]` (ACNEPLUR, ROSATOPIC…) y confirmar marcas (Q‑25)
 - [x] F3‑18 · Imágenes para compartir: JPEG 1000 px (`-share.jpg`) para Open Graph, JSON‑LD y sitemap (antes apuntaban a rutas internas inexistentes)
 - [x] F3‑15 · Capa de datos `lib/catalog` con fuente fixture (sin Docker) y Supabase (`CATALOG_SOURCE=supabase`), caché `"use cache"` + tag `catalog`; fotos nuevas identificadas para 16 productos
 - [x] F3‑16 · `sitemap.xml` (con imágenes) y `robots.txt` (bloquea privadas, permite buscadores e IAs)
 - [x] F3‑17 · Barra de navegación inferior en mobile/app instalada (R‑06 parcial: Inicio, Tienda, Mi piel)
-- [ ] F3‑10 · **P0** · Ficha: bloques Activos clave, Modo de uso AM/PM, Completá tu rutina, CTA sticky mobile, WhatsApp con mensaje prellenado — 1,5d
+- [ ] F3‑10 · **P0** · Ficha: bloques Activos clave, Modo de uso AM/PM, Completá tu rutina, CTA sticky mobile, WhatsApp con mensaje prellenado — 1,5d · 🟡 hechos: Completá tu rutina y CTA sticky mobile. Faltan activos y modo de uso (requieren contenido revisado) y WhatsApp (número de la tienda)
 - [x] F3‑11 · Quiz "Armá tu rutina" (`/rutina`): 4 pasos (piel, preocupación, simple/completa, presupuesto), reglas explicables en `lib/routine.ts` (7 tests), excluye productos con asesoramiento y sin stock, resultado compartible por URL (validada), total con transferencia y cuotas. **Falta:** "Agregar rutina al carrito" (F4)
 - [ ] F3‑12 · **P0** · Loader de imágenes propio (variantes AVIF/WebP pre‑generadas) — 0,5d
-- [ ] F3‑13 · **P1** · View Transitions listado ↔ ficha con fallback — 0,5d
+- [x] F3‑13 · **P1** · View Transitions listado ↔ ficha con fallback — 0,5d · `<ViewTransition>` tarjeta ↔ foto de ficha + precarga por intención (`IntentPrefetch`); sin animación con reduced motion o navegadores sin soporte
 - [ ] F3‑14 · **P1** · Facade para embeds de Instagram/YouTube (sin scripts de terceros hasta interacción) — 0,5d
 
 ## F3b — WebGL y motion
@@ -194,7 +194,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] R‑05 · **P0** · Reemplazar íconos provisorios (monograma) por el logo vectorial (Q‑12) — F2
 - [ ] R‑06 · **P0** · Bottom navigation mobile/standalone (Inicio · Tienda · Buscar · Carrito · Cuenta) y botón "atrás" en modo app — F3
 - [ ] R‑07 · **P0** · Container queries en ProductCard/PriceBlock/filtros; tipografía fluida con `clamp()` — F3
-- [ ] R‑08 · **P1** · Regresión visual (`toHaveScreenshot`) por dispositivo, activada con el diseño aprobado — F3
+- [x] R‑08 · **P1** · Regresión visual (`toHaveScreenshot`) por dispositivo, activada con el diseño aprobado — F3 · `tests/e2e/visual.spec.ts` (5 rutas × 3 dispositivos, `VISUAL=1`; capturas de Windows, en CI se omite hasta tener las de Linux)
 - [x] R‑09 · axe (WCAG 2.2 AA) en 7 rutas, mobile y desktop: 0 violaciones (corregida la galería no enfocable)
 - [ ] R‑10 · **P1** · Prompt de instalación propio (Android `beforeinstallprompt`, guía iOS) tras 2.ª visita/compra + eventos de analytics — F7
 - [ ] R‑11 · **P1** · Service worker mínimo: offline page, assets inmutables, sin cachear HTML con precios — F7

@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -5,7 +6,7 @@ import { CreditCard, Landmark, Truck } from "lucide-react";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Breadcrumbs } from "@/components/shop/breadcrumbs";
 import { PriceBlock } from "@/components/shop/price-block";
-import { ProductCard } from "@/components/shop/product-card";
+import { ProductCard, productTransitionName } from "@/components/shop/product-card";
 import { ProductMedia } from "@/components/shop/product-media";
 import {
   brandSlug,
@@ -89,14 +90,30 @@ export default async function ProductoPage({ params }: PageProps<"/producto/[slu
                     id={`foto-${i + 1}`}
                     className="w-[88%] shrink-0 snap-center sm:w-full"
                   >
-                    <ProductMedia
-                      image={img}
-                      name={product.name}
-                      brand={product.brand}
-                      priority={i === 0}
-                      sizes="(min-width: 768px) 560px, 88vw"
-                      className="aspect-square rounded-2xl"
-                    />
+                    {i === 0 ? (
+                      <ViewTransition
+                        name={productTransitionName(product.slug)}
+                        share="morph"
+                        default="none"
+                      >
+                        <ProductMedia
+                          image={img}
+                          name={product.name}
+                          brand={product.brand}
+                          priority
+                          sizes="(min-width: 768px) 560px, 88vw"
+                          className="aspect-square rounded-2xl"
+                        />
+                      </ViewTransition>
+                    ) : (
+                      <ProductMedia
+                        image={img}
+                        name={product.name}
+                        brand={product.brand}
+                        sizes="(min-width: 768px) 560px, 88vw"
+                        className="aspect-square rounded-2xl"
+                      />
+                    )}
                   </li>
                 ))}
               </ul>
@@ -123,12 +140,14 @@ export default async function ProductoPage({ params }: PageProps<"/producto/[slu
               ) : null}
             </>
           ) : (
-            <ProductMedia
-              name={product.name}
-              brand={product.brand}
-              sizes="560px"
-              className="aspect-square rounded-2xl"
-            />
+            <ViewTransition name={productTransitionName(product.slug)} share="morph" default="none">
+              <ProductMedia
+                name={product.name}
+                brand={product.brand}
+                sizes="560px"
+                className="aspect-square rounded-2xl"
+              />
+            </ViewTransition>
           )}
         </section>
 

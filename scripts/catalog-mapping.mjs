@@ -7,7 +7,24 @@ export const PHOTOS = {
   114: ["BB-006"], // EXEL pantalla SPF 60
   125: ["BB-008"], // Vitamina C
   134: ["BB-011"], // Spray Mist
-  143: ["BB-012", "BB-012_2", "BB-012_3", "BB-012_4"], // Jabón íntimo prebiótico
+  143: ["BB-012", "BB-012_2", "BB-012_3", "BB-012_4", "BB-014"], // Jabón íntimo prebiótico (+ línea íntima)
+  // Identificadas el 2026-11-17 leyendo las etiquetas de las fotos del backup:
+  106: ["BB-025", "BB-025_2", "BB-025_3", "BB-025_4", "BB-025_5"], // Scrub físico + químico 5 % glicólico
+  107: ["BB-024", "BB-024_2", "BB-024_3", "BB-024_4"], // Crema hidratante corporal supreme
+  108: ["BB-030", "BB-030_2", "BB-030_3", "BB-030_4"], // Anticelulitis
+  109: ["BB-033", "BB-033_2"], // Hydra Filler Light
+  110: ["BB-034", "BB-034_2"], // Hydra Filler Intense
+  111: ["BB-023", "BB-023_2", "BB-023_3"], // Hydra Age (La edad de oro)
+  112: ["BB-015"], // Protector solar FPS 50+ con color
+  113: ["BB-016", "BB-016_2"], // Protector solar FPS 50+ (sin color)
+  116: ["BB-026"], // Clear Complexion
+  117: ["BB-018", "BB-018_2"], // Ultra Defense ácido glicólico 10 %
+  121: ["BB-027", "BB-027_2"], // Lips Glow
+  123: ["BB-022", "BB-022_2", "BB-022_3"], // Oil Serum Age+ (La edad de oro)
+  124: ["BB-019", "BB-019_2", "BB-019_3"], // Serum Xpression
+  135: ["BB-038"], // Solución de metformina
+  137: ["BB-063", "BB-063_2"], // Cleanser ácido mandélico
+  138: ["BB-064"], // Cleanser anticomedones salicílico 2 %
   136: ["BB-031", "BB-031_2", "BB-031_3", "BB-031_4", "BB-031_5"], // ROSATOPIC Biosensitive
   128: ["BB-032", "BB-032_2", "BB-032_3", "BB-032_4", "BB-032_5"], // ROSATOPIC Serum
   133: ["BB-035", "BB-035_2", "BB-035_3", "BB-035_4", "BB-035_5"], // ACNEPLUR Hydra
@@ -43,6 +60,20 @@ export const BRANDS = {
   142: "Sulderm",
   104: "Sulderm",
   105: "Sulderm",
+  // Marca visible en la etiqueta de la foto (2026-11-17):
+  106: "Sulderm",
+  107: "Sulderm",
+  108: "Sulderm",
+  109: "Sulderm",
+  110: "Sulderm",
+  111: "Sulderm",
+  112: "Sulderm",
+  113: "Sulderm",
+  116: "Sulderm",
+  117: "Sulderm",
+  121: "Sulderm",
+  123: "Sulderm",
+  124: "Sulderm",
 };
 
 // Reglas por nombre → categoría y preocupaciones. Orden: de lo específico (líneas) a lo genérico;

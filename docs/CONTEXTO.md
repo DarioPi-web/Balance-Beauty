@@ -55,7 +55,7 @@ E‑commerce de dermocosmética **Balance Beauty** (balancebeauty.com.ar, Argent
 ## Base de datos
 
 - Migraciones: `supabase/migrations/` (esquema, funciones, RLS, endurecimiento). Aplicadas en staging vía MCP de Supabase.
-- Catálogo: `apps/web/lib/catalog/fixture.json` es la versión depurada (50 productos, 6 marcas, 16 con foto). `node scripts/generate-catalog-sync-sql.mjs` genera `supabase/staging-sync-catalogo.sql` (idempotente) para volcarla a Supabase.
+- Catálogo: `apps/web/lib/catalog/fixture.json` es la versión depurada (50 productos, 6 marcas, 32 con foto). `node scripts/generate-catalog-sync-sql.mjs` genera `supabase/staging-sync-catalogo.sql` (idempotente) para volcarla a Supabase.
 - Fotos: no están en Supabase Storage; `product_images.storage_path` guarda `/products/...` y el sitio sirve variantes AVIF desde `apps/web/public/img/products` (ADR‑009).
 - Con IA + MCP de Supabase: `apply_migration` para DDL, `execute_sql` para datos, `get_advisors` después de cada cambio. **Solo staging**; producción nunca sin aprobación.
 

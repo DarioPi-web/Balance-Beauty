@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
 import type { Product } from "@/lib/catalog/types";
 import { PriceBlock } from "./price-block";
@@ -7,6 +8,9 @@ export type ProductCardData = Pick<
   Product,
   "slug" | "name" | "brand" | "price" | "compareAtPrice" | "inStock" | "images" | "concerns"
 >;
+
+/** Nombre compartido tarjeta ↔ ficha para la transición de imagen (F3-13). */
+export const productTransitionName = (slug: string) => `product-${slug}`;
 
 /** Tarjeta de producto. Pura (sin hooks): sirve en Server y Client Components. */
 export function ProductCard({
@@ -25,15 +29,18 @@ export function ProductCard({
   const Heading = headingLevel;
   return (
     <article className="group @container relative flex flex-col overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-[0_8px_30px_-12px_rgb(20_35_28/0.25)]">
-      <ProductMedia
-        image={product.images[0]}
-        name={product.name}
-        brand={product.brand}
-        priority={priority}
-        zoom
-        sizes="(min-width: 1280px) 400px, (min-width: 768px) 45vw, 75vw"
-        className="aspect-square"
-      />
+      {/* Misma "identidad" que la foto principal de la ficha: el navegador anima entre ambas. */}
+      <ViewTransition name={productTransitionName(product.slug)} share="morph" default="none">
+        <ProductMedia
+          image={product.images[0]}
+          name={product.name}
+          brand={product.brand}
+          priority={priority}
+          zoom
+          sizes="(min-width: 1280px) 400px, (min-width: 768px) 45vw, 75vw"
+          className="aspect-square"
+        />
+      </ViewTransition>
       <div className="flex flex-1 flex-col gap-1 p-3 @[220px]:p-4">
         <p className="truncate text-[11px] tracking-[0.12em] text-muted-foreground uppercase">
           {[product.brand, concern].filter(Boolean).join(" · ") || "Balance"}
@@ -42,7 +49,8 @@ export function ProductCard({
           {/* Link "estirado": su ::after cubre toda la tarjeta, que es el área táctil real */}
           <Link
             href={`/producto/${product.slug}`}
-            prefetch={false} // precarga al pasar el mouse/tocar: no compite con el LCP de grillas largas
+            prefetch={false} // sin precarga por viewport (grillas largas); la hace IntentPrefetch
+            data-prefetch-intent
             data-stretched-link
             className="after:absolute after:inset-0 focus-visible:outline-none"
           >

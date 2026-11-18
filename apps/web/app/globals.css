@@ -86,7 +86,26 @@
   }
 }
 
+/* View Transitions tarjeta ↔ ficha (F3-13): morph corto con un leve blur que oculta el reescalado. */
+::view-transition-group(.morph) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: bb-morph-blur;
+}
+@keyframes bb-morph-blur {
+  35% {
+    filter: blur(2px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
   *,
   *::before,
   *::after {

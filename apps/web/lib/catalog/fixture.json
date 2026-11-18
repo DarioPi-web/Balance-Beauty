@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17",
+  "generatedAt": "2026-11-18",
   "categories": [
     {
       "slug": "limpieza",
@@ -184,7 +184,7 @@
       "sku": "106",
       "slug": "scrumb-fisicoquimico",
       "name": "Scrub facial y corporal 5% ac glicólico",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": null,
       "description": "La exfoliación combina acción física y química para eliminar células muertas, desobstruir poros y eliminar impurezas acumuladas, renovando la superficie de la piel. Este paso es indispensable para mejorar la textura, estimular la regeneración celular y devolver luminosidad. Además, favorece la absorción de los activos aplicados posteriormente. Uso semanal.\n\nExfoliar es renovar: el paso clave para una piel más suave, uniforme y luminosa.",
       "price": 29500,
@@ -193,7 +193,28 @@
       "inStock": true,
       "categories": ["limpieza"],
       "concerns": ["manchas", "corporal"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/scrumb-fisicoquimico/BB-025.webp",
+          "alt": "Scrub facial y corporal 5% ac glicólico Sulderm"
+        },
+        {
+          "src": "/products/scrumb-fisicoquimico/BB-025_2.webp",
+          "alt": "Scrub facial y corporal 5% ac glicólico — foto 2"
+        },
+        {
+          "src": "/products/scrumb-fisicoquimico/BB-025_3.webp",
+          "alt": "Scrub facial y corporal 5% ac glicólico — foto 3"
+        },
+        {
+          "src": "/products/scrumb-fisicoquimico/BB-025_4.webp",
+          "alt": "Scrub facial y corporal 5% ac glicólico — foto 4"
+        },
+        {
+          "src": "/products/scrumb-fisicoquimico/BB-025_5.webp",
+          "alt": "Scrub facial y corporal 5% ac glicólico — foto 5"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -201,7 +222,7 @@
       "sku": "107",
       "slug": "crema-corporal",
       "name": "Crema hidratante corporal supreme Urea",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "Una fórmula súper hidratante, de rápida absorción que no deja efecto graso, para una piel suave, hidratada y radiante durante todo el día.",
       "description": "Una fórmula súper hidratante, de rápida absorción que no deja efecto graso, para una piel suave, hidratada y radiante durante todo el día. Un blend de activos hidratantes y nutritivos, rico en omegas, micronutrientes esenciales y aminoácidos. Urea + karité Hydra Nutriskin® Rosa de Jericó",
       "price": 48000,
@@ -210,7 +231,24 @@
       "inStock": true,
       "categories": ["corporal"],
       "concerns": ["corporal", "hidratacion"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/crema-corporal/BB-024.webp",
+          "alt": "Crema hidratante corporal supreme Urea Sulderm"
+        },
+        {
+          "src": "/products/crema-corporal/BB-024_2.webp",
+          "alt": "Crema hidratante corporal supreme Urea — foto 2"
+        },
+        {
+          "src": "/products/crema-corporal/BB-024_3.webp",
+          "alt": "Crema hidratante corporal supreme Urea — foto 3"
+        },
+        {
+          "src": "/products/crema-corporal/BB-024_4.webp",
+          "alt": "Crema hidratante corporal supreme Urea — foto 4"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -218,7 +256,7 @@
       "sku": "108",
       "slug": "crema-corporal-celulitis",
       "name": "Anticelulitis",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": null,
       "description": "Crema corporal reductora de la celulitis con una doble eficacia: Ayuda a mejorar visiblemente la apariencia de la piel de naranja mientras ayuda a disminuir la retención de líquidos mejorando la microcirculación.",
       "price": 48000,
@@ -227,7 +265,24 @@
       "inStock": true,
       "categories": ["corporal"],
       "concerns": ["corporal"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/crema-corporal-celulitis/BB-030.webp",
+          "alt": "Anticelulitis Sulderm"
+        },
+        {
+          "src": "/products/crema-corporal-celulitis/BB-030_2.webp",
+          "alt": "Anticelulitis — foto 2"
+        },
+        {
+          "src": "/products/crema-corporal-celulitis/BB-030_3.webp",
+          "alt": "Anticelulitis — foto 3"
+        },
+        {
+          "src": "/products/crema-corporal-celulitis/BB-030_4.webp",
+          "alt": "Anticelulitis — foto 4"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -235,7 +290,7 @@
       "sku": "109",
       "slug": "hydra-filler-light",
       "name": "Hydra Filler Light",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "La hidratación facial es fundamental para mantener el equilibrio y la salud de la piel.",
       "description": "La hidratación facial es fundamental para mantener el equilibrio y la salud de la piel. Hydra Filler Light está formulado con una textura liviana, ideal para pieles mixtas a grasas o para quienes buscan una hidratación sin sensación pesada. Su combinación de activos ayuda a restaurar la barrera cutánea, aportando frescura, suavidad y luminosidad, mientras mantiene la piel protegida durante el día.",
       "price": 29600,
@@ -244,7 +299,16 @@
       "inStock": true,
       "categories": ["hidratacion"],
       "concerns": ["hidratacion", "antiedad"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/hydra-filler-light/BB-033.webp",
+          "alt": "Hydra Filler Light Sulderm"
+        },
+        {
+          "src": "/products/hydra-filler-light/BB-033_2.webp",
+          "alt": "Hydra Filler Light — foto 2"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -252,7 +316,7 @@
       "sku": "110",
       "slug": "hydra-filler-intense",
       "name": "Hydra Filler Intense",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "La hidratación profunda es clave para devolverle a la piel su vitalidad y elasticidad.",
       "description": "La hidratación profunda es clave para devolverle a la piel su vitalidad y elasticidad. Hydra Filler Intense presenta una textura más rica y nutritiva, ideal para pieles secas o deshidratadas que requieren un mayor aporte de hidratación. Su fórmula concentrada ayuda a reparar la barrera protectora, mejorar la tersura y aportar luminosidad, dejando la piel visiblemente más saludable y confortable. Ideal para uso diario.",
       "price": 29600,
@@ -261,7 +325,16 @@
       "inStock": true,
       "categories": ["hidratacion"],
       "concerns": ["hidratacion", "antiedad"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/hydra-filler-intense/BB-034.webp",
+          "alt": "Hydra Filler Intense Sulderm"
+        },
+        {
+          "src": "/products/hydra-filler-intense/BB-034_2.webp",
+          "alt": "Hydra Filler Intense — foto 2"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -269,7 +342,7 @@
       "sku": "111",
       "slug": "hydra-age-oro-edad",
       "name": "Hydra edad de oro",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "Este tratamiento hidratante está diseñado para cubrir las necesidades de las pieles más maduras, brindando una hidratación profunda y sostenida.",
       "description": "Este tratamiento hidratante está diseñado para cubrir las necesidades de las pieles más maduras, brindando una hidratación profunda y sostenida. Su fórmula con activos de alto poder nutritivo ayuda a reforzar la barrera protectora de la piel, mejorar la tersura y devolver luminosidad. Ideal para acompañar los procesos naturales de la piel con el paso del tiempo, aportando firmeza, confort y un aspecto más saludable.rnrn",
       "price": 32700,
@@ -278,7 +351,20 @@
       "inStock": true,
       "categories": ["hidratacion"],
       "concerns": ["hidratacion", "antiedad"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/hydra-age-oro-edad/BB-023.webp",
+          "alt": "Hydra edad de oro Sulderm"
+        },
+        {
+          "src": "/products/hydra-age-oro-edad/BB-023_2.webp",
+          "alt": "Hydra edad de oro — foto 2"
+        },
+        {
+          "src": "/products/hydra-age-oro-edad/BB-023_3.webp",
+          "alt": "Hydra edad de oro — foto 3"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -286,7 +372,7 @@
       "sku": "112",
       "slug": "protector-solar-con-color",
       "name": "Protector Solar con Color",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "Además de brindar alta protección solar, esta emulsión facial con color ayuda a unificar el tono de la piel, disimulando imperfecciones de forma natural.",
       "description": "Además de brindar alta protección solar, esta emulsión facial con color ayuda a unificar el tono de la piel, disimulando imperfecciones de forma natural. Su textura de toque seco permite un acabado mate y liviano, ideal para el uso diario. Protege frente a los rayos UVA/UVB y la luz azul, aportando un efecto saludable y uniforme en la piel.",
       "price": 35500,
@@ -295,7 +381,12 @@
       "inStock": false,
       "categories": ["proteccion-solar"],
       "concerns": ["proteccion-solar", "manchas"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/protector-solar-con-color/BB-015.webp",
+          "alt": "Protector Solar con Color Sulderm"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -303,7 +394,7 @@
       "sku": "113",
       "slug": "protector-solar-sin-color",
       "name": "Protector Solar sin Color",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "Esta emulsión facial está diseñada para proteger la piel del rostro de la exposición diaria al sol.",
       "description": "Esta emulsión facial está diseñada para proteger la piel del rostro de la exposición diaria al sol. Su fórmula liviana actúa contra los rayos UVA/UVB y la luz azul, previniendo el envejecimiento prematuro y la aparición de manchas. Aporta hidratación sin dejar residuos grasos, logrando un acabado confortable y de rápida absorción.",
       "price": 35500,
@@ -312,7 +403,16 @@
       "inStock": false,
       "categories": ["proteccion-solar"],
       "concerns": ["proteccion-solar", "manchas"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/protector-solar-sin-color/BB-016.webp",
+          "alt": "Protector Solar sin Color Sulderm"
+        },
+        {
+          "src": "/products/protector-solar-sin-color/BB-016_2.webp",
+          "alt": "Protector Solar sin Color — foto 2"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -359,7 +459,7 @@
       "sku": "116",
       "slug": "despigment-clear-complex",
       "name": "Clear complexión despigmentante",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "Clear Complexion, innovador y poderoso complejo despigmentante que permite unificar el color de la piel logrando el aspecto deseado.",
       "description": "Clear Complexion, innovador y poderoso complejo despigmentante que permite unificar el color de la piel logrando el aspecto deseado. Su formulación sinérgica aporta luminosidad, brillo y tersura a la piel del rostro, cuello, escote y manos.",
       "price": 48000,
@@ -368,7 +468,12 @@
       "inStock": true,
       "categories": ["despigmentantes"],
       "concerns": ["manchas"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/despigment-clear-complex/BB-026.webp",
+          "alt": "Clear complexión despigmentante Sulderm"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -376,7 +481,7 @@
       "sku": "117",
       "slug": "ultra-defense-acido-glicolico-10",
       "name": "Ac glicolico 10% (ULTRA DEFENSE)",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": null,
       "description": "Pensada para combatir el envejecimiento cutáneo, favoreciendo la renovación celular, fortaleciendo la barrera cutánea y devolviendo su elasticidad y flexibilidad. Ideal uso nocturno.",
       "price": 38000,
@@ -385,7 +490,16 @@
       "inStock": true,
       "categories": ["limpieza"],
       "concerns": ["manchas"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/ultra-defense-acido-glicolico-10/BB-018.webp",
+          "alt": "Ac glicolico 10% (ULTRA DEFENSE) Sulderm"
+        },
+        {
+          "src": "/products/ultra-defense-acido-glicolico-10/BB-018_2.webp",
+          "alt": "Ac glicolico 10% (ULTRA DEFENSE) — foto 2"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -461,7 +575,7 @@
       "sku": "121",
       "slug": "lips-glow-hidratante",
       "name": "Lips glow hidratación + volumen",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "El cuidado de los labios es esencial para lucir una boca hidratada y luminosa, mejorar la textura y disminuir sus arrugas.",
       "description": "El cuidado de los labios es esencial para lucir una boca hidratada y luminosa, mejorar la textura y disminuir sus arrugas. La exfoliación e hidratación son dos pasos fundamentales de una rutina. Aseguran una regeneración efectiva, mejorando la calidad, el aspecto, la tersura y su luminosidad.",
       "price": 32800,
@@ -470,7 +584,16 @@
       "inStock": true,
       "categories": ["contorno-ojos-labios"],
       "concerns": ["hidratacion"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/lips-glow-hidratante/BB-027.webp",
+          "alt": "Lips glow hidratación + volumen Sulderm"
+        },
+        {
+          "src": "/products/lips-glow-hidratante/BB-027_2.webp",
+          "alt": "Lips glow hidratación + volumen — foto 2"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -478,7 +601,7 @@
       "sku": "123",
       "slug": "serum-edad-oro",
       "name": "Serum Edad de Oro",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": "Este serum nutritivo está especialmente formulado para pieles maduras y secas que requieren un cuidado intensivo.",
       "description": "Este serum nutritivo está especialmente formulado para pieles maduras y secas que requieren un cuidado intensivo. Su textura oleosa aporta nutrición profunda, ayudando a restaurar la barrera cutánea y mejorar la elasticidad de la piel. Actúa sobre los signos del envejecimiento, devolviendo suavidad, luminosidad y confort, dejando la piel visiblemente más revitalizada y flexible.",
       "price": 33000,
@@ -487,7 +610,20 @@
       "inStock": true,
       "categories": ["serums"],
       "concerns": ["antiedad"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/serum-edad-oro/BB-022.webp",
+          "alt": "Serum Edad de Oro Sulderm"
+        },
+        {
+          "src": "/products/serum-edad-oro/BB-022_2.webp",
+          "alt": "Serum Edad de Oro — foto 2"
+        },
+        {
+          "src": "/products/serum-edad-oro/BB-022_3.webp",
+          "alt": "Serum Edad de Oro — foto 3"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -495,7 +631,7 @@
       "sku": "124",
       "slug": "sermun-expression",
       "name": "Serum Expression",
-      "brand": null,
+      "brand": "Sulderm",
       "tagline": null,
       "description": "El serum Xpression está formulado para actuar específicamente sobre las líneas de expresión, ayudando a suavizar visiblemente arrugas dinámicas y prevenir su formación. Gracias a su acción focalizada, relaja la apariencia de la piel sin perder naturalidad, aportando un aspecto más descansado y rejuvenecido.\n\nUn tratamiento clave para una piel más lisa, uniforme y visiblemente más joven.",
       "price": 32000,
@@ -504,7 +640,20 @@
       "inStock": true,
       "categories": ["serums"],
       "concerns": ["antiedad"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/sermun-expression/BB-019.webp",
+          "alt": "Serum Expression Sulderm"
+        },
+        {
+          "src": "/products/sermun-expression/BB-019_2.webp",
+          "alt": "Serum Expression — foto 2"
+        },
+        {
+          "src": "/products/sermun-expression/BB-019_3.webp",
+          "alt": "Serum Expression — foto 3"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -785,7 +934,12 @@
       "inStock": true,
       "categories": ["despigmentantes"],
       "concerns": ["manchas"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/solucion-de-metformina-30/BB-038.webp",
+          "alt": "Solucion de Metformina 30%"
+        }
+      ],
       "requiresReview": true
     },
     {
@@ -840,7 +994,16 @@
       "inStock": true,
       "categories": ["limpieza"],
       "concerns": ["acne"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/cleanser-con-ac-mandelico/BB-063.webp",
+          "alt": "Cleanser con Ac.Mandelico"
+        },
+        {
+          "src": "/products/cleanser-con-ac-mandelico/BB-063_2.webp",
+          "alt": "Cleanser con Ac.Mandelico — foto 2"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -857,7 +1020,12 @@
       "inStock": true,
       "categories": ["limpieza"],
       "concerns": ["acne"],
-      "images": [],
+      "images": [
+        {
+          "src": "/products/cleanser-con-salisilico/BB-064.webp",
+          "alt": "Cleanser con Salisilico"
+        }
+      ],
       "requiresReview": false
     },
     {
@@ -967,6 +1135,10 @@
         {
           "src": "/products/jabon-intimo-sulderm/BB-012_4.webp",
           "alt": "Jabon de limpieza intimo prebiótico — foto 4"
+        },
+        {
+          "src": "/products/jabon-intimo-sulderm/BB-014.webp",
+          "alt": "Jabon de limpieza intimo prebiótico — foto 5"
         }
       ],
       "requiresReview": false
