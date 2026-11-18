@@ -47,9 +47,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Chequeo optimista: solo si el JWT trae user_role (custom_access_token_hook habilitado).
+  // La autorización real está en app/admin/layout.tsx (is_admin) y en las RPC/RLS.
   if (pathname.startsWith("/admin")) {
     const role = (claims as { user_role?: string } | undefined)?.user_role;
-    if (role !== "admin" && role !== "staff") {
+    if (role && role !== "admin" && role !== "staff") {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
@@ -58,5 +60,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/mi-cuenta/:path*", "/checkout/:path*", "/auth/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/mi-cuenta/:path*", "/checkout/:path*", "/auth/:path*"],
 };

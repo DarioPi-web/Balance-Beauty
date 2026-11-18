@@ -1272,6 +1272,16 @@ export type Database = {
         }
         Returns: Json
       }
+      admin_order_action: {
+        Args: {
+          p_action: string
+          p_carrier?: string
+          p_note?: string
+          p_order_id: string
+          p_tracking_code?: string
+        }
+        Returns: Json
+      }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       get_order_summary: { Args: { p_order_id: string }; Returns: Json }
       is_admin: { Args: never; Returns: boolean }
