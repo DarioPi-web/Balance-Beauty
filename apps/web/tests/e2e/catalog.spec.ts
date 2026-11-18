@@ -22,7 +22,8 @@ test.describe("catálogo", () => {
     await page.getByRole("link", { name: "ROSATOPIC Serum" }).first().click();
     await expect(page).toHaveURL(/\/producto\/rosatopis-serum$/);
     await expect(page.getByRole("heading", { level: 1, name: "ROSATOPIC Serum" })).toBeVisible();
-    await expect(page.getByText("con transferencia").first()).toBeVisible();
+    // Dentro de <main>: el header también menciona la transferencia (oculto en mobile).
+    await expect(page.getByRole("main").getByText("con transferencia").first()).toBeVisible();
   });
 
   test("filtros de la tienda actualizan resultados y URL", async ({ page }) => {

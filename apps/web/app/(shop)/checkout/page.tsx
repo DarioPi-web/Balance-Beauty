@@ -23,7 +23,8 @@ async function CheckoutFromCookie() {
 
   if (cart.items.length === 0) {
     return (
-      <div className="rounded-2xl border bg-card p-8 text-center">
+      // min-h-96 = alto del fallback de Suspense: el footer no salta al resolver (CLS).
+      <div className="flex min-h-96 flex-col items-center justify-center rounded-2xl border bg-card p-8 text-center">
         <p className="text-lg">Tu carrito está vacío.</p>
         <Link
           href="/tienda"

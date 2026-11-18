@@ -6,8 +6,14 @@ const ONLY = ["iPhone 15 Pro", "Pixel 7", "Desktop Chrome"];
 const VIDEO_RE = /\/video\/hero-\d+\.(mp4|webm)/;
 
 test.describe("video de fondo del hero", () => {
-  test.beforeEach(({}, testInfo) => {
+  test.beforeEach(({ browserName }, testInfo) => {
     test.skip(!ONLY.includes(testInfo.project.name), "iOS, Android y desktop");
+    // El WebKit de Playwright para Windows no trae decodificadores H.264/VP9: el video no
+    // puede reproducirse ahí (sí en el WebKit de Linux del CI y en Safari real).
+    test.skip(
+      browserName === "webkit" && process.platform === "win32",
+      "WebKit en Windows sin códecs de video",
+    );
   });
 
   test("póster primero, después el video muteado en bucle", async ({ browser }, testInfo) => {

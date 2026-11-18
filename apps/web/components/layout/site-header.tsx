@@ -108,7 +108,7 @@ export async function SiteHeader() {
           {formatARS(site.installments.promoMinAmount)} · {site.transferDiscountPercent}% off
           transferencia
         </p>
-        <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-2 sm:px-6 md:py-3">
+        <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-2 sm:gap-3 sm:px-6 md:py-3">
           <div className="flex items-center">
             {/* Mobile: lupa. Desktop: buscador en forma de pastilla (abre el mismo diálogo). */}
             <SearchButton className="rounded-full text-clinical hover:bg-white/10 md:hidden" />
@@ -122,18 +122,18 @@ export async function SiteHeader() {
           <Link
             href="/"
             aria-label="Balance Beauty — inicio"
-            className="inline-flex min-h-11 items-center justify-self-center text-clinical"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center justify-self-center text-clinical"
           >
             <BrandLogo />
           </Link>
 
-          <div className="flex items-center justify-end gap-2 md:gap-3">
+          <div className="flex items-center justify-end gap-1 sm:gap-2 md:gap-3">
             <CartButton className="rounded-full text-clinical hover:bg-white/10 md:h-12 md:w-12 md:border md:border-clinical/80" />
             <Link
               href="/ingresar"
               prefetch={false}
               aria-label="Mi cuenta"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-clinical hover:bg-white/10 md:h-12 md:w-12 md:border md:border-clinical/80"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-clinical hover:bg-white/10 max-[379px]:hidden md:h-12 md:w-12 md:border md:border-clinical/80"
             >
               <UserRound className="h-5 w-5" aria-hidden="true" />
             </Link>
