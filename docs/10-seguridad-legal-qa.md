@@ -26,6 +26,38 @@
 - [ ] Principio de mínimo privilegio: rol `staff` (pedidos) vs. `admin` (todo).
 - [ ] Rotar credenciales del WordPress actual (expuestas en el zip).
 
+## 1b. Revisión de seguridad previa al lanzamiento (L7 · 2026‑11‑18)
+
+**Revisado y en orden**
+
+| Área                    | Resultado                                                                                                                                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Secretos                | Ninguno en el repo ni en el historial de git. Solo `.env.example` versionado. Lo que va al navegador (`NEXT_PUBLIC_*`) es público por diseño: URL y clave publicable de Supabase, URL del sitio.             |
+| Módulos con secretos    | `server-only` en carrito, pedidos, pagos, emails e integraciones; `lib/env.ts` (t3-env) impide leer variables de servidor desde el cliente.                                                                  |
+| Server Actions          | Todas validan con Zod; las de admin verifican sesión **y** rol en la base (`requireAdmin` → `is_admin()`); las RPC de admin vuelven a verificar `is_admin()` adentro.                                        |
+| Precios y stock         | Nunca se confía en el cliente: `place_order` recalcula todo en la base.                                                                                                                                      |
+| Webhook de Mercado Pago | Firma HMAC con ventana de 5 min + re-consulta del pago a la API; idempotente.                                                                                                                                |
+| `/api/revalidate`       | Bearer con comparación de tiempo constante.                                                                                                                                                                  |
+| Login                   | Redirección posterior solo a una lista blanca (`/admin`, `/mi-cuenta`): sin open redirect.                                                                                                                   |
+| HTML inyectado          | Único `dangerouslySetInnerHTML`: JSON-LD con `<` escapado.                                                                                                                                                   |
+| Búsqueda del admin      | Se limpian `, ( ) % _` antes del filtro `.or()`.                                                                                                                                                             |
+| Fotos                   | Solo JPG/PNG/WebP/AVIF ≤ 4 MB, re-codificadas con sharp (se descartan metadatos y cualquier contenido no imagen); bucket con escritura solo admin.                                                           |
+| Cookies                 | Carrito firmado con HMAC, `httpOnly`, `SameSite=Lax`, `Secure` en Vercel.                                                                                                                                    |
+| Supabase (advisors)     | RLS en todas las tablas. Los avisos "SECURITY DEFINER ejecutable" son intencionales: cada función exige `is_admin()` o la clave de servidor, y `get_order_summary` usa un uuid no adivinable como capacidad. |
+
+**Corregido en esta revisión**
+
+1. **Sin Content-Security-Policy** → CSP agregada en `next.config.ts`: bloquea scripts y conexiones a dominios ajenos, `<object>`, `<base>` inyectado, ser embebidos en iframes (clickjacking) y formularios hacia otros sitios (salvo Mercado Pago). Lleva `unsafe-inline` en scripts porque el catálogo es estático (un nonce obligaría a renderizar todo por pedido). Test E2E: encabezados + ninguna página viola la CSP.
+2. **`request_withdrawal` se podía llamar directo** por la API pública (salteando el honeypot) → ahora exige la clave de servidor (migración 13), como `place_order`.
+3. **Dependencias:** `@hono/node-server` 1.x con vulnerabilidad moderada (servicio del VPS) → 2.1.3; `shadcn` (CLI, arrastraba `minimatch` vulnerable) pasó a devDependencies. `pnpm audit --prod`: sin vulnerabilidades.
+
+**Pendiente (dueño / configuración)**
+
+- Activar en Supabase → Authentication → **Leaked password protection** (verifica contraseñas filtradas contra HaveIBeenPwned; requiere plan Pro).
+- Rotar las credenciales del WordPress viejo (D8 en docs/18).
+- En producción, `SUPABASE_SERVICE_ROLE_KEY` y las claves de Mercado Pago solo como variables _Sensitive_ de Vercel.
+- Prueba de compra completa con Mercado Pago sandbox (requiere D1).
+
 ## 2. Cumplimiento legal (Argentina) — validar con asesor
 
 | Requisito                                                      | Norma                                                      | Implementación                                                                 |

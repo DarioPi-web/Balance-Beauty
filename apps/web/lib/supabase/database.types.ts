@@ -1297,6 +1297,7 @@ export type Database = {
       release_expired_reservations: { Args: never; Returns: number };
       request_withdrawal: {
         Args: {
+          p_server_key: string;
           p_email: string;
           p_full_name: string;
           p_order_number?: number;

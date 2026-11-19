@@ -12,6 +12,7 @@ import {
   type WithdrawalEmail,
 } from "@/emails/withdrawal-received";
 import { sendEmail } from "@/lib/email/send";
+import { checkoutServerKey } from "@/lib/orders/server";
 import { getIntegrationSetting } from "@/lib/settings/integrations";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 
@@ -45,7 +46,13 @@ export async function requestWithdrawal(fd: FormData): Promise<void> {
   if (!parsed.success) back({ error: parsed.error.issues[0]?.message ?? "Revisá los datos" });
   const d = parsed.data!;
 
+  const serverKey = checkoutServerKey();
+  if (!serverKey) {
+    console.error(JSON.stringify({ event: "withdrawal.no_server_key" }));
+    back({ error: "No pudimos registrar tu pedido. Escribinos por WhatsApp o Instagram." });
+  }
   const { data, error } = await createSupabasePublicClient().rpc("request_withdrawal", {
+    p_server_key: serverKey!,
     p_full_name: d.full_name,
     p_email: d.email,
     p_order_number: d.order_number ?? undefined,

@@ -7,7 +7,38 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
   ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).host
   : "localhost";
 
+const isDev = process.env.NODE_ENV === "development";
+const onVercel = Boolean(process.env.VERCEL_ENV);
+
+/**
+ * Content-Security-Policy (L7, docs/10). Sin nonce: el catálogo es estático (Cache Components)
+ * y un nonce obligaría a renderizar todo por pedido; por eso script-src admite 'unsafe-inline'
+ * (los scripts inline de Next). Igual bloquea lo más importante: scripts y conexiones a
+ * dominios ajenos, <object>/<embed>, <base> inyectado, que nos embeban en un iframe
+ * (clickjacking) y formularios que manden datos a otro sitio.
+ * Orígenes: el propio sitio, fotos de Supabase Storage, Vercel Analytics/Speed Insights
+ * (mismo origen en Vercel) y Mercado Pago solo como destino del formulario de pago.
+ */
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com`,
+  "style-src 'self' 'unsafe-inline'",
+  `img-src 'self' data: blob: https://${supabaseHost}`,
+  "font-src 'self'",
+  "media-src 'self'",
+  `connect-src 'self' https://${supabaseHost} https://vitals.vercel-insights.com${isDev ? " ws: wss:" : ""}`,
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self' https://*.mercadopago.com.ar https://*.mercadopago.com",
+  ...(onVercel ? ["upgrade-insecure-requests"] : []),
+].join("; ");
+
 const securityHeaders = [
+  { key: "Content-Security-Policy", value: csp },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
