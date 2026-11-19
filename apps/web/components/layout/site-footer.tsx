@@ -51,7 +51,7 @@ export async function SiteFooter() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-4 sm:px-6">
           <p className="text-xs text-clinical/70">© Balance Beauty. Precios en pesos argentinos.</p>
           <nav aria-label="Legales" className="flex flex-wrap gap-x-4">
-            {/* Res. 424/2020: acceso fácil y visible desde la primera pantalla del sitio. */}
+            {/* Res. 424/2020: acceso fácil y destacado. Por decisión del dueño, solo en el footer. */}
             <Link
               href="/arrepentimiento"
               prefetch={false}

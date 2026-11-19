@@ -13,8 +13,6 @@ const topLinks = [
   { href: "/mayorista", label: "Mayorista" },
   { href: "/promociones", label: "Promos" },
   { href: "/contacto", label: "Contacto" },
-  // Res. 424/2020: visible desde la primera pantalla.
-  { href: "/arrepentimiento", label: "Botón de arrepentimiento" },
 ];
 
 const socials = [
@@ -61,17 +59,6 @@ export async function SiteHeader() {
 
   return (
     <>
-      {/* Mobile: el Botón de arrepentimiento en la primera pantalla (Res. 424/2020); se va al
-          hacer scroll. En desktop está en la barra utilitaria. */}
-      <div className="flex justify-end bg-graphite px-3 md:hidden">
-        <Link
-          href="/arrepentimiento"
-          prefetch={false}
-          className="inline-flex min-h-11 items-center text-xs font-semibold tracking-[0.08em] text-clinical/90 uppercase underline-offset-4 hover:underline"
-        >
-          Botón de arrepentimiento
-        </Link>
-      </div>
       <div className="hidden bg-graphite text-clinical/90 md:block standalone:hidden">
         <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6">
           <nav aria-label="Enlaces rápidos">

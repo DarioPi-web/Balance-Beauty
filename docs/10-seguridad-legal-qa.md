@@ -74,6 +74,11 @@
 | Venta de medicamentos / magistrales                            | ANMAT (venta por internet restringida)                     | Ver R‑04: no permitir compra online de productos que lo requieran              |
 | Cuotas sin interés                                             | Ley 24.240 art. 36 (operaciones de crédito)                | Mostrar CFT/TEA = 0 % cuando corresponda                                       |
 
+> **Botón de arrepentimiento (2026‑11‑19):** por decisión del dueño el link quedó solo en el
+> footer (destacado). La Res. SCI 424/2020 pide que el acceso sea fácil y esté en la primera
+> pantalla del sitio; conviene confirmarlo con el asesor legal antes del lanzamiento. Volver a
+> mostrarlo arriba es un cambio de una línea en `components/layout/site-header.tsx`.
+
 ## 3. Estrategia de testing
 
 | Nivel       | Herramienta                                                                             | Qué cubre                                                                                     | Meta                                   |
