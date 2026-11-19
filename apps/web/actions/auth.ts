@@ -13,7 +13,8 @@ const schema = z.object({
 });
 
 /** Solo se vuelve a rutas internas conocidas (evita redirecciones abiertas). */
-const safeNext = (n?: string) => (n && /^\/(admin|mi-cuenta)(\/[\w\-/]*)?$/.test(n) ? n : "/admin");
+const safeNext = (n?: string) =>
+  n && /^\/(admin|mi-cuenta|vendedora)(\/[\w\-/]*)?$/.test(n) ? n : null;
 
 export async function signIn(_prev: SignInState, fd: FormData): Promise<SignInState> {
   const parsed = schema.safeParse({
@@ -39,7 +40,14 @@ export async function signIn(_prev: SignInState, fd: FormData): Promise<SignInSt
       email,
     };
   }
-  redirect(safeNext(parsed.data.next));
+  const next = safeNext(parsed.data.next);
+  if (next) redirect(next);
+  // Sin destino pedido: cada rol a su panel (admin → /admin, vendedora → /vendedora).
+  const [{ data: isAdmin }, { data: sellerId }] = await Promise.all([
+    supabase.rpc("is_admin"),
+    supabase.rpc("current_seller_id"),
+  ]);
+  redirect(isAdmin ? "/admin" : sellerId ? "/vendedora" : "/");
 }
 
 export async function signOut() {

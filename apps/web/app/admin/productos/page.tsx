@@ -169,7 +169,15 @@ export default function ProductosPage({ searchParams }: PageProps<"/admin/produc
   return (
     <div className="grid gap-5">
       <header className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="font-display text-4xl font-semibold">Productos</h1>
+        <div className="grid gap-2">
+          <h1 className="font-display text-4xl font-semibold">Productos</h1>
+          <Link
+            href="/admin/productos/planilla"
+            className="inline-flex min-h-11 w-fit items-center rounded-full border px-4 text-sm font-medium hover:bg-mist"
+          >
+            Editar con Excel (precios, stock, medidas…)
+          </Link>
+        </div>
         <form action={createProduct} className="flex flex-wrap items-end gap-2">
           <label className="grid gap-1 text-sm font-medium">
             Nuevo producto

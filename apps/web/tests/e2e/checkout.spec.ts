@@ -20,6 +20,21 @@ test.describe("checkout", () => {
     await expect(page.getByRole("link", { name: "Ir a la tienda" })).toBeVisible();
   });
 
+  test("código de descuento: un código inexistente se rechaza sin cambiar el total", async ({
+    page,
+  }) => {
+    await addToCart(page, "agua-micelar");
+    await page.goto("/checkout");
+    const form = page.locator("form");
+    test.skip(!(await form.count()), "Checkout sin Supabase en este entorno");
+    const total = await page.locator("dl").filter({ hasText: "Total" }).last().innerText();
+    await page.getByLabel(/Código de descuento/).fill("noexiste99");
+    await expect(page.getByLabel(/Código de descuento/)).toHaveValue("NOEXISTE99");
+    await page.getByRole("button", { name: "Aplicar" }).click();
+    await expect(page.locator("#co-couponMsg")).toContainText("no es válido");
+    expect(await page.locator("dl").filter({ hasText: "Total" }).last().innerText()).toBe(total);
+  });
+
   test("desde el carrito, el servidor valida los datos y conserva lo escrito", async ({ page }) => {
     await addToCart(page, "agua-micelar");
     await page.goto("/carrito");

@@ -65,6 +65,13 @@ export const checkoutSchema = z
       paymentMethod: z.enum(["mercadopago", "bank_transfer"], { message: "Elegí cómo pagar" }),
       acceptTerms: z.literal(true, { message: "Tenés que aceptar los términos y condiciones" }),
       marketingOptIn: z.boolean().default(false),
+      // Código de descuento (vendedoras/promos). Se valida y aplica en la base (place_order).
+      couponCode: z
+        .string()
+        .trim()
+        .toUpperCase()
+        .refine((v) => v === "" || /^[A-Z0-9-]{4,20}$/.test(v), "Revisá el código de descuento")
+        .default(""),
     }),
   );
 
@@ -106,6 +113,7 @@ export function checkoutFromFormData(fd: FormData): CheckoutInput {
     paymentMethod: str(fd, "paymentMethod"),
     acceptTerms: fd.get("acceptTerms") === "on",
     marketingOptIn: fd.get("marketingOptIn") === "on",
+    couponCode: str(fd, "couponCode"),
   };
   return raw as unknown as CheckoutInput;
 }
@@ -144,5 +152,6 @@ export function toPlaceOrderPayload(data: CheckoutData, lines: { slug: string; q
       postal_code: a.postalCode,
     },
     items: lines.map((l) => ({ slug: l.slug, qty: l.qty })),
+    coupon_code: data.couponCode || null,
   };
 }

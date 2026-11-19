@@ -250,6 +250,22 @@ Reglas:
 - Job diario (pg_cron 03:05 AR) `private.inventory_expire_lots()`: lotes vencidos salen de la venta.
 - El stock previo quedó en un lote `INICIAL` sin vencimiento por producto.
 
+## Vendedoras, cupones y edición masiva (migración 17)
+
+| Tabla / columna                              | Para qué                                                                                                                         |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `sellers`                                    | Vendedora: email (vincula su usuario al ingresar), comisión %, datos de cobro, activa                                            |
+| `coupons.seller_id`                          | Código de descuento de una vendedora (índice único sin distinguir mayúsculas)                                                    |
+| `orders.seller_id`, `orders.coupon_discount` | Atribución del pedido y descuento del código (`discount_total` lo incluye)                                                       |
+| `products.seller_commission_percent`         | % propio del producto (si no, el de la vendedora)                                                                                |
+| `seller_commissions`                         | Una fila por producto vendido con código: base neta, %, monto, estado `pending → approved → paid` o `void` (trigger en `orders`) |
+| `seller_payouts`                             | Liquidaciones pagadas                                                                                                            |
+
+RPC: `check_coupon` (con clave de servidor), `place_order` (cupón opcional), `seller_dashboard`,
+`seller_update_payout_info`, `current_seller_id`, `admin_save_seller`, `admin_save_seller_coupon`,
+`admin_create_payout`, `admin_sellers_overview`, `admin_bulk_update_products` (planilla Excel).
+Guía de uso: [GUIA-PLANILLA-Y-VENDEDORAS.md](GUIA-PLANILLA-Y-VENDEDORAS.md).
+
 ## Funciones (RPC)
 
 | Función                                     | Tipo                                   | Descripción                                                                                                                                                                       |

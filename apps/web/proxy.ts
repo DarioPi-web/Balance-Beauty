@@ -14,7 +14,7 @@ export async function proxy(request: NextRequest) {
   if (!url || !anonKey) {
     // Sin Supabase (CI, PC sin .env.local): las rutas privadas no son accesibles.
     const p = request.nextUrl.pathname;
-    return p.startsWith("/admin") || p.startsWith("/mi-cuenta")
+    return p.startsWith("/admin") || p.startsWith("/mi-cuenta") || p.startsWith("/vendedora")
       ? NextResponse.redirect(new URL("/", request.url))
       : response;
   }
@@ -39,7 +39,10 @@ export async function proxy(request: NextRequest) {
   const claims = data?.claims;
   const { pathname } = request.nextUrl;
 
-  const needsLogin = pathname.startsWith("/mi-cuenta") || pathname.startsWith("/admin");
+  const needsLogin =
+    pathname.startsWith("/mi-cuenta") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/vendedora");
   if (needsLogin && !claims) {
     const url = request.nextUrl.clone();
     url.pathname = "/ingresar";
@@ -60,5 +63,13 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/mi-cuenta/:path*", "/checkout/:path*", "/auth/:path*"],
+  matcher: [
+    "/admin",
+    "/admin/:path*",
+    "/vendedora",
+    "/vendedora/:path*",
+    "/mi-cuenta/:path*",
+    "/checkout/:path*",
+    "/auth/:path*",
+  ],
 };

@@ -29,6 +29,8 @@
 
 ## Sesión 2026‑11‑18
 
+- ✅ **Excel + vendedoras (2026‑11‑19, pedido del dueño):** planilla de productos (`/admin/productos/planilla`: descargar, vista previa, aplicar todo-o-nada), módulo de vendedoras (`/admin/vendedoras`, panel `/vendedora`, código de descuento en el checkout, comisión por producto según el estado del pedido, liquidaciones). Migración 17. Unitarios 106, E2E 669/669. Guía: [GUIA-PLANILLA-Y-VENDEDORAS.md](GUIA-PLANILLA-Y-VENDEDORAS.md). Falta: prueba visual con sesión de admin y deploy a producción.
+
 - 🚀 **Producción (Vercel) 2026‑11‑19, aprobado por el dueño:** commit `4ce42a9` en https://balance-beauty.vercel.app (sin dominio propio todavía; usa la base de **staging**). Ojo: la dirección de producción `*.vercel.app` es **pública** (la protección de Vercel solo cubre previews). Fix publicado (deploy `60c19c4`, 2026‑11‑19): `X-Robots-Tag: noindex, nofollow` en todo host `*.vercel.app`, verificado en producción. Hubo además un deploy de producción del commit viejo `2985dbe` creado desde el panel de Vercel.
 
 - 🚀 Deploy a **staging** (preview protegida, aprobado por el dueño): `balance-beauty-37wwrmrx4-dariopi2012-7192.vercel.app`, commit 2985dbe, build en Vercel (`vercel deploy --target=preview`, `.vercelignore` excluye secretos). Rutas, noindex, video AV1 y cache verificados. URL pública corregida en código (L1, `lib/site-url.ts`): falta redeploy a staging para verla; MP webhook necesita bypass de protección de Vercel.

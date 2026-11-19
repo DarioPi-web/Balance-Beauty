@@ -916,6 +916,7 @@ export type Database = {
       };
       products: {
         Row: {
+          seller_commission_percent: number | null;
           gtin: string | null;
           net_content: number | null;
           net_unit: string | null;
@@ -1363,6 +1364,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      check_coupon: {
+        Args: { p_code: string; p_server_key: string; p_subtotal: number };
+        Returns: Json;
+      };
       confirm_payment: {
         Args: {
           p_amount: number;
@@ -1386,6 +1391,11 @@ export type Database = {
         Returns: Json;
       };
       admin_dashboard: { Args: never; Returns: Json };
+      admin_bulk_update_products: { Args: { p_rows: Json }; Returns: Json };
+      admin_create_payout: {
+        Args: { p_method: string; p_notes: string; p_reference: string; p_seller_id: string };
+        Returns: Json;
+      };
       admin_create_product: { Args: { p_name: string }; Returns: string };
       admin_inventory_adjust: {
         Args: {
@@ -1426,7 +1436,32 @@ export type Database = {
         Returns: Json;
       };
       admin_withdrawal_handle: { Args: { p_id: string }; Returns: Json };
+      admin_save_seller: {
+        Args: {
+          p_commission_percent: number;
+          p_email: string;
+          p_full_name: string;
+          p_id: string | null;
+          p_is_active: boolean;
+          p_payout_info: string;
+          p_phone: string;
+        };
+        Returns: string;
+      };
+      admin_save_seller_coupon: {
+        Args: {
+          p_code: string;
+          p_ends_at: string | null;
+          p_is_active: boolean;
+          p_min_amount: number;
+          p_percent: number;
+          p_seller_id: string;
+        };
+        Returns: string;
+      };
+      admin_sellers_overview: { Args: never; Returns: Json };
       admin_set_integration_secret: { Args: { p_name: string; p_value: string }; Returns: Json };
+      current_seller_id: { Args: never; Returns: string };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       get_integration_secrets: { Args: { p_server_key: string }; Returns: Json };
       get_order_summary: { Args: { p_order_id: string }; Returns: Json };
@@ -1443,6 +1478,8 @@ export type Database = {
         };
         Returns: Json;
       };
+      seller_dashboard: { Args: never; Returns: Json };
+      seller_update_payout_info: { Args: { p_payout_info: string }; Returns: Json };
       search_products: {
         Args: { max_results?: number; q: string };
         Returns: {

@@ -41,6 +41,9 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
           <Link href="/admin/productos" className="inline-flex min-h-11 items-center">
             Productos
           </Link>
+          <Link href="/admin/vendedoras" className="inline-flex min-h-11 items-center">
+            Vendedoras
+          </Link>
           <Link href="/admin/integraciones" className="inline-flex min-h-11 items-center">
             Integraciones
           </Link>

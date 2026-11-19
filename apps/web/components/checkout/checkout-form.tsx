@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import Link from "next/link";
 import { placeOrder, type CheckoutState } from "@/actions/checkout";
+import { checkCoupon } from "@/actions/coupon";
 import { formatARS } from "@/lib/pricing";
 import { PROVINCIAS } from "@/lib/validation/provincias";
 import { cn } from "@/lib/utils";
@@ -37,8 +38,31 @@ export function CheckoutForm({ subtotal, rates, transferPercent, cardEnabled, fo
     v.paymentMethod ?? (cardEnabled ? "mercadopago" : "bank_transfer"),
   );
 
+  const [code, setCode] = useState(v.couponCode ?? "");
+  const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponMsg, setCouponMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [checking, startCheck] = useTransition();
+  const applyCoupon = () =>
+    startCheck(async () => {
+      const r = await checkCoupon(code);
+      if (r.ok) {
+        setCoupon({ code: r.code, discount: r.discount });
+        setCode(r.code);
+        setCouponMsg({ ok: true, text: `Código ${r.code} aplicado: −${formatARS(r.discount)}` });
+      } else {
+        setCoupon(null);
+        setCouponMsg({ ok: false, text: r.error });
+      }
+    });
+
   const rate = rates.find((r) => r.method === method);
-  const discount = payment === "bank_transfer" ? Math.floor((subtotal * transferPercent) / 100) : 0;
+  // Mismo orden que place_order: primero el código, después el % de la transferencia.
+  const couponDiscount = coupon && coupon.code === code.trim().toUpperCase() ? coupon.discount : 0;
+  const transferDiscount =
+    payment === "bank_transfer"
+      ? Math.floor(((subtotal - couponDiscount) * transferPercent) / 100)
+      : 0;
+  const discount = couponDiscount + transferDiscount;
   const shipping = !rate
     ? 0
     : rate.freeFrom !== null && subtotal - discount >= rate.freeFrom
@@ -274,15 +298,65 @@ export function CheckoutForm({ subtotal, rates, transferPercent, cardEnabled, fo
       </fieldset>
 
       <div className="grid gap-3 rounded-2xl border bg-card p-5">
+        <div className="grid gap-2">
+          <label htmlFor="co-couponCode" className={label}>
+            Código de descuento{" "}
+            <span className="font-normal text-muted-foreground">(opcional)</span>
+          </label>
+          <div className="flex gap-2">
+            <input
+              id="co-couponCode"
+              name="couponCode"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value.toUpperCase());
+                setCouponMsg(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  if (code.trim()) applyCoupon();
+                }
+              }}
+              maxLength={20}
+              autoComplete="off"
+              autoCapitalize="characters"
+              aria-describedby="co-couponMsg"
+              aria-invalid={couponMsg && !couponMsg.ok ? true : undefined}
+              className={cn(field, "mt-0 flex-1 uppercase")}
+            />
+            <button
+              type="button"
+              onClick={applyCoupon}
+              disabled={checking || !code.trim()}
+              className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full border px-5 font-medium hover:bg-mist disabled:opacity-60"
+            >
+              {checking ? "…" : "Aplicar"}
+            </button>
+          </div>
+          <p
+            id="co-couponMsg"
+            aria-live="polite"
+            className={cn("text-sm", couponMsg?.ok ? "text-leaf" : "text-alert")}
+          >
+            {couponMsg?.text ?? err.couponCode ?? ""}
+          </p>
+        </div>
         <dl className="grid gap-1 text-base">
           <div className="flex justify-between">
             <dt>Subtotal</dt>
             <dd>{formatARS(subtotal)}</dd>
           </div>
-          {discount ? (
+          {couponDiscount ? (
+            <div className="flex justify-between text-leaf">
+              <dt>Código {coupon?.code}</dt>
+              <dd>−{formatARS(couponDiscount)}</dd>
+            </div>
+          ) : null}
+          {transferDiscount ? (
             <div className="flex justify-between text-leaf">
               <dt>Descuento transferencia</dt>
-              <dd>−{formatARS(discount)}</dd>
+              <dd>−{formatARS(transferDiscount)}</dd>
             </div>
           ) : null}
           <div className="flex justify-between">

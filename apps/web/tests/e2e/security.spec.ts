@@ -25,6 +25,15 @@ test.describe("seguridad", () => {
     expect(h["x-powered-by"]).toBeUndefined();
   });
 
+  test("los paneles privados piden ingresar", async ({ page }) => {
+    for (const p of ["/admin", "/admin/vendedoras", "/admin/productos/planilla", "/vendedora"]) {
+      await page.goto(p);
+      await expect(page, p).toHaveURL(/\/ingresar\?next=/);
+    }
+    const r = await page.request.get("/admin/productos/planilla/descargar", { maxRedirects: 0 });
+    expect(r.status(), "la planilla no se descarga sin sesión").toBe(307);
+  });
+
   test("ninguna página viola la CSP", async ({ page }) => {
     const violations: string[] = [];
     page.on("console", (m) => {
