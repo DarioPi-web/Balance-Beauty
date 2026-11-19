@@ -228,6 +228,28 @@ create table contact_messages (id uuid primary key default gen_random_uuid(), na
 create table audit_log (id bigserial primary key, actor uuid, action text not null, entity text not null, entity_id text, diff jsonb, created_at timestamptz default now());
 ```
 
+## Inventario por lote (v1.2 · migraciones 15 y 16)
+
+Plan completo en [17](17-plan-catalogo-inventario-y-automatizacion.md) §3.
+
+| Tabla                                      | Para qué                                                                                                                                                                                            |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `suppliers`                                | Proveedores (CUIT, contacto, plazo de entrega).                                                                                                                                                     |
+| `inventory_lots`                           | Un lote por producto y código: vencimiento, costo, recibido, **en mano**, estado (`available`, `quarantine`, `expired`, `recalled`, `depleted`).                                                    |
+| `stock_movements`                          | Libro **inmutable** de cada cambio de stock (recepción, venta, devolución, ajuste, merma, conteo, cuarentena, retiro) con lote, pedido, usuario y motivo. Solo se borra en cascada con el producto. |
+| `purchase_orders` / `purchase_order_items` | Órdenes de compra (estructura lista; pantalla en v1.7).                                                                                                                                             |
+| `price_history`                            | Cada cambio de precio/tachado (trigger).                                                                                                                                                            |
+| `product_regulatory`                       | Datos ANMAT: inscripción, grado, titular, elaborador, país, INCI, PAO, advertencias (lectura pública para productos activos; pantalla en v1.5).                                                     |
+| `products` (+)                             | `gtin` (EAN validado), `net_content`/`net_unit`, `supplier_id`, `unit_cost`, `reorder_point`.                                                                                                       |
+
+Reglas:
+
+- `products.stock` sigue siendo el **stock vendible** que leen el catálogo y `place_order`; es la suma de los lotes `available` (vista `inventory_discrepancies` para conciliar).
+- Solo cambia por RPC: `admin_inventory_receive`, `admin_inventory_adjust`, `admin_inventory_set_lot_status`; `admin_save_product` ya **no** toca el stock.
+- Ventas: trigger en `orders` asigna lotes por **FEFO** al pasar a `paid` y los devuelve a los mismos lotes si un pedido pagado se cancela.
+- Job diario (pg_cron 03:05 AR) `private.inventory_expire_lots()`: lotes vencidos salen de la venta.
+- El stock previo quedó en un lote `INICIAL` sin vencimiento por producto.
+
 ## Funciones (RPC)
 
 | Función                                     | Tipo                                   | Descripción                                                                                                                                                                       |

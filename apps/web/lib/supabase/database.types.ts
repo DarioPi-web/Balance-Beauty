@@ -409,6 +409,62 @@ export type Database = {
         };
         Relationships: [];
       };
+      inventory_lots: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          expires_on: string | null;
+          id: string;
+          lot_code: string;
+          notes: string | null;
+          product_id: string;
+          qty_on_hand: number;
+          qty_received: number;
+          received_on: string;
+          status: Database["public"]["Enums"]["lot_status"];
+          supplier_id: string | null;
+          unit_cost: number | null;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          expires_on?: string | null;
+          id?: string;
+          lot_code: string;
+          notes?: string | null;
+          product_id: string;
+          qty_on_hand?: number;
+          qty_received?: number;
+          received_on?: string;
+          status?: Database["public"]["Enums"]["lot_status"];
+          supplier_id?: string | null;
+          unit_cost?: number | null;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          expires_on?: string | null;
+          id?: string;
+          lot_code?: string;
+          notes?: string | null;
+          product_id?: string;
+          qty_on_hand?: number;
+          qty_received?: number;
+          received_on?: string;
+          status?: Database["public"]["Enums"]["lot_status"];
+          supplier_id?: string | null;
+          unit_cost?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "inventory_lots_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       order_items: {
         Row: {
           id: string;
@@ -860,6 +916,12 @@ export type Database = {
       };
       products: {
         Row: {
+          gtin: string | null;
+          net_content: number | null;
+          net_unit: string | null;
+          reorder_point: number | null;
+          supplier_id: string | null;
+          unit_cost: number | null;
           brand_id: string | null;
           compare_at_price: number | null;
           created_at: string;
@@ -1198,6 +1260,53 @@ export type Database = {
         };
         Relationships: [];
       };
+      stock_movements: {
+        Row: {
+          actor: string | null;
+          created_at: string;
+          id: number;
+          kind: Database["public"]["Enums"]["stock_movement_kind"];
+          lot_id: string | null;
+          order_id: string | null;
+          product_id: string;
+          purchase_order_id: string | null;
+          qty: number;
+          reason: string | null;
+        };
+        Insert: {
+          actor?: string | null;
+          created_at?: string;
+          id?: number;
+          kind: Database["public"]["Enums"]["stock_movement_kind"];
+          lot_id?: string | null;
+          order_id?: string | null;
+          product_id: string;
+          purchase_order_id?: string | null;
+          qty: number;
+          reason?: string | null;
+        };
+        Update: {
+          actor?: string | null;
+          created_at?: string;
+          id?: number;
+          kind?: Database["public"]["Enums"]["stock_movement_kind"];
+          lot_id?: string | null;
+          order_id?: string | null;
+          product_id?: string;
+          purchase_order_id?: string | null;
+          qty?: number;
+          reason?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_lot_id_fkey";
+            columns: ["lot_id"];
+            isOneToOne: false;
+            referencedRelation: "inventory_lots";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       store_settings: {
         Row: {
           is_public: boolean;
@@ -1278,6 +1387,33 @@ export type Database = {
       };
       admin_dashboard: { Args: never; Returns: Json };
       admin_create_product: { Args: { p_name: string }; Returns: string };
+      admin_inventory_adjust: {
+        Args: {
+          p_delta: number;
+          p_kind: string;
+          p_lot_id?: string;
+          p_product_id: string;
+          p_reason: string;
+        };
+        Returns: Json;
+      };
+      admin_inventory_receive: {
+        Args: {
+          p_expires_on?: string;
+          p_lot_code: string;
+          p_note?: string;
+          p_product_id: string;
+          p_purchase_order_id?: string;
+          p_qty: number;
+          p_supplier_id?: string;
+          p_unit_cost?: number;
+        };
+        Returns: Json;
+      };
+      admin_inventory_set_lot_status: {
+        Args: { p_lot_id: string; p_reason: string; p_status: string };
+        Returns: Json;
+      };
       admin_integration_status: { Args: never; Returns: Json };
       admin_save_product: {
         Args: {
@@ -1322,6 +1458,17 @@ export type Database = {
       unaccent_immutable: { Args: { "": string }; Returns: string };
     };
     Enums: {
+      lot_status: "available" | "quarantine" | "expired" | "recalled" | "depleted";
+      stock_movement_kind:
+        | "receipt"
+        | "sale"
+        | "return"
+        | "adjustment"
+        | "waste"
+        | "count"
+        | "quarantine"
+        | "unquarantine"
+        | "recall";
       order_status:
         | "pending_payment"
         | "paid"

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { editProductImage, saveProduct, uploadProductImage } from "@/actions/admin-products";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import { InventorySection, type Lot, type Movement } from "@/components/admin/inventory-section";
 import { imageSrc } from "@/lib/admin/image-paths";
 import { requireAdmin } from "@/lib/admin/server";
 import imageLoader from "@/lib/image-loader";
@@ -28,6 +29,9 @@ const OK: Record<string, string> = {
   foto: "Fotos actualizadas.",
   fotos: "Fotos subidas.",
   foto_borrada: "Foto borrada.",
+  recibido: "Mercadería recibida: se sumó al stock y al lote.",
+  ajustado: "Ajuste registrado en el historial.",
+  lote: "Estado del lote actualizado.",
 };
 
 async function ProductEditor({
@@ -41,17 +45,29 @@ async function ProductEditor({
   if (!UUID_RE.test(id)) notFound();
   const { supabase } = await requireAdmin(`/admin/productos/${id}`);
 
-  const [prod, brands, cats, cons] = await Promise.all([
+  const [prod, brands, cats, cons, lots, moves] = await Promise.all([
     supabase
       .from("products")
       .select(
-        "id, sku, slug, name, tagline, description, how_to_use, price, compare_at_price, price_without_national_taxes, stock, reserved_stock, track_stock, status, is_featured, requires_prescription, brand_id, weight_g, length_cm, width_cm, height_cm, seo_title, seo_description, product_categories(category_id), product_concerns(concern_id, is_primary), product_images(id, storage_path, alt, sort_order)",
+        "id, sku, slug, name, tagline, description, how_to_use, price, compare_at_price, price_without_national_taxes, stock, reserved_stock, low_stock_threshold, unit_cost, track_stock, status, is_featured, requires_prescription, brand_id, weight_g, length_cm, width_cm, height_cm, seo_title, seo_description, product_categories(category_id), product_concerns(concern_id, is_primary), product_images(id, storage_path, alt, sort_order)",
       )
       .eq("id", id)
       .maybeSingle(),
     supabase.from("brands").select("id, name").order("name"),
     supabase.from("categories").select("id, name").order("sort_order"),
     supabase.from("concerns").select("id, name").order("sort_order"),
+    supabase
+      .from("inventory_lots")
+      .select("id, lot_code, expires_on, qty_on_hand, status, received_on, unit_cost")
+      .eq("product_id", id)
+      .order("expires_on", { ascending: true, nullsFirst: false })
+      .limit(50),
+    supabase
+      .from("stock_movements")
+      .select("id, qty, kind, reason, created_at, lot_id")
+      .eq("product_id", id)
+      .order("created_at", { ascending: false })
+      .limit(15),
   ]);
   if (prod.error) throw prod.error;
   const p = prod.data;
@@ -178,6 +194,15 @@ async function ProductEditor({
         )}
         <ImageUploader productId={p.id} upload={uploadProductImage} />
       </section>
+
+      <InventorySection
+        productId={p.id}
+        trackStock={p.track_stock}
+        stock={p.stock}
+        reserved={p.reserved_stock}
+        lots={(lots.data ?? []) as Lot[]}
+        movements={(moves.data ?? []) as Movement[]}
+      />
 
       <form action={saveProduct} className="grid gap-6">
         <input type="hidden" name="id" value={p.id} />
@@ -315,23 +340,33 @@ async function ProductEditor({
                 className={field}
               />
             </label>
+            <div className={label}>
+              Stock para vender
+              <p className="mt-1 flex min-h-11 items-center rounded-xl border bg-mist/50 px-3 text-base tabular-nums">
+                {p.stock - p.reserved_stock} disponibles
+                {p.reserved_stock > 0 ? ` · ${p.reserved_stock} reservadas` : ""}
+              </p>
+              <span className={hint}>
+                Se cambia en{" "}
+                <a href="#inventario" className="underline underline-offset-2">
+                  Inventario
+                </a>{" "}
+                (recibir mercadería o ajustar), con lote y motivo.
+              </span>
+            </div>
             <label className={label}>
-              Stock (unidades en el local)
+              Avisar con stock bajo cuando queden
               <input
-                name="stock"
+                name="low_stock_threshold"
                 type="number"
                 inputMode="numeric"
-                min={p.reserved_stock}
+                min={0}
+                max={1000}
                 step={1}
-                defaultValue={p.stock}
-                required
+                defaultValue={p.low_stock_threshold}
                 className={field}
               />
-              <span className={hint}>
-                {p.reserved_stock > 0
-                  ? `${p.reserved_stock} reservadas en pedidos sin pagar · disponibles ${p.stock - p.reserved_stock}.`
-                  : "Sin reservas en curso."}
-              </span>
+              <span className={hint}>unidades o menos (aparece en el inicio “Hoy”).</span>
             </label>
             <label className={`${check} self-center`}>
               <input

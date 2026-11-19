@@ -72,7 +72,7 @@ const productSchema = z.object({
     .trim()
     .transform((v) => (v === "" ? null : Number(v)))
     .pipe(z.number().int().positive().max(100_000_000).nullable()),
-  stock: z.coerce.number().int().min(0).max(100_000),
+  low_stock_threshold: z.coerce.number().int().min(0).max(1000),
   track_stock: z.boolean(),
   status: z.enum(["draft", "active", "archived"]),
   is_featured: z.boolean(),
@@ -96,7 +96,7 @@ export async function saveProduct(fd: FormData): Promise<void> {
     how_to_use: str(fd, "how_to_use") ?? "",
     price: str(fd, "price") ?? "",
     compare_at_price: str(fd, "compare_at_price") ?? "",
-    stock: str(fd, "stock") ?? "",
+    low_stock_threshold: str(fd, "low_stock_threshold") || "3",
     track_stock: fd.get("track_stock") === "on",
     status: str(fd, "status"),
     is_featured: fd.get("is_featured") === "on",

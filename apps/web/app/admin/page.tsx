@@ -29,6 +29,17 @@ type Dashboard = {
   }[];
   low_stock: { id: string; name: string; sku: string; available: number }[];
   no_photo_count: number;
+  expiring_lots: {
+    id: string;
+    product_id: string;
+    name: string;
+    lot_code: string;
+    expires_on: string;
+    qty_on_hand: number;
+    cost_value: number;
+  }[];
+  lots_without_expiry: number;
+  discrepancies: number;
   withdrawals: {
     id: string;
     code: string;
@@ -264,6 +275,47 @@ async function Today({ search }: { search: Promise<{ ok?: string; error?: string
           ) : (
             <p className="text-muted-foreground">Todo con stock suficiente.</p>
           )}
+        </section>
+
+        <section className={card} aria-labelledby="vence-t">
+          <h2 id="vence-t" className={h2}>
+            Por vencer (90 días)
+          </h2>
+          {d.expiring_lots.length ? (
+            <ul className="grid">
+              {d.expiring_lots.map((l) => (
+                <li key={l.id}>
+                  <Link href={`/admin/productos/${l.product_id}#inventario`} className={row}>
+                    <span>
+                      {l.name}
+                      <span className="block text-sm text-muted-foreground">
+                        Lote {l.lot_code} · {l.qty_on_hand} u.
+                        {l.cost_value ? ` · costo ${formatARS(l.cost_value)}` : ""}
+                      </span>
+                    </span>
+                    <span className="shrink-0 rounded-full bg-rose-soft px-3 py-1 text-sm font-medium tabular-nums">
+                      {l.expires_on.slice(5, 7)}/{l.expires_on.slice(0, 4)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted-foreground">Nada vence en los próximos 90 días.</p>
+          )}
+          {d.lots_without_expiry ? (
+            <p className="text-sm text-muted-foreground">
+              {d.lots_without_expiry} lote{d.lots_without_expiry === 1 ? "" : "s"} sin vencimiento
+              cargado (el stock que había antes del control por lote). Completalo en la próxima
+              recepción o conteo.
+            </p>
+          ) : null}
+          {d.discrepancies ? (
+            <p role="alert" className="rounded-xl bg-rose-soft px-3 py-2 text-sm">
+              {d.discrepancies} producto{d.discrepancies === 1 ? "" : "s"} con diferencia entre
+              stock y lotes: revisalos con un conteo.
+            </p>
+          ) : null}
         </section>
 
         <section className={card} aria-labelledby="atajos-t">
