@@ -2,7 +2,7 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-18 · header nuevo, video de fondo en el hero, `/admin/integraciones` (MP, Andreani, Resend, banco) · E2E 575/575 y Lighthouse CI en verde · sin deploys
+**Última actualización:** 2026-11-19 · v1.0 casi completa (faltan L6 webhook MP y L8 producción) + v1.1 y v1.2 hechas · contexto completo en [CONTEXTO.md](CONTEXTO.md) · staging con versión anterior
 
 > Contexto general (stack, identificadores, credenciales): [CONTEXTO.md](CONTEXTO.md).
 
