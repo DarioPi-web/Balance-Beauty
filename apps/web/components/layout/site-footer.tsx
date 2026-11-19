@@ -48,9 +48,40 @@ export async function SiteFooter() {
         />
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-xs text-clinical/70 sm:px-6">
-          © Balance Beauty. Precios en pesos argentinos.
-        </p>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-4 sm:px-6">
+          <p className="text-xs text-clinical/70">© Balance Beauty. Precios en pesos argentinos.</p>
+          <nav aria-label="Legales" className="flex flex-wrap gap-x-4">
+            {/* Res. 424/2020: acceso fácil y visible desde la primera pantalla del sitio. */}
+            <Link
+              href="/arrepentimiento"
+              prefetch={false}
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-clinical underline underline-offset-4"
+            >
+              Botón de arrepentimiento
+            </Link>
+            <Link
+              href="/devoluciones"
+              prefetch={false}
+              className="inline-flex min-h-11 items-center text-sm text-clinical/90 hover:text-clinical"
+            >
+              Cambios y devoluciones
+            </Link>
+            <Link
+              href="/terminos"
+              prefetch={false}
+              className="inline-flex min-h-11 items-center text-sm text-clinical/90 hover:text-clinical"
+            >
+              Términos
+            </Link>
+            <Link
+              href="/privacidad"
+              prefetch={false}
+              className="inline-flex min-h-11 items-center text-sm text-clinical/90 hover:text-clinical"
+            >
+              Privacidad
+            </Link>
+          </nav>
+        </div>
       </div>
     </footer>
   );

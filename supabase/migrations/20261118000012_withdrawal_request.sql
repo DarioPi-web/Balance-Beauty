@@ -1,0 +1,53 @@
+-- L4 (docs/18): Botón de arrepentimiento (Res. SCI 424/2020). El pedido se registra solo por
+-- esta RPC: valida, limita repeticiones y devuelve el código de identificación que hay que
+-- entregarle a quien lo pide. Se quita la inserción directa (sin validación) de anon.
+
+drop policy if exists "anyone can request withdrawal" on public.withdrawal_requests;
+
+alter table public.withdrawal_requests
+  add constraint withdrawal_full_name_len check (char_length(full_name) between 3 and 120),
+  add constraint withdrawal_email_len check (char_length(email) between 5 and 254),
+  add constraint withdrawal_reason_len check (reason is null or char_length(reason) <= 2000);
+
+create index if not exists withdrawal_requests_email_idx on public.withdrawal_requests (lower(email), created_at desc);
+
+create or replace function public.request_withdrawal(
+  p_full_name text,
+  p_email text,
+  p_order_number int default null,
+  p_reason text default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_name text := trim(coalesce(p_full_name, ''));
+  v_email text := lower(trim(coalesce(p_email, '')));
+  v_row public.withdrawal_requests;
+begin
+  if char_length(v_name) < 3 or char_length(v_name) > 120 then
+    raise exception 'Ingresá tu nombre y apellido' using hint = 'withdrawal';
+  end if;
+  if v_email !~ '^[^@\s]+@[^@\s]+\.[^@\s]+$' or char_length(v_email) > 254 then
+    raise exception 'Revisá el email' using hint = 'withdrawal';
+  end if;
+  if p_order_number is not null and p_order_number <= 0 then
+    raise exception 'Revisá el número de pedido' using hint = 'withdrawal';
+  end if;
+  if (select count(*) from public.withdrawal_requests
+       where lower(email) = v_email and created_at > now() - interval '1 day') >= 3 then
+    raise exception 'Ya recibimos tu pedido. Si necesitás algo más, respondé el email que te enviamos'
+      using hint = 'withdrawal';
+  end if;
+
+  insert into public.withdrawal_requests (full_name, email, order_number, reason)
+  values (v_name, v_email, p_order_number, nullif(left(trim(coalesce(p_reason, '')), 2000), ''))
+  returning * into v_row;
+
+  return jsonb_build_object('code', v_row.code, 'created_at', v_row.created_at);
+end;
+$$;
+
+revoke all on function public.request_withdrawal(text, text, int, text) from public;
+grant execute on function public.request_withdrawal(text, text, int, text) to anon, authenticated;

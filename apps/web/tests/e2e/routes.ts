@@ -10,6 +10,8 @@ export const PUBLIC_ROUTES = [
   "/contacto",
   "/mayorista",
   "/preguntas-frecuentes",
+  "/arrepentimiento",
+  "/devoluciones",
 
   "/categoria/serums",
   "/preocupacion/manchas",

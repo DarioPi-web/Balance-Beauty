@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import { retryPayment } from "@/actions/checkout";
+import { CopyButton } from "@/components/checkout/copy-button";
+import type { BankDetails } from "@/emails/types";
+import { getBankDetails } from "@/lib/settings/bank";
 import { getOrderSummary } from "@/lib/orders/server";
 import type { OrderSummary } from "@/lib/orders/types";
 import { formatARS } from "@/lib/pricing";
@@ -40,6 +43,36 @@ function Totals({ o }: { o: OrderSummary }) {
         <dt>Total</dt>
         <dd>{formatARS(o.total)}</dd>
       </div>
+    </dl>
+  );
+}
+
+/** Datos para transferir, con botón de copiar en lo que se tipea a mano (CBU, alias, monto). */
+function BankBox({ bank, total }: { bank: BankDetails; total: number }) {
+  const rows: { label: string; value: string; copy?: boolean }[] = [
+    { label: "Titular", value: bank.holder },
+    ...(bank.bank ? [{ label: "Banco", value: bank.bank }] : []),
+    ...(bank.cbu ? [{ label: "CBU/CVU", value: bank.cbu, copy: true }] : []),
+    ...(bank.alias ? [{ label: "Alias", value: bank.alias, copy: true }] : []),
+    ...(bank.cuit ? [{ label: "CUIT", value: bank.cuit }] : []),
+    { label: "Monto", value: String(total), copy: true },
+  ];
+  return (
+    <dl
+      className="mt-3 grid gap-2 rounded-xl border bg-mist/50 p-4"
+      aria-label="Datos para transferir"
+    >
+      {rows.map((r) => (
+        <div key={r.label} className="flex flex-wrap items-center justify-between gap-2">
+          <div className="min-w-0">
+            <dt className="text-sm text-muted-foreground">{r.label}</dt>
+            <dd className="font-medium break-all tabular-nums">
+              {r.label === "Monto" ? formatARS(total) : r.value}
+            </dd>
+          </div>
+          {r.copy ? <CopyButton value={r.value} label={r.label} /> : null}
+        </div>
+      ))}
     </dl>
   );
 }
@@ -107,6 +140,7 @@ async function Result({ search }: { search: Promise<Search> }) {
       </p>
     );
   } else {
+    const bank = await getBankDetails();
     body = (
       <>
         <p>
@@ -114,9 +148,14 @@ async function Result({ search }: { search: Promise<Search> }) {
           {site.transferDiscountPercent} % de descuento) indicando el número de pedido{" "}
           <strong>#{o.number}</strong> en el concepto.
         </p>
+        {bank ? (
+          <BankBox bank={bank} total={o.total} />
+        ) : (
+          <p className="mt-2">Te enviamos los datos bancarios por email o WhatsApp.</p>
+        )}
         <p className="mt-2">
-          Te enviamos los datos bancarios y confirmamos el pago por email o WhatsApp. Guardamos el
-          stock de tu pedido por 30 minutos.
+          Cuando acreditemos la transferencia te confirmamos por email. Guardamos el stock de tu
+          pedido por 30 minutos.
         </p>
       </>
     );

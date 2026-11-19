@@ -5,28 +5,16 @@ import { OrderReceivedEmail, orderReceivedSubject } from "@/emails/order-receive
 import { PaymentApprovedEmail, paymentApprovedSubject } from "@/emails/payment-approved";
 import { OrderCancelledEmail, orderCancelledSubject } from "@/emails/order-cancelled";
 import { OrderShippedEmail, orderShippedSubject } from "@/emails/order-shipped";
-import type { BankDetails } from "@/emails/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
 import { sendEmail } from "@/lib/email/send";
 import { getIntegrationSetting } from "@/lib/settings/integrations";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { toEmailOrder, type OrderForEmail } from "./email-mapping";
+import { getBankDetails } from "@/lib/settings/bank";
 import { SITE_URL } from "@/lib/site-url";
 
 const siteUrl = () => SITE_URL;
-
-/** Datos bancarios públicos (store_settings "bank_transfer"); null si todavía no se cargaron. */
-async function bankDetails(): Promise<BankDetails | null> {
-  const { data } = await createSupabasePublicClient()
-    .from("store_settings")
-    .select("value")
-    .eq("key", "bank_transfer")
-    .maybeSingle();
-  const v = data?.value as Partial<BankDetails> | undefined;
-  return v?.holder ? (v as BankDetails) : null;
-}
 
 /** Pedido recién creado: email al cliente (+ datos de transferencia) y aviso a la tienda. */
 export async function notifyOrderPlaced(order: OrderForEmail) {
@@ -34,7 +22,7 @@ export async function notifyOrderPlaced(order: OrderForEmail) {
   // Con tarjeta el email útil es el de pago aprobado (evita dos emails seguidos).
   const tasks: Promise<unknown>[] = [];
   if (order.payment_method === "bank_transfer") {
-    const bank = await bankDetails().catch(() => null);
+    const bank = await getBankDetails();
     tasks.push(
       sendEmail({
         to: order.email,

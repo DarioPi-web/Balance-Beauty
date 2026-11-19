@@ -1295,6 +1295,15 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean };
       place_order: { Args: { p_checkout: Json; p_server_key: string }; Returns: Json };
       release_expired_reservations: { Args: never; Returns: number };
+      request_withdrawal: {
+        Args: {
+          p_email: string;
+          p_full_name: string;
+          p_order_number?: number;
+          p_reason?: string;
+        };
+        Returns: Json;
+      };
       search_products: {
         Args: { max_results?: number; q: string };
         Returns: {

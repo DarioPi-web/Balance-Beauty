@@ -95,7 +95,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] F4‑08 · **P0** · Webhook firmado + idempotente → `confirm_payment()` — 1d · 🟡 `/api/webhooks/mercadopago` valida firma HMAC y re‑consulta el pago; `confirm_payment()` idempotente (solo service_role) hecho y probado; falta cargar `SUPABASE_SERVICE_ROLE_KEY`
 - [x] F4‑10 · **P0** · Validación del checkout (Zod en servidor) + formulario `/checkout` progresivo — 0,5d
 - [x] F4‑09 · **P0** · Página `/checkout/resultado` (aprobado, pendiente, rechazado) — 0,5d · `get_order_summary` por uuid; actualización manual (sin polling)
-- [ ] F4‑10b · **P0** · Flujo transferencia/QR: datos bancarios desde settings, subida de comprobante a bucket privado, vencimiento 48 h — 1d
+- [ ] F4‑10b · **P0** · Flujo transferencia/QR: datos bancarios desde settings, subida de comprobante a bucket privado, vencimiento 48 h — 1d · 🟡 v1.0 (L3): datos bancarios en el resultado y en el email; faltan comprobante y vencimiento 48 h
 - [ ] F4‑11 · **P0** · Emails React Email: pedido recibido, pago aprobado, transferencia pendiente, enviado, cancelado — 1,5d · 🟡 hechos: pedido recibido (con datos de transferencia), pago aprobado y aviso a la tienda (`apps/web/emails/`, `lib/email/send.ts`, envío con `after()`); enviado y cancelado hechos (desde /admin); falta la cuenta de Resend
 - [ ] F4‑12 · **P0** · Cron `release_expired_reservations` (pg_cron) — 0,25d
 - [x] F4‑13 · **P1** · Rate limiting en acciones de checkout y login (Upstash) — 0,5d · ✅ clave de servidor en `place_order` (hash en `private.server_keys`), máx. 5 pedidos/h por IP (hash) y 3 pendientes por email, honeypot + token de tiempo firmado. Turnstile queda opcional
