@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   reactStrictMode: true,
   poweredByHeader: false,
+  experimental: {
+    // Fotos del admin: el navegador las achica a 2000 px (≈ 0,5–1,5 MB) y las sube de a una.
+    // Por debajo del límite de 4,5 MB del cuerpo de una función de Vercel.
+    serverActions: { bodySizeLimit: "4mb" },
+  },
   // experimental.inlineCss: medido y descartado (2026-11-18). Duplica el CSS 3 veces en el HTML
   // (style + 2× payload RSC): documento 17 → 75 KB gz, TBT 140 → 346 ms. Ver docs/11.
   turbopack: {

@@ -117,9 +117,9 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 
 - [ ] F6‑01 · **P0** · Layout admin, guard por rol (middleware + layout + RLS), custom access token hook — 0,5d · 🟡 guard en `app/admin/layout.tsx` (sesión + `is_admin()` en la base) y `proxy.ts`; falta habilitar el custom access token hook en Supabase Auth
 - [ ] F6‑02 · **P0** · Dashboard: ventas hoy/mes, pedidos por estado, stock bajo — 1d
-- [ ] F6‑03 · **P0** · Productos: DataTable (TanStack Table) con búsqueda, filtros y edición inline de precio/stock — 1,5d
-- [ ] F6‑04 · **P0** · Producto: formulario completo, editor de texto enriquecido (Tiptap), SEO, categorías, relacionados — 1,5d
-- [ ] F6‑05 · **P0** · Uploader de imágenes (drag&drop, reordenar, alt, compresión en cliente) a Storage — 1d
+- [ ] F6‑03 · **P0** · Productos: DataTable (TanStack Table) con búsqueda, filtros y edición inline de precio/stock — 1,5d · 🟡 v1.0 (L2): listado server con búsqueda, filtros (estado, sin foto, sin stock, stock bajo) y alta de borrador; sin edición inline
+- [ ] F6‑04 · **P0** · Producto: formulario completo, editor de texto enriquecido (Tiptap), SEO, categorías, relacionados — 1,5d · 🟡 v1.0 (L2): formulario completo con texto plano (sin Tiptap), RPC `admin_save_product`; faltan relacionados y activos
+- [ ] F6‑05 · **P0** · Uploader de imágenes (drag&drop, reordenar, alt, compresión en cliente) a Storage — 1d · 🟡 v1.0 (L2): selección múltiple/cámara, compresión en cliente, AVIF en servidor, ordenar, alt, borrar; falta drag&drop
 - [ ] F6‑06 · **P1** · Import/Export CSV de productos y actualización masiva de precios (± %) — 1d
 - [ ] F6‑07 · **P0** · Pedidos: lista, detalle, cambio de estado con timeline, tracking, notas, reenviar email, confirmar transferencia — 2d · 🟡 hecho: lista con filtro por estado, detalle (cliente, ítems, pagos, envíos, notas), acreditar transferencia, preparar, despachar con tracking, entregar, cancelar (devuelve stock) vía RPC `admin_order_action` + emails; falta reenviar email y timeline visual
 - [ ] F6‑08 · **P1** · Clientes: lista, detalle, pedidos, aprobar mayorista — 0,5d
