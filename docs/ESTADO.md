@@ -27,6 +27,9 @@
 
 ## Sesión 2026‑11‑18
 
+- 🚀 Deploy a **staging** (preview protegida, aprobado por el dueño): `balance-beauty-37wwrmrx4-dariopi2012-7192.vercel.app`, commit 2985dbe, build en Vercel (`vercel deploy --target=preview`, `.vercelignore` excluye secretos). Rutas, noindex, video AV1 y cache verificados. **Pendiente:** el sitio usa `http://localhost:3000` como URL pública en staging (sitemap/canonical/back_urls de MP) → conectar `lib/site-url.ts` (creado, sin usar todavía) y redeploy; MP webhook necesita bypass de protección de Vercel.
+- 📋 Plan de catálogo, inventario por lote (FEFO), imágenes, contenido con IA y automatizaciones: [docs/17](17-plan-catalogo-inventario-y-automatizacion.md). Esperando 8 decisiones del dueño (§9).
+
 - ✅ Optimización (tarde): JS inicial home 167 → 153 KB gz, CSS −33 %, video AV1 (−43/−54 %), cache de `/public`, 21 componentes shadcn sin uso eliminados (se recuperan con `shadcn add`). Detalle y lo descartado en docs/11 §Optimización 2026‑11‑18. E2E 575/575, visual 15/15, Lighthouse CI en verde.
 
 - Header nuevo (referencia del sitio anterior), páginas Promociones/Contacto/Mayorista/Preguntas frecuentes, video de marca como fondo del hero (reemplaza WebGL), `/admin/integraciones` (migración 8, Vault), servicio `apps/integrations` (Hono + Andreani, 9 tests).
