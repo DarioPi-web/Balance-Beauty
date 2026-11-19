@@ -2,7 +2,7 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-19 · v1.0 casi completa (faltan L6 webhook MP y L8 producción) + v1.1 y v1.2 hechas · contexto completo en [CONTEXTO.md](CONTEXTO.md) · staging con versión anterior
+**Última actualización:** 2026-11-19 · producción en balance-beauty.vercel.app con la versión 4ce42a9 (base de staging, sin dominio) · v1.1 y v1.2 hechas · contexto en [CONTEXTO.md](CONTEXTO.md)
 
 > Contexto general (stack, identificadores, credenciales): [CONTEXTO.md](CONTEXTO.md).
 
@@ -28,6 +28,8 @@
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 
 ## Sesión 2026‑11‑18
+
+- 🚀 **Producción (Vercel) 2026‑11‑19, aprobado por el dueño:** commit `4ce42a9` en https://balance-beauty.vercel.app (sin dominio propio todavía; usa la base de **staging**). Ojo: la dirección de producción `*.vercel.app` es **pública** (la protección de Vercel solo cubre previews). Fix listo para el próximo deploy: `X-Robots-Tag: noindex` en todo host `*.vercel.app`. Hubo además un deploy de producción del commit viejo `2985dbe` creado desde el panel de Vercel.
 
 - 🚀 Deploy a **staging** (preview protegida, aprobado por el dueño): `balance-beauty-37wwrmrx4-dariopi2012-7192.vercel.app`, commit 2985dbe, build en Vercel (`vercel deploy --target=preview`, `.vercelignore` excluye secretos). Rutas, noindex, video AV1 y cache verificados. URL pública corregida en código (L1, `lib/site-url.ts`): falta redeploy a staging para verla; MP webhook necesita bypass de protección de Vercel.
 - 📋 Plan de catálogo, inventario por lote (FEFO), imágenes, contenido con IA y automatizaciones: [docs/17](17-plan-catalogo-inventario-y-automatizacion.md). Esperando 8 decisiones del dueño (§9).

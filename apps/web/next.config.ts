@@ -95,6 +95,14 @@ const nextConfig: NextConfig = {
       ...(process.env.VERCEL_ENV === "preview"
         ? [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }]
         : []),
+      // Las direcciones *.vercel.app (también la de producción, que es pública) nunca se
+      // indexan: solo el dominio propio. Evita contenido duplicado antes y después del cambio
+      // de DNS (docs/09) y que Google indexe el sitio mientras usa la base de pruebas.
+      {
+        source: "/:path*",
+        has: [{ type: "host" as const, value: "(?<sub>.*)\\.vercel\\.app" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
     ];
   },
   async redirects() {
