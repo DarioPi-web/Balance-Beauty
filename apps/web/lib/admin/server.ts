@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
@@ -8,6 +9,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
  * Usar dentro de <Suspense> (lee cookies).
  */
 export async function requireAdmin(path = "/admin") {
+  // La validación del JWT usa la hora actual: siempre por pedido, nunca en el prerender.
+  await connection();
   const supabase = await createSupabaseServerClient();
   const { data: claims } = await supabase.auth.getClaims();
   if (!claims?.claims) redirect(`/ingresar?next=${encodeURIComponent(path)}`);

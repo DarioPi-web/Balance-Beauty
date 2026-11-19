@@ -35,9 +35,9 @@ async function ProductEditor({
   search,
 }: {
   params: Promise<{ id: string }>;
-  search: Promise<{ ok?: string; error?: string }>;
+  search: Promise<{ ok?: string; error?: string; falta?: string }>;
 }) {
-  const [{ id }, { ok, error: errMsg }] = await Promise.all([params, search]);
+  const [{ id }, { ok, error: errMsg, falta }] = await Promise.all([params, search]);
   if (!UUID_RE.test(id)) notFound();
   const { supabase } = await requireAdmin(`/admin/productos/${id}`);
 
@@ -86,7 +86,13 @@ async function ProductEditor({
         ) : null}
       </header>
 
-      {ok && OK[ok] ? (
+      {falta ? (
+        <p role="alert" className="rounded-xl border border-alert/40 bg-rose-soft px-4 py-3">
+          Se guardaron los cambios, pero <strong>todavía no se publicó</strong>: falta{" "}
+          {falta.slice(0, 120)}. Completalo y elegí “Publicado” de nuevo.
+        </p>
+      ) : null}
+      {ok && OK[ok] && !falta ? (
         <p role="status" className="rounded-xl border border-leaf/40 bg-mist px-4 py-3">
           {OK[ok]}
         </p>
@@ -500,7 +506,7 @@ export default function ProductoAdminPage({
     <Suspense fallback={<div className="h-96 rounded-2xl bg-mist/60" aria-hidden="true" />}>
       <ProductEditor
         params={params}
-        search={searchParams as Promise<{ ok?: string; error?: string }>}
+        search={searchParams as Promise<{ ok?: string; error?: string; falta?: string }>}
       />
     </Suspense>
   );

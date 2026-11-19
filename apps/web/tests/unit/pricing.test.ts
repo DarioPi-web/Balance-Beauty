@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   formatARS,
   installmentAmount,
+  priceWithoutNationalTaxes,
   priceWithPaymentDiscount,
   remainingToThreshold,
 } from "@/lib/pricing";
@@ -39,5 +40,11 @@ describe("remainingToThreshold", () => {
   it("calcula lo que falta para 12 cuotas", () => {
     expect(remainingToThreshold(137700, 150000)).toBe(12300);
     expect(remainingToThreshold(160000, 150000)).toBe(0);
+  });
+
+  it("precio sin impuestos nacionales igual que la base (Ley 27.743)", () => {
+    expect(priceWithoutNationalTaxes(12100)).toBe(10000);
+    expect(priceWithoutNationalTaxes(32000)).toBe(26446);
+    expect(() => priceWithoutNationalTaxes(-1)).toThrow();
   });
 });

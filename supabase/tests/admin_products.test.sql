@@ -1,7 +1,7 @@
 -- pgTAP: admin de productos (migración 10): alta con slug único, reglas para publicar,
 -- precio sin impuestos nacionales, categorías/preocupaciones y permisos.
 begin;
-select plan(9);
+select plan(11);
 
 insert into auth.users (id, instance_id, aud, role, email, raw_user_meta_data, created_at, updated_at) values
   ('11111111-1111-4111-8111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@test.local', '{}', now(), now()),
@@ -19,8 +19,10 @@ select isnt((select slug from public.products where id = public.admin_create_pro
   'serum-prueba-acido-hialuronico', 'slug único');
 select is((select status::text from public.products where id = (select id from _p)), 'draft', 'nace en borrador');
 
-select throws_like($$ select public.admin_save_product((select id from _p), '{"name":"Sérum","price":"12100","stock":"5","status":"active"}') $$,
-  '%foto%', 'no se publica sin foto');
+select is(public.admin_save_product((select id from _p), '{"name":"Sérum","price":"12100","stock":"5","status":"active"}')->'missing',
+  '["una foto", "una categoría"]'::jsonb, 'sin foto ni categoría: guarda y avisa qué falta');
+select is((select status::text from public.products where id = (select id from _p)), 'draft', 'y queda en borrador');
+select is((select price from public.products where id = (select id from _p)), 12100, 'sin perder lo cargado');
 insert into public.product_images (product_id, storage_path, alt) values ((select id from _p), 'x/y.avif', 'x');
 select throws_like($$ select public.admin_save_product((select id from _p), '{"name":"Sérum","price":"12100","compare_at_price":"100","stock":"5","status":"draft"}') $$,
   '%tachado%', 'el tachado tiene que ser mayor');

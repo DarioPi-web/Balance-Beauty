@@ -120,7 +120,7 @@ export async function saveProduct(fd: FormData): Promise<void> {
   const primary = str(fd, "primary_concern");
 
   const { supabase } = await requireAdmin(`/admin/productos/${id}`);
-  const { error } = await supabase.rpc("admin_save_product", {
+  const { data, error } = await supabase.rpc("admin_save_product", {
     p_id: id,
     p_data: parsed.data!,
     p_category_ids: ids("category_ids"),
@@ -129,7 +129,9 @@ export async function saveProduct(fd: FormData): Promise<void> {
   });
   if (error) back(id, { error: dbMessage(error, "admin.product.save") });
   updateTag(CATALOG_TAG);
-  back(id, { ok: "guardado" });
+  // Se guardó todo; si se pidió publicar y falta algo, queda como borrador y se avisa qué.
+  const missing = ((data as { missing?: string[] } | null)?.missing ?? []).join(", ");
+  back(id, missing ? { ok: "guardado", falta: missing } : { ok: "guardado" });
 }
 
 // ── Fotos ────────────────────────────────────────────────────────────────────────────────
@@ -172,32 +174,28 @@ export async function uploadProductImage(fd: FormData): Promise<UploadResult> {
 
     const resize = (w: number) =>
       input.clone().resize({ width: w, height: w, fit: "inside", withoutEnlargement: true });
-    const master = await resize(MASTER_WIDTH)
-      .avif({ quality: 60, effort: 4 })
-      .toBuffer({ resolveWithObject: true });
-    const outputs: { key: string; body: Buffer; type: string }[] = [
+    // Codificación y subida en paralelo (sharp usa el pool de libvips; Storage acepta varias).
+    const [master, share, ...variants] = await Promise.all([
+      resize(MASTER_WIDTH).avif({ quality: 60, effort: 3 }).toBuffer({ resolveWithObject: true }),
+      resize(SHARE_WIDTH).jpeg({ quality: 82, mozjpeg: true }).toBuffer(),
+      ...keys.variants.map((v) => resize(v.width).avif({ quality: 55, effort: 3 }).toBuffer()),
+    ]);
+    const outputs = [
       { key: keys.master, body: master.data, type: "image/avif" },
-      {
-        key: keys.share,
-        body: await resize(SHARE_WIDTH).jpeg({ quality: 82, mozjpeg: true }).toBuffer(),
-        type: "image/jpeg",
-      },
+      { key: keys.share, body: share, type: "image/jpeg" },
+      ...keys.variants.map((v, i) => ({ key: v.key, body: variants[i], type: "image/avif" })),
     ];
-    for (const v of keys.variants) {
-      outputs.push({
-        key: v.key,
-        body: await resize(v.width).avif({ quality: 55, effort: 4 }).toBuffer(),
-        type: "image/avif",
-      });
-    }
-    for (const o of outputs) {
-      const { error } = await store.upload(o.key, o.body, {
-        contentType: o.type,
-        cacheControl: "31536000",
-        upsert: false,
-      });
-      if (error) throw new Error(error.message);
-    }
+    const uploads = await Promise.all(
+      outputs.map((o) =>
+        store.upload(o.key, o.body, {
+          contentType: o.type,
+          cacheControl: "31536000",
+          upsert: false,
+        }),
+      ),
+    );
+    const failed = uploads.find((u) => u.error);
+    if (failed?.error) throw new Error(failed.error.message);
     const order = Math.max(-1, ...(product.product_images ?? []).map((i) => i.sort_order)) + 1;
     const { error } = await supabase.from("product_images").insert({
       product_id: id,

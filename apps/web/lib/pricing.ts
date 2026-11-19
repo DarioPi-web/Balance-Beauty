@@ -22,6 +22,18 @@ export function priceWithPaymentDiscount(price: number, percent: number): number
   return Math.floor((price * (100 - percent)) / 100);
 }
 
+/** IVA general (cosméticos). Única fuente: la base usa el mismo 21 % (migraciones 10/11). */
+export const VAT_PERCENT = 21;
+
+/**
+ * "Precio sin impuestos nacionales" (Ley 27.743 art. 99): precio final sin IVA, redondeado
+ * igual que la base (round(precio / 1,21)).
+ */
+export function priceWithoutNationalTaxes(price: number): number {
+  if (!Number.isFinite(price) || price < 0) throw new RangeError("precio inválido");
+  return Math.round(price / (1 + VAT_PERCENT / 100));
+}
+
 /** Valor de cada cuota sin interés, redondeado hacia arriba para no mostrar menos de lo real. */
 export function installmentAmount(total: number, installments: number): number {
   if (!Number.isInteger(installments) || installments < 1) {

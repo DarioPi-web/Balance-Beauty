@@ -1,4 +1,9 @@
-import { formatARS, installmentAmount, priceWithPaymentDiscount } from "@/lib/pricing";
+import {
+  formatARS,
+  installmentAmount,
+  priceWithoutNationalTaxes,
+  priceWithPaymentDiscount,
+} from "@/lib/pricing";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +43,10 @@ export function PriceBlock({
       </p>
       <p className={cn("text-muted-foreground", size === "lg" ? "mt-1 text-base" : "text-sm")}>
         {n} cuotas sin interés de {formatARS(installmentAmount(price, n))}
+      </p>
+      {/* Ley 27.743 art. 99: en letra menor que el precio final, con esta leyenda. */}
+      <p className={cn("text-muted-foreground", size === "lg" ? "mt-1 text-sm" : "text-xs")}>
+        Precio sin impuestos nacionales: {formatARS(priceWithoutNationalTaxes(price))}
       </p>
     </div>
   );
