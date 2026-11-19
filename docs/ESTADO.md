@@ -2,7 +2,7 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-19 · producción en balance-beauty.vercel.app con la versión 60c19c4 (noindex) (base de staging, sin dominio) · v1.1 y v1.2 hechas · contexto en [CONTEXTO.md](CONTEXTO.md)
+**Última actualización:** 2026-11-19 · producción `220f3dd` (Excel + vendedoras) en balance-beauty.vercel.app (base de staging, sin dominio) · contexto en [CONTEXTO.md](CONTEXTO.md)
 
 > Contexto general (stack, identificadores, credenciales): [CONTEXTO.md](CONTEXTO.md).
 
@@ -28,6 +28,8 @@
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 
 ## Sesión 2026‑11‑18
+
+- 🚀 **Producción 2026‑11‑19 (aprobado por el dueño):** `220f3dd` con Excel + vendedoras en https://balance-beauty.vercel.app. Verificado: páginas públicas 200, paneles privados y descarga de planilla piden ingresar, CSP y noindex activos.
 
 - ✅ **Excel + vendedoras (2026‑11‑19, pedido del dueño):** planilla de productos (`/admin/productos/planilla`: descargar, vista previa, aplicar todo-o-nada), módulo de vendedoras (`/admin/vendedoras`, panel `/vendedora`, código de descuento en el checkout, comisión por producto según el estado del pedido, liquidaciones). Migración 17. Unitarios 106, E2E 669/669. Guía: [GUIA-PLANILLA-Y-VENDEDORAS.md](GUIA-PLANILLA-Y-VENDEDORAS.md). Probado en el navegador con sesión de admin (planilla real: descargar, errores por fila, aplicar; vendedora, código, checkout con código, panel `/vendedora`); datos de prueba borrados. Arreglo: respaldo de cookies ante un bug de Next al refrescar la sesión durante una Server Action (`lib/supabase/server.ts`).
 - 👥 Administradoras agregadas por pedido del dueño (2026‑11‑19): 2 usuarias más con rol `admin` (registrado en `audit_log`).

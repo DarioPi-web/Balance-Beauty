@@ -1,7 +1,7 @@
 # Contexto del proyecto — leer primero
 
 > Resumen para cualquier persona o sesión de IA (Claude Code, Cursor, etc.) que toma el proyecto
-> desde cero en cualquier PC. **Actualizado: 2026‑11‑19** (último commit `b75623c`, v1.2).
+> desde cero en cualquier PC. **Actualizado: 2026‑11‑19** (último commit `220f3dd`: Excel + vendedoras).
 > Orden de lectura: este archivo → [ESTADO.md](ESTADO.md) (punto de retorno) →
 > [18 Hoja de ruta](18-roadmap-lanzamiento-y-actualizaciones.md) (qué sigue) → [../CLAUDE.md](../CLAUDE.md) (reglas).
 > **Nunca** guardar secretos acá: solo identificadores públicos y dónde vive cada credencial.
