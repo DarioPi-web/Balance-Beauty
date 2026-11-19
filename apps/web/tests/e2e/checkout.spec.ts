@@ -27,12 +27,18 @@ test.describe("checkout", () => {
     await page.goto("/checkout");
     const form = page.locator("form");
     test.skip(!(await form.count()), "Checkout sin Supabase en este entorno");
-    const total = await page.locator("dl").filter({ hasText: "Total" }).last().innerText();
+    // Esperar la hidratación: antes de eso el campo no pasa a mayúsculas (WebKit es más lento).
+    await page.waitForLoadState("networkidle");
+    const totalOf = async () =>
+      (await page.locator("form dl").last().innerText()).match(/Total\s+(\$\s?[\d.]+)/)?.[1];
+    const total = await totalOf();
+    expect(total).toBeTruthy();
     await page.getByLabel(/Código de descuento/).fill("noexiste99");
+    await expect(page.getByRole("button", { name: "Aplicar" })).toBeEnabled();
     await expect(page.getByLabel(/Código de descuento/)).toHaveValue("NOEXISTE99");
     await page.getByRole("button", { name: "Aplicar" }).click();
     await expect(page.locator("#co-couponMsg")).toContainText("no es válido");
-    expect(await page.locator("dl").filter({ hasText: "Total" }).last().innerText()).toBe(total);
+    expect(await totalOf()).toBe(total);
   });
 
   test("desde el carrito, el servidor valida los datos y conserva lo escrito", async ({ page }) => {
