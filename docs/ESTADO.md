@@ -20,6 +20,8 @@
 
 ## Próximos pasos (en orden)
 
+> **Desde 2026‑11‑18 el orden lo define [docs/18](18-roadmap-lanzamiento-y-actualizaciones.md): v1.0 (lanzamiento, tareas L1–L8 y D1–D9) y después actualizaciones v1.1…v2.0.** L1 ✅. Siguiente: L2 admin de productos mínimo. La etapa A de inventario (v1.2) está guardada en la rama `feat/inventario-lotes` sin aplicar.
+
 1. Cerrar F3: páginas de línea y de activos (S‑03, requieren contenido revisado por profesional), regresión visual (R‑08 ✅, local con `VISUAL=1`), View Transitions (F3‑13 ✅), revalidación por tag (F3‑07 ✅ `POST /api/revalidate`). Hechos: búsqueda, marcas, quiz `/rutina`, error.tsx, axe.
 2. ✅ JS inicial bajo el tope (2026‑11‑17): todas las rutas ≤ 190.507 bytes (home 185.743). Se quitó `sonner`/`next-themes` y el paquete `cn`; Lighthouse CI ahora sí ejecuta las aserciones (antes fallaba la config). Detalle en `docs/perf/fase-3-catalogo.md`.
 3. F4: probar tarjeta con credenciales TEST; datos bancarios en `store_settings`; emails 🟡 (F4‑11: pedido recibido, pago aprobado y aviso a la tienda con Resend + React Email; sin `RESEND_API_KEY` se registran en el log y no salen). Anti‑spam ✅ (F4‑13, migración 6): `place_order(p_checkout, p_server_key)` exige `CHECKOUT_SERVER_KEY` (la base guarda solo el hash en `private.server_keys`; rotar = nueva clave en Vercel/.env.local + `update private.server_keys`), máx. 5 pedidos/h por IP (hash con sal) y 3 pendientes por email, honeypot `website` + token de tiempo firmado (2,5 s–2 h). Opcional a futuro: Cloudflare Turnstile (requiere cuenta del dueño).
@@ -27,7 +29,7 @@
 
 ## Sesión 2026‑11‑18
 
-- 🚀 Deploy a **staging** (preview protegida, aprobado por el dueño): `balance-beauty-37wwrmrx4-dariopi2012-7192.vercel.app`, commit 2985dbe, build en Vercel (`vercel deploy --target=preview`, `.vercelignore` excluye secretos). Rutas, noindex, video AV1 y cache verificados. **Pendiente:** el sitio usa `http://localhost:3000` como URL pública en staging (sitemap/canonical/back_urls de MP) → conectar `lib/site-url.ts` (creado, sin usar todavía) y redeploy; MP webhook necesita bypass de protección de Vercel.
+- 🚀 Deploy a **staging** (preview protegida, aprobado por el dueño): `balance-beauty-37wwrmrx4-dariopi2012-7192.vercel.app`, commit 2985dbe, build en Vercel (`vercel deploy --target=preview`, `.vercelignore` excluye secretos). Rutas, noindex, video AV1 y cache verificados. URL pública corregida en código (L1, `lib/site-url.ts`): falta redeploy a staging para verla; MP webhook necesita bypass de protección de Vercel.
 - 📋 Plan de catálogo, inventario por lote (FEFO), imágenes, contenido con IA y automatizaciones: [docs/17](17-plan-catalogo-inventario-y-automatizacion.md). Esperando 8 decisiones del dueño (§9).
 
 - ✅ Optimización (tarde): JS inicial home 167 → 153 KB gz, CSS −33 %, video AV1 (−43/−54 %), cache de `/public`, 21 componentes shadcn sin uso eliminados (se recuperan con `shadcn add`). Detalle y lo descartado en docs/11 §Optimización 2026‑11‑18. E2E 575/575, visual 15/15, Lighthouse CI en verde.

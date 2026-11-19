@@ -13,9 +13,9 @@ import { getIntegrationSetting } from "@/lib/settings/integrations";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { toEmailOrder, type OrderForEmail } from "./email-mapping";
+import { SITE_URL } from "@/lib/site-url";
 
-const siteUrl = () =>
-  (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+const siteUrl = () => SITE_URL;
 
 /** Datos bancarios públicos (store_settings "bank_transfer"); null si todavía no se cargaron. */
 async function bankDetails(): Promise<BankDetails | null> {

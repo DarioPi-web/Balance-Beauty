@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/toast";
 import { brand } from "@/lib/brand";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site-url";
 
 // Tipografías de la dirección "B · Botánica clínica" (ADR-017).
 // Geist: UI, textos y precios. Cormorant Garamond: titulares (armoniza con la serif del logo).
@@ -24,7 +25,7 @@ const display = Cormorant_Garamond({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

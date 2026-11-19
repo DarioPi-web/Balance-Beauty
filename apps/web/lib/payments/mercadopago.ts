@@ -3,6 +3,7 @@ import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
 import { buildPreferenceBody, mapMercadoPagoStatus } from "./mercadopago-core";
 import { getIntegrationSetting } from "@/lib/settings/integrations";
 import type { CheckoutOrder, PaymentProvider, ProviderPayment } from "./types";
+import { SITE_URL } from "@/lib/site-url";
 
 /**
  * Adaptador de Mercado Pago (Checkout Pro) sobre el SDK oficial. Solo servidor.
@@ -24,7 +25,7 @@ export async function isMercadoPagoConfigured() {
 
 export const mercadoPago: PaymentProvider = {
   async createCheckout(order: CheckoutOrder) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const siteUrl = SITE_URL;
     const pref = await new Preference(await client()).create({
       body: buildPreferenceBody(order, { siteUrl }),
       requestOptions: { idempotencyKey: `pref-${order.id}` },

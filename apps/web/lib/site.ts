@@ -1,6 +1,7 @@
+import { SITE_URL } from "@/lib/site-url";
 /** Datos públicos del sitio (se migran a store_settings cuando haya Supabase). */
 export const site = {
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: SITE_URL,
   social: {
     instagram: "https://www.instagram.com/balancesaludbelleza",
     tiktok: "https://www.tiktok.com/@balancesaludbelleza",
