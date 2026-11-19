@@ -97,7 +97,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [x] F4‑09 · **P0** · Página `/checkout/resultado` (aprobado, pendiente, rechazado) — 0,5d · `get_order_summary` por uuid; actualización manual (sin polling)
 - [ ] F4‑10b · **P0** · Flujo transferencia/QR: datos bancarios desde settings, subida de comprobante a bucket privado, vencimiento 48 h — 1d · 🟡 v1.0 (L3): datos bancarios en el resultado y en el email; faltan comprobante y vencimiento 48 h
 - [ ] F4‑11 · **P0** · Emails React Email: pedido recibido, pago aprobado, transferencia pendiente, enviado, cancelado — 1,5d · 🟡 hechos: pedido recibido (con datos de transferencia), pago aprobado y aviso a la tienda (`apps/web/emails/`, `lib/email/send.ts`, envío con `after()`); enviado y cancelado hechos (desde /admin); falta la cuenta de Resend
-- [ ] F4‑12 · **P0** · Cron `release_expired_reservations` (pg_cron) — 0,25d
+- [x] F4‑12 · **P0** · Cron `release_expired_reservations` (pg_cron) — 0,25d · ✅ cada 5 min (migración 14)
 - [x] F4‑13 · **P1** · Rate limiting en acciones de checkout y login (Upstash) — 0,5d · ✅ clave de servidor en `place_order` (hash en `private.server_keys`), máx. 5 pedidos/h por IP (hash) y 3 pendientes por email, honeypot + token de tiempo firmado. Turnstile queda opcional
 - [ ] F4‑14 · **P1** · Eventos de analytics: view_item, add_to_cart, begin_checkout, purchase (GA4 + Meta CAPI) — 1d
 - [ ] F4‑15 · **P0** · Barra de progreso hacia 12 cuotas ✅. **Falta:** envío gratis (requiere definir umbral, Q‑04)
@@ -116,7 +116,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 ## F6 — Admin
 
 - [ ] F6‑01 · **P0** · Layout admin, guard por rol (middleware + layout + RLS), custom access token hook — 0,5d · 🟡 guard en `app/admin/layout.tsx` (sesión + `is_admin()` en la base) y `proxy.ts`; falta habilitar el custom access token hook en Supabase Auth
-- [ ] F6‑02 · **P0** · Dashboard: ventas hoy/mes, pedidos por estado, stock bajo — 1d
+- [x] F6‑02 · **P0** · Dashboard: ventas hoy/mes, pedidos por estado, stock bajo — 1d · ✅ inicio "Hoy" (RPC admin_dashboard, migración 14)
 - [ ] F6‑03 · **P0** · Productos: DataTable (TanStack Table) con búsqueda, filtros y edición inline de precio/stock — 1,5d · 🟡 v1.0 (L2): listado server con búsqueda, filtros (estado, sin foto, sin stock, stock bajo) y alta de borrador; sin edición inline
 - [ ] F6‑04 · **P0** · Producto: formulario completo, editor de texto enriquecido (Tiptap), SEO, categorías, relacionados — 1,5d · 🟡 v1.0 (L2): formulario completo con texto plano (sin Tiptap), RPC `admin_save_product`; faltan relacionados y activos
 - [ ] F6‑05 · **P0** · Uploader de imágenes (drag&drop, reordenar, alt, compresión en cliente) a Storage — 1d · 🟡 v1.0 (L2): selección múltiple/cámara, compresión en cliente, AVIF en servidor, ordenar, alt, borrar; falta drag&drop
@@ -126,7 +126,7 @@ Marcar `[x]` al completar. Cada tarea = 1 PR validado en local + CI (**sin deplo
 - [ ] F6‑09 · **P1** · Cupones y promociones (cuotas, % por medio de pago, vigencias) — 1d
 - [ ] F6‑10 · **P1** · Banners, FAQ, páginas legales, tarifas de envío, ajustes de tienda — 1,5d
 - [ ] F6‑11 · **P1** · Audit log y vista de cambios — 0,5d
-- [ ] F6‑12 · **P1** · Solicitudes de arrepentimiento y mensajes de contacto — 0,5d
+- [ ] F6‑12 · **P1** · Solicitudes de arrepentimiento y mensajes de contacto — 0,5d · 🟡 arrepentimientos en el inicio del admin (marcar atendida); faltan mensajes de contacto
 - [ ] F6‑13 · **P0** · Dashboard con vista materializada `sales_daily_mv` (pg_cron 15 min); listas con paginación keyset — 0,5d
 - [ ] F6‑14 · **P1** · Generar orden y etiqueta Andreani/Correo desde el pedido (vía cola del VPS) — 1d
 - [ ] F6‑15 · **P1** · Carga de activos (%), preocupaciones y paso de rutina por producto — 0,5d

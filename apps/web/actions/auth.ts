@@ -44,6 +44,8 @@ export async function signIn(_prev: SignInState, fd: FormData): Promise<SignInSt
 
 export async function signOut() {
   const supabase = await createSupabaseServerClient();
-  await supabase.auth.signOut();
+  // "local": cierra solo esta sesión. El valor por defecto ("global") revoca todas las del
+  // usuario y lo deja afuera también en el celular u otra PC.
+  await supabase.auth.signOut({ scope: "local" });
   redirect("/ingresar");
 }

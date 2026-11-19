@@ -1276,6 +1276,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      admin_dashboard: { Args: never; Returns: Json };
       admin_create_product: { Args: { p_name: string }; Returns: string };
       admin_integration_status: { Args: never; Returns: Json };
       admin_save_product: {
@@ -1288,6 +1289,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      admin_withdrawal_handle: { Args: { p_id: string }; Returns: Json };
       admin_set_integration_secret: { Args: { p_name: string; p_value: string }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       get_integration_secrets: { Args: { p_server_key: string }; Returns: Json };

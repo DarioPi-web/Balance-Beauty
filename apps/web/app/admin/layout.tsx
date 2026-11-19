@@ -29,8 +29,11 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
           className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6"
           aria-label="Admin"
         >
-          <Link href="/admin/pedidos" className="font-display text-xl font-semibold text-leaf">
+          <Link href="/admin" className="font-display text-xl font-semibold text-leaf">
             {brand.name} · Admin
+          </Link>
+          <Link href="/admin" className="inline-flex min-h-11 items-center">
+            Hoy
           </Link>
           <Link href="/admin/pedidos" className="inline-flex min-h-11 items-center">
             Pedidos
