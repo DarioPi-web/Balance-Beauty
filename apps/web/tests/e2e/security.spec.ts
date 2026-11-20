@@ -26,7 +26,13 @@ test.describe("seguridad", () => {
   });
 
   test("los paneles privados piden ingresar", async ({ page }) => {
-    for (const p of ["/admin", "/admin/vendedoras", "/admin/productos/planilla", "/vendedora"]) {
+    for (const p of [
+      "/admin",
+      "/admin/vendedoras",
+      "/admin/usuarios",
+      "/admin/productos/planilla",
+      "/vendedora",
+    ]) {
       await page.goto(p);
       await expect(page, p).toHaveURL(/\/ingresar\?next=/);
     }

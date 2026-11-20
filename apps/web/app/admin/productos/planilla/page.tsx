@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Download } from "lucide-react";
 import { ProductSheetUploader } from "@/components/admin/product-sheet-uploader";
+import { PageHeader, Panel, btnPrimary } from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/admin/server";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Editar con Excel" };
 
@@ -13,51 +15,49 @@ async function Gate({ children }: { children: React.ReactNode }) {
 
 export default function PlanillaPage() {
   return (
-    <div className="grid gap-6">
-      <p>
-        <Link
-          href="/admin/productos"
-          className="inline-flex min-h-11 items-center underline underline-offset-2"
-        >
-          ← Productos
-        </Link>
-      </p>
-      <header>
-        <h1 className="font-display text-4xl font-semibold">Editar productos con Excel</h1>
-        <p className="mt-2 max-w-2xl text-muted-foreground">
-          Cambiá nombres, precios, stock, peso y medidas de envío de muchos productos a la vez. Los
-          productos nuevos y las fotos se cargan desde el editor de cada producto.
-        </p>
-      </header>
+    <>
+      <PageHeader
+        back={{ href: "/admin/productos", label: "Productos" }}
+        title="Editar productos con Excel"
+        description="Cambiá nombres, precios, stock, peso y medidas de envío de muchos productos a la vez. Los productos nuevos y las fotos se cargan desde el editor de cada producto."
+      />
 
-      <section className="grid gap-3 rounded-2xl border bg-card p-5">
-        <h2 className="font-display text-2xl font-semibold">1. Descargá la planilla</h2>
-        <p className="text-sm text-muted-foreground">
-          Trae todos los productos con sus datos actuales. Editá las columnas verdes y guardala como
-          .xlsx (Excel, Google Sheets o LibreOffice).
-        </p>
-        <a
-          href="/admin/productos/planilla/descargar"
-          download
-          className="inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-leaf px-5 font-medium text-clinical hover:bg-leaf-hover"
-        >
-          Descargar planilla (.xlsx)
-        </a>
-        <ul className="grid list-disc gap-1 pl-5 text-sm text-muted-foreground">
-          <li>No cambies la columna “Código”: es la que identifica cada producto.</li>
-          <li>
-            Stock: si lo subís, se suma como lote “PLANILLA”; si lo bajás, sale del lote que vence
-            primero. Todo queda en el historial.
-          </li>
-          <li>Precios en pesos sin decimales; medidas en cm (admiten decimales).</li>
-        </ul>
-      </section>
-
-      <Suspense fallback={<div className="h-48 rounded-2xl bg-mist/60" aria-hidden="true" />}>
-        <Gate>
-          <ProductSheetUploader />
-        </Gate>
-      </Suspense>
-    </div>
+      <ol className="grid gap-6">
+        <li className="contents">
+          <Panel
+            title="1. Descargá la planilla"
+            description="Trae todos los productos con sus datos actuales."
+          >
+            <a
+              href="/admin/productos/planilla/descargar"
+              download
+              className={cn(btnPrimary, "w-fit")}
+            >
+              <Download aria-hidden="true" className="size-4" />
+              Descargar planilla (.xlsx)
+            </a>
+            <ul className="grid gap-2 text-sm text-muted-foreground">
+              <li>
+                • Editá las columnas verdes y guardala como .xlsx (Excel, Google Sheets o
+                LibreOffice).
+              </li>
+              <li>• No cambies la columna “Código”: es la que identifica cada producto.</li>
+              <li>
+                • Stock: si lo subís, se suma como lote “PLANILLA”; si lo bajás, sale del lote que
+                vence primero. Todo queda en el historial.
+              </li>
+              <li>• Precios en pesos sin decimales; medidas en cm (admiten decimales).</li>
+            </ul>
+          </Panel>
+        </li>
+        <li className="contents">
+          <Suspense fallback={<div className="h-48 rounded-2xl bg-mist/60" aria-hidden="true" />}>
+            <Gate>
+              <ProductSheetUploader />
+            </Gate>
+          </Suspense>
+        </li>
+      </ol>
+    </>
   );
 }

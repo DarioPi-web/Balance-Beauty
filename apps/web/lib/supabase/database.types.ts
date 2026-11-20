@@ -1380,6 +1380,10 @@ export type Database = {
         };
         Returns: Json;
       };
+      admin_list_users: {
+        Args: { p_limit?: number; p_offset?: number; p_query?: string; p_role?: string }
+        Returns: Json
+      }
       admin_order_action: {
         Args: {
           p_action: string;
@@ -1460,6 +1464,7 @@ export type Database = {
         Returns: string;
       };
       admin_sellers_overview: { Args: never; Returns: Json };
+      admin_set_user_role: { Args: { p_role: string; p_user_id: string }; Returns: Json }
       admin_set_integration_secret: { Args: { p_name: string; p_value: string }; Returns: Json };
       current_seller_id: { Args: never; Returns: string };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };

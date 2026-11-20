@@ -266,6 +266,11 @@ RPC: `check_coupon` (con clave de servidor), `place_order` (cupón opcional), `s
 `admin_create_payout`, `admin_sellers_overview`, `admin_bulk_update_products` (planilla Excel).
 Guía de uso: [GUIA-PLANILLA-Y-VENDEDORAS.md](GUIA-PLANILLA-Y-VENDEDORAS.md).
 
+## Usuarios y roles (migración 18)
+
+Roles (`user_role`): `customer` (cliente), `wholesale` (mayorista, se marca `wholesale_approved_at`), `staff` (equipo: entra al admin) y `admin` (todo, incluido cambiar roles). `is_admin()` incluye staff.
+`admin_list_users(p_query, p_role, p_limit, p_offset)` devuelve `{total, counts, users[]}` (auth.users + profiles, si es vendedora y cantidad de pedidos). `admin_set_user_role(p_user_id, p_role)`: nadie se quita a sí mismo el acceso al admin, siempre queda al menos un `admin`, cada cambio va a `audit_log` (`profile.role`). Ambas solo para `is_admin()`.
+
 ## Funciones (RPC)
 
 | Función                                     | Tipo                                   | Descripción                                                                                                                                                                       |

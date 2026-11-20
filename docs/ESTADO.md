@@ -2,7 +2,7 @@
 
 > Archivo de traspaso: se actualiza en cada commit. Si una sesión se corta (límite de uso, cierre de la app), una sesión nueva retoma leyendo esto primero, luego `CLAUDE.md` y `docs/05-backlog-tareas.md`.
 
-**Última actualización:** 2026-11-19 · producción `220f3dd` (Excel + vendedoras) en balance-beauty.vercel.app (base de staging, sin dominio) · contexto en [CONTEXTO.md](CONTEXTO.md)
+**Última actualización:** 2026-11-20 · rediseño del admin + usuarios y roles (sin publicar) · producción `220f3dd` (Excel + vendedoras) en balance-beauty.vercel.app (base de staging, sin dominio) · contexto en [CONTEXTO.md](CONTEXTO.md)
 
 > Contexto general (stack, identificadores, credenciales): [CONTEXTO.md](CONTEXTO.md).
 
@@ -28,6 +28,8 @@
 4. Gate de fase → preguntar al dueño si deploy a staging (requiere `VERCEL_TOKEN` en GitHub).
 
 ## Sesión 2026‑11‑18
+
+- ✅ **Admin rediseñado + usuarios y roles (2026‑11‑20, pedido del dueño), sin publicar todavía:** barra lateral agrupada por tarea (Operación · Catálogo · Personas · Configuración) y menú lateral en el celular; piezas comunes en `components/admin/ui.tsx` (encabezado, mensajes, paneles, indicadores, estados vacíos). Nueva `/admin/usuarios`: busca, filtra por rol con conteos y cambia el rol con confirmación en línea (migración 18: `admin_list_users`, `admin_set_user_role`; nadie se quita su propio acceso, siempre queda un admin, todo a `audit_log`). Pedidos con búsqueda y tarjetas en el celular; detalle con "Próximo paso"; editor de producto con índice de secciones y checklist para publicar; Integraciones con resumen de estado. pgTAP `supabase/tests/user_roles.test.sql` (staging no tiene pgtap: las reglas se verificaron con bloques revertidos). Verificado: typecheck, lint, 106 unitarios, build, E2E seguridad/admin/a11y 44/44, navegador en 375 px y 1366 px.
 
 - 🚀 **Producción 2026‑11‑19 (aprobado por el dueño):** `220f3dd` con Excel + vendedoras en https://balance-beauty.vercel.app. Verificado: páginas públicas 200, paneles privados y descarga de planilla piden ingresar, CSP y noindex activos.
 

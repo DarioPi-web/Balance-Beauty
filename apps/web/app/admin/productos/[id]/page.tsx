@@ -3,7 +3,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { editProductImage, saveProduct, uploadProductImage } from "@/actions/admin-products";
+import { Check, ExternalLink, X } from "lucide-react";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import {
+  Flash,
+  PageHeader,
+  Pill,
+  adminField,
+  adminLabel,
+  btnPrimary,
+  btnSecondary,
+} from "@/components/admin/ui";
 import { InventorySection, type Lot, type Movement } from "@/components/admin/inventory-section";
 import { imageSrc } from "@/lib/admin/image-paths";
 import { requireAdmin } from "@/lib/admin/server";
@@ -13,13 +23,30 @@ import { formatARS } from "@/lib/pricing";
 
 export const metadata: Metadata = { title: "Producto" };
 
-const field = "mt-1 block min-h-11 w-full rounded-xl border bg-background px-3 text-base";
-const area = "mt-1 block w-full rounded-xl border bg-background px-3 py-2 text-base";
-const label = "block text-sm font-medium";
+const field = adminField;
+const area =
+  "mt-1 block w-full rounded-xl border bg-background px-3 py-2 text-base outline-none focus-visible:border-leaf focus-visible:ring-2 focus-visible:ring-leaf/25";
+const label = adminLabel;
 const hint = "mt-1 block text-sm font-normal text-muted-foreground";
-const section = "grid gap-4 rounded-2xl border bg-card p-5";
-const h2 = "font-display text-2xl font-semibold";
-const check = "flex min-h-11 items-center gap-3";
+const section =
+  "grid scroll-mt-24 gap-4 rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:p-6";
+const h2 = "font-display text-2xl font-semibold text-graphite";
+const check = "flex min-h-11 items-center gap-3 [&>input]:accent-leaf";
+const SECTIONS = [
+  ["fotos", "Fotos"],
+  ["inventario", "Inventario"],
+  ["publicacion", "Publicación"],
+  ["datos", "Datos"],
+  ["precio", "Precio"],
+  ["clasificacion", "Categorías"],
+  ["envio", "Envío"],
+  ["google", "Google"],
+] as const;
+const STATUS = {
+  active: { label: "Publicado", tone: "success" },
+  draft: { label: "Borrador", tone: "warning" },
+  archived: { label: "Archivado", tone: "muted" },
+} as const;
 const smallBtn =
   "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 text-sm hover:bg-mist disabled:opacity-40";
 
@@ -77,47 +104,78 @@ async function ProductEditor({
   const conIds = new Set((p.product_concerns ?? []).map((c) => c.concern_id));
   const primary = (p.product_concerns ?? []).find((c) => c.is_primary)?.concern_id ?? "";
   const images = [...(p.product_images ?? [])].sort((a, b) => a.sort_order - b.sort_order);
+  const ready: [boolean, string][] = [
+    [images.length > 0, "una foto"],
+    [p.price > 0, "precio"],
+    [catIds.size > 0, "una categoría"],
+  ];
 
   return (
     <article className="grid gap-6">
-      <p>
-        <Link
-          href="/admin/productos"
-          className="inline-flex min-h-11 items-center underline underline-offset-2"
-        >
-          ← Productos
-        </Link>
-      </p>
-      <header className="flex flex-wrap items-center gap-3">
-        <h1 className="font-display text-4xl font-semibold">{p.name}</h1>
-        <span className="text-sm text-muted-foreground">Código {p.sku}</span>
-        {p.status === "active" ? (
-          <Link
-            href={`/producto/${p.slug}`}
-            target="_blank"
-            className="inline-flex min-h-11 items-center text-sm underline underline-offset-2"
-          >
-            Ver en la tienda (se abre en otra pestaña)
-          </Link>
-        ) : null}
-      </header>
+      <PageHeader
+        back={{ href: "/admin/productos", label: "Productos" }}
+        title={p.name}
+        meta={
+          <>
+            <Pill tone={STATUS[p.status].tone}>{STATUS[p.status].label}</Pill>
+            <span className="text-sm text-muted-foreground">Código {p.sku}</span>
+          </>
+        }
+        actions={
+          p.status === "active" ? (
+            <Link href={`/producto/${p.slug}`} target="_blank" className={btnSecondary}>
+              <ExternalLink aria-hidden="true" className="size-4" />
+              Ver en la tienda
+              <span className="sr-only">(se abre en otra pestaña)</span>
+            </Link>
+          ) : null
+        }
+      />
 
       {falta ? (
-        <p role="alert" className="rounded-xl border border-alert/40 bg-rose-soft px-4 py-3">
-          Se guardaron los cambios, pero <strong>todavía no se publicó</strong>: falta{" "}
-          {falta.slice(0, 120)}. Completalo y elegí “Publicado” de nuevo.
-        </p>
+        <Flash
+          error={`Se guardaron los cambios, pero todavía no se publicó: falta ${falta.slice(0, 120)}. Completalo y elegí “Publicado” de nuevo.`}
+        />
       ) : null}
-      {ok && OK[ok] && !falta ? (
-        <p role="status" className="rounded-xl border border-leaf/40 bg-mist px-4 py-3">
-          {OK[ok]}
-        </p>
+      <Flash ok={ok && OK[ok] && !falta ? OK[ok] : null} error={errMsg} />
+
+      {p.status !== "active" ? (
+        <section
+          aria-label="Para publicar"
+          className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-dashed bg-card px-5 py-4 text-sm"
+        >
+          <span className="font-medium">Para publicar:</span>
+          {ready.map(([done, text]) => (
+            <span key={text} className="inline-flex items-center gap-1.5">
+              {done ? (
+                <Check aria-hidden="true" className="size-4 text-leaf" />
+              ) : (
+                <X aria-hidden="true" className="size-4 text-alert" />
+              )}
+              <span className={done ? "" : "font-medium"}>{text}</span>
+              <span className="sr-only">{done ? "(listo)" : "(falta)"}</span>
+            </span>
+          ))}
+        </section>
       ) : null}
-      {errMsg ? (
-        <p role="alert" className="rounded-xl border border-alert/40 bg-rose-soft px-4 py-3">
-          {errMsg}
-        </p>
-      ) : null}
+
+      <nav
+        aria-label="Secciones del producto"
+        className="sticky top-15 z-20 -mx-4 overflow-x-auto bg-clinical/95 px-4 py-2 backdrop-blur lg:top-0"
+      >
+        <ul className="flex gap-2">
+          {SECTIONS.map(([id, text]) => (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                className="inline-flex min-h-11 items-center rounded-full border bg-card px-4 text-sm whitespace-nowrap hover:bg-mist"
+              >
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {/* Fotos: formularios propios (no se pueden anidar dentro del formulario del producto). */}
       <section id="fotos" className={section} aria-labelledby="fotos-t">
@@ -207,7 +265,7 @@ async function ProductEditor({
       <form action={saveProduct} className="grid gap-6">
         <input type="hidden" name="id" value={p.id} />
 
-        <section className={section} aria-labelledby="estado-t">
+        <section id="publicacion" className={section} aria-labelledby="estado-t">
           <h2 id="estado-t" className={h2}>
             Publicación
           </h2>
@@ -242,7 +300,7 @@ async function ProductEditor({
           </label>
         </section>
 
-        <section className={section} aria-labelledby="datos-t">
+        <section id="datos" className={section} aria-labelledby="datos-t">
           <h2 id="datos-t" className={h2}>
             Datos
           </h2>
@@ -303,7 +361,7 @@ async function ProductEditor({
           </label>
         </section>
 
-        <section className={section} aria-labelledby="precio-t">
+        <section id="precio" className={section} aria-labelledby="precio-t">
           <h2 id="precio-t" className={h2}>
             Precio y stock
           </h2>
@@ -380,7 +438,7 @@ async function ProductEditor({
           </div>
         </section>
 
-        <section className={section} aria-labelledby="clasif-t">
+        <section id="clasificacion" className={section} aria-labelledby="clasif-t">
           <h2 id="clasif-t" className={h2}>
             Categorías y preocupaciones
           </h2>
@@ -434,7 +492,7 @@ async function ProductEditor({
           </label>
         </section>
 
-        <section className={section} aria-labelledby="envio-t">
+        <section id="envio" className={section} aria-labelledby="envio-t">
           <h2 id="envio-t" className={h2}>
             Envío
           </h2>
@@ -484,7 +542,7 @@ async function ProductEditor({
           </div>
         </section>
 
-        <section className={section} aria-labelledby="seo-t">
+        <section id="google" className={section} aria-labelledby="seo-t">
           <h2 id="seo-t" className={h2}>
             Google (opcional)
           </h2>
@@ -517,16 +575,14 @@ async function ProductEditor({
           </p>
         </section>
 
-        <div className="sticky bottom-0 z-10 -mx-1 flex flex-wrap items-center gap-3 rounded-2xl border bg-card/95 p-3 safe-bottom shadow-lg backdrop-blur">
-          <button className="inline-flex min-h-12 items-center justify-center rounded-full bg-leaf px-6 font-medium text-clinical hover:bg-leaf-hover">
-            Guardar cambios
-          </button>
-          <Link
-            href="/admin/productos"
-            className="inline-flex min-h-11 items-center underline underline-offset-2"
-          >
+        <div className="sticky bottom-2 z-10 -mx-1 flex flex-wrap items-center gap-3 rounded-2xl border bg-card/95 p-3 safe-bottom shadow-lg backdrop-blur">
+          <button className={btnPrimary}>Guardar cambios</button>
+          <Link href="/admin/productos" className={btnSecondary}>
             Cancelar
           </Link>
+          <span className="text-sm text-muted-foreground">
+            Fotos e inventario se guardan por separado, en su sección.
+          </span>
         </div>
       </form>
     </article>

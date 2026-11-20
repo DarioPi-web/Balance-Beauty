@@ -1,10 +1,21 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { handleWithdrawal } from "@/actions/admin-withdrawals";
+import {
+  EmptyState,
+  Flash,
+  PageHeader,
+  Panel,
+  Pill,
+  RowLink,
+  Stat,
+  btnPrimary,
+  btnSecondary,
+} from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/admin/server";
 import { formatARS } from "@/lib/pricing";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Hoy" };
 
@@ -56,19 +67,15 @@ const when = new Intl.DateTimeFormat("es-AR", {
   timeStyle: "short",
   timeZone: "America/Argentina/Buenos_Aires",
 });
-const card = "grid content-start gap-3 rounded-2xl border bg-card p-5";
-const h2 = "font-display text-2xl font-semibold";
-const row = "flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 py-2 hover:bg-mist";
-
-function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
-  return (
-    <div className="rounded-2xl border bg-card p-5">
-      <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="mt-1 text-3xl font-semibold tabular-nums">{value}</p>
-      {hint ? <p className="mt-1 text-sm text-muted-foreground">{hint}</p> : null}
-    </div>
-  );
-}
+const longDate = new Intl.DateTimeFormat("es-AR", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  timeZone: "America/Argentina/Buenos_Aires",
+});
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+const linkMore =
+  "inline-flex min-h-11 items-center text-sm font-medium text-leaf underline-offset-4 hover:underline";
 
 async function Today({ search }: { search: Promise<{ ok?: string; error?: string }> }) {
   const { supabase } = await requireAdmin("/admin");
@@ -88,60 +95,75 @@ async function Today({ search }: { search: Promise<{ ok?: string; error?: string
     }).format(now),
   );
   const greeting = hour < 12 ? "Buen día" : hour < 20 ? "Buenas tardes" : "Buenas noches";
+  const today = longDate.format(now);
+  const pendingTasks =
+    d.withdrawals.length + d.to_ship_count + d.pending_transfers.length + (d.discrepancies ? 1 : 0);
 
   return (
-    <div className="grid gap-6">
-      <header>
-        <h1 className="font-display text-4xl font-semibold">{greeting}</h1>
-        <p className="mt-1 text-muted-foreground">Esto es lo que necesita atención hoy.</p>
-      </header>
+    <>
+      <PageHeader
+        title={greeting}
+        description={
+          <>
+            {today.charAt(0).toUpperCase() + today.slice(1)}
+            {" · "}
+            {pendingTasks === 0
+              ? "No hay nada urgente: buen momento para completar fotos y descripciones."
+              : `Tenés ${plural(pendingTasks, "tema", "temas")} para resolver hoy.`}
+          </>
+        }
+        actions={
+          <>
+            <Link href="/admin/productos#nuevo" className={btnSecondary}>
+              <Plus aria-hidden="true" className="size-4" />
+              Nuevo producto
+            </Link>
+            <Link href="/admin/pedidos" className={btnPrimary}>
+              Ver pedidos
+            </Link>
+          </>
+        }
+      />
 
-      {ok === "arrepentimiento" ? (
-        <p role="status" className="rounded-xl border border-leaf/40 bg-mist px-4 py-3">
-          Solicitud marcada como atendida.
-        </p>
-      ) : null}
-      {errMsg ? (
-        <p role="alert" className="rounded-xl border border-alert/40 bg-rose-soft px-4 py-3">
-          {errMsg.slice(0, 200)}
-        </p>
-      ) : null}
+      <Flash
+        ok={ok === "arrepentimiento" ? "Solicitud marcada como atendida." : null}
+        error={errMsg}
+      />
 
-      <section aria-label="Ventas" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="Resumen" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Stat
+          tone="primary"
           label="Ventas de hoy"
           value={formatARS(d.sales_today.total)}
-          hint={`${d.sales_today.count} pedido${d.sales_today.count === 1 ? "" : "s"} pagado${d.sales_today.count === 1 ? "" : "s"}`}
+          hint={plural(d.sales_today.count, "pedido pagado", "pedidos pagados")}
         />
         <Stat
           label="Ventas del mes"
           value={formatARS(d.sales_month.total)}
-          hint={`${d.sales_month.count} pedido${d.sales_month.count === 1 ? "" : "s"}`}
+          hint={plural(d.sales_month.count, "pedido", "pedidos")}
         />
         <Stat
+          tone={d.to_ship_count ? "attention" : "default"}
           label="Para despachar"
           value={String(d.to_ship_count)}
           hint="pagados o en preparación"
+          href="/admin/pedidos?estado=paid"
         />
         <Stat
           label="Productos sin foto"
           value={String(d.no_photo_count)}
-          hint="borradores y publicados"
+          hint="Completar fotos →"
+          href="/admin/productos?f=sin_foto"
         />
       </section>
 
       {d.withdrawals.length ? (
-        <section
+        <Panel
           id="arrepentimientos"
-          className={cn(card, "border-alert/40")}
-          aria-labelledby="arr-t"
+          tone="attention"
+          title={`Arrepentimientos sin atender (${d.withdrawals.length})`}
+          description="Hay que responder dentro de las 24 h con los pasos para la devolución (Res. 424/2020)."
         >
-          <h2 id="arr-t" className={h2}>
-            Arrepentimientos sin atender ({d.withdrawals.length})
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Hay que responder dentro de las 24 h con los pasos para la devolución (Res. 424/2020).
-          </p>
           <ul className="grid gap-3">
             {d.withdrawals.map((w) => (
               <li key={w.id} className="grid gap-2 rounded-xl border p-4">
@@ -162,186 +184,146 @@ async function Today({ search }: { search: Promise<{ ok?: string; error?: string
                 <form action={handleWithdrawal} className="flex flex-wrap items-center gap-3">
                   <input type="hidden" name="id" value={w.id} />
                   <label className="flex min-h-11 items-center gap-2 text-sm">
-                    <input type="checkbox" name="confirm" className="size-5" />
+                    <input type="checkbox" name="confirm" className="size-5 accent-leaf" />
                     Ya le escribí con los pasos
                   </label>
-                  <button className="inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-medium hover:bg-mist">
-                    Marcar atendida
-                  </button>
+                  <button className={btnSecondary}>Marcar atendida</button>
                 </form>
               </li>
             ))}
           </ul>
-        </section>
+        </Panel>
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <section className={card} aria-labelledby="despachar-t">
-          <div className="flex items-center justify-between gap-3">
-            <h2 id="despachar-t" className={h2}>
-              Para despachar
-            </h2>
-            <Link
-              href="/admin/pedidos?estado=paid"
-              className="inline-flex min-h-11 items-center text-sm underline underline-offset-2"
-            >
+        <Panel
+          title="Para despachar"
+          actions={
+            <Link href="/admin/pedidos?estado=paid" className={linkMore}>
               Ver todos
             </Link>
-          </div>
+          }
+        >
           {d.to_ship.length ? (
-            <ul className="grid">
+            <ul className="-mx-3 grid">
               {d.to_ship.map((o) => (
                 <li key={o.id}>
-                  <Link href={`/admin/pedidos/${o.id}`} className={row}>
-                    <span>
-                      #{o.number} · {o.full_name}
+                  <RowLink href={`/admin/pedidos/${o.id}`}>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">
+                        #{o.number} · {o.full_name}
+                      </span>
                       <span className="block text-sm text-muted-foreground">
                         {when.format(new Date(o.created_at))}
                         {o.status === "preparing" ? " · en preparación" : ""}
                       </span>
                     </span>
-                    <span className="tabular-nums">{formatARS(o.total)}</span>
-                  </Link>
+                    <span className="shrink-0 tabular-nums">{formatARS(o.total)}</span>
+                  </RowLink>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground">Nada pendiente. 🎉</p>
+            <EmptyState
+              title="Nada pendiente de despacho"
+              description="Los pedidos pagados aparecen acá."
+            />
           )}
-        </section>
+        </Panel>
 
-        <section className={card} aria-labelledby="transf-t">
-          <h2 id="transf-t" className={h2}>
-            Transferencias por acreditar
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Pedidos de los últimos 7 días esperando la transferencia. Abrilos para acreditar el pago
-            cuando la veas en el banco.
-          </p>
+        <Panel
+          title="Transferencias por acreditar"
+          description="Pedidos de los últimos 7 días esperando la transferencia. Abrilos para acreditar el pago cuando la veas en el banco."
+        >
           {d.pending_transfers.length ? (
-            <ul className="grid">
+            <ul className="-mx-3 grid">
               {d.pending_transfers.map((o) => (
                 <li key={o.id}>
-                  <Link href={`/admin/pedidos/${o.id}`} className={row}>
-                    <span>
-                      #{o.number} · {o.full_name}
+                  <RowLink href={`/admin/pedidos/${o.id}`}>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">
+                        #{o.number} · {o.full_name}
+                      </span>
                       <span className="block text-sm text-muted-foreground">
                         {when.format(new Date(o.created_at))}
                       </span>
                     </span>
-                    <span className="tabular-nums">{formatARS(o.total)}</span>
-                  </Link>
+                    <span className="shrink-0 tabular-nums">{formatARS(o.total)}</span>
+                  </RowLink>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground">No hay transferencias pendientes.</p>
+            <EmptyState title="No hay transferencias pendientes" />
           )}
-        </section>
+        </Panel>
 
-        <section className={card} aria-labelledby="stock-t">
-          <div className="flex items-center justify-between gap-3">
-            <h2 id="stock-t" className={h2}>
-              Stock bajo
-            </h2>
-            <Link
-              href="/admin/productos?f=stock_bajo"
-              className="inline-flex min-h-11 items-center text-sm underline underline-offset-2"
-            >
+        <Panel
+          title="Stock bajo"
+          actions={
+            <Link href="/admin/productos?f=stock_bajo" className={linkMore}>
               Ver en productos
             </Link>
-          </div>
+          }
+        >
           {d.low_stock.length ? (
-            <ul className="grid">
+            <ul className="-mx-3 grid">
               {d.low_stock.map((p) => (
                 <li key={p.id}>
-                  <Link href={`/admin/productos/${p.id}`} className={row}>
-                    <span>
-                      {p.name}
+                  <RowLink href={`/admin/productos/${p.id}`}>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">{p.name}</span>
                       <span className="block text-sm text-muted-foreground">Cód. {p.sku}</span>
                     </span>
-                    <span
-                      className={cn(
-                        "shrink-0 rounded-full px-3 py-1 text-sm font-medium tabular-nums",
-                        p.available <= 0 ? "bg-rose-soft text-graphite" : "bg-mist",
-                      )}
-                    >
+                    <Pill tone={p.available <= 0 ? "warning" : "neutral"}>
                       {p.available <= 0 ? "Sin stock" : `Quedan ${p.available}`}
-                    </span>
-                  </Link>
+                    </Pill>
+                  </RowLink>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground">Todo con stock suficiente.</p>
+            <EmptyState title="Todo con stock suficiente" />
           )}
-        </section>
+        </Panel>
 
-        <section className={card} aria-labelledby="vence-t">
-          <h2 id="vence-t" className={h2}>
-            Por vencer (90 días)
-          </h2>
+        <Panel title="Por vencer (90 días)">
+          {d.discrepancies ? (
+            <Flash
+              error={`${plural(d.discrepancies, "producto", "productos")} con diferencia entre stock y lotes: revisalos con un conteo.`}
+            />
+          ) : null}
           {d.expiring_lots.length ? (
-            <ul className="grid">
+            <ul className="-mx-3 grid">
               {d.expiring_lots.map((l) => (
                 <li key={l.id}>
-                  <Link href={`/admin/productos/${l.product_id}#inventario`} className={row}>
-                    <span>
-                      {l.name}
+                  <RowLink href={`/admin/productos/${l.product_id}#inventario`}>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">{l.name}</span>
                       <span className="block text-sm text-muted-foreground">
                         Lote {l.lot_code} · {l.qty_on_hand} u.
                         {l.cost_value ? ` · costo ${formatARS(l.cost_value)}` : ""}
                       </span>
                     </span>
-                    <span className="shrink-0 rounded-full bg-rose-soft px-3 py-1 text-sm font-medium tabular-nums">
+                    <Pill tone="warning">
                       {l.expires_on.slice(5, 7)}/{l.expires_on.slice(0, 4)}
-                    </span>
-                  </Link>
+                    </Pill>
+                  </RowLink>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground">Nada vence en los próximos 90 días.</p>
+            <EmptyState title="Nada vence en los próximos 90 días" />
           )}
           {d.lots_without_expiry ? (
             <p className="text-sm text-muted-foreground">
-              {d.lots_without_expiry} lote{d.lots_without_expiry === 1 ? "" : "s"} sin vencimiento
-              cargado (el stock que había antes del control por lote). Completalo en la próxima
-              recepción o conteo.
+              {plural(d.lots_without_expiry, "lote", "lotes")} sin vencimiento cargado (el stock que
+              había antes del control por lote). Completalo en la próxima recepción o conteo.
             </p>
           ) : null}
-          {d.discrepancies ? (
-            <p role="alert" className="rounded-xl bg-rose-soft px-3 py-2 text-sm">
-              {d.discrepancies} producto{d.discrepancies === 1 ? "" : "s"} con diferencia entre
-              stock y lotes: revisalos con un conteo.
-            </p>
-          ) : null}
-        </section>
-
-        <section className={card} aria-labelledby="atajos-t">
-          <h2 id="atajos-t" className={h2}>
-            Atajos
-          </h2>
-          <ul className="grid gap-2">
-            <li>
-              <Link href="/admin/productos?f=sin_foto" className={row}>
-                Completar fotos ({d.no_photo_count} sin foto)
-              </Link>
-            </li>
-            <li>
-              <Link href="/admin/productos" className={row}>
-                Crear o editar un producto
-              </Link>
-            </li>
-            <li>
-              <Link href="/admin/integraciones" className={row}>
-                Mercado Pago, Andreani, emails y datos bancarios
-              </Link>
-            </li>
-          </ul>
-        </section>
+        </Panel>
       </div>
-    </div>
+    </>
   );
 }
 

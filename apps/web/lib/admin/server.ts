@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -8,7 +9,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
  * no solo en el JWT. Devuelve el cliente con la sesión (RLS "admin all" habilita la lectura).
  * Usar dentro de <Suspense> (lee cookies).
  */
-export async function requireAdmin(path = "/admin") {
+export const requireAdmin = cache(async function requireAdmin(path = "/admin") {
   // La validación del JWT usa la hora actual: siempre por pedido, nunca en el prerender.
   await connection();
   const supabase = await createSupabaseServerClient();
@@ -21,4 +22,4 @@ export async function requireAdmin(path = "/admin") {
     userId: claims.claims.sub as string,
     email: claims.claims.email as string | undefined,
   };
-}
+});

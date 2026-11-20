@@ -1,6 +1,17 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { createPayout, saveSeller, saveSellerCoupon } from "@/actions/admin-sellers";
+import { Plus } from "lucide-react";
+import {
+  EmptyState,
+  Flash,
+  PageHeader,
+  Pill,
+  adminField,
+  adminLabel,
+  btnPrimary,
+  btnSecondary,
+} from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/admin/server";
 import { formatARS } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
@@ -30,12 +41,11 @@ type Seller = {
   paid: number;
 };
 
-const field = "mt-1 block min-h-11 w-full rounded-xl border bg-background px-3 text-base";
-const label = "block text-sm font-medium";
-const btn =
-  "inline-flex min-h-11 items-center justify-center rounded-full bg-leaf px-5 font-medium text-clinical hover:bg-leaf-hover";
-const ghost =
-  "inline-flex min-h-11 items-center justify-center rounded-full border px-4 text-sm font-medium hover:bg-mist";
+const field = adminField;
+const label = adminLabel;
+const btn = btnPrimary;
+const ghost = btnSecondary;
+const card = "grid gap-4 rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:p-6";
 const OK: Record<string, string> = {
   creada: "Vendedora creada. Si todavía no tiene usuario, creáselo en Supabase con su email.",
   guardada: "Datos guardados.",
@@ -123,20 +133,15 @@ async function Sellers({ search }: { search: Promise<{ ok?: string; error?: stri
 
   return (
     <div className="grid gap-6">
-      {ok && OK[ok] ? (
-        <p role="status" className="rounded-xl border border-leaf/40 bg-mist px-4 py-3">
-          {OK[ok]}
-        </p>
-      ) : null}
-      {errMsg ? (
-        <p role="alert" className="rounded-xl border border-alert/40 bg-rose-soft px-4 py-3">
-          {errMsg.slice(0, 200)}
-        </p>
-      ) : null}
+      <Flash ok={ok && OK[ok] ? OK[ok] : null} error={errMsg} />
 
-      <details className="rounded-2xl border bg-card p-5">
-        <summary className="flex min-h-11 cursor-pointer items-center font-display text-2xl font-semibold">
-          + Nueva vendedora
+      <details id="nueva" className={cn(card, "group")} open={sellers.length === 0}>
+        <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 font-display text-2xl font-semibold text-graphite">
+          <Plus
+            aria-hidden="true"
+            className="size-5 text-leaf transition-transform group-open:rotate-45"
+          />
+          Nueva vendedora
         </summary>
         <div className="mt-4 grid gap-3">
           <SellerForm />
@@ -149,32 +154,30 @@ async function Sellers({ search }: { search: Promise<{ ok?: string; error?: stri
       </details>
 
       {sellers.length === 0 ? (
-        <p className="text-muted-foreground">Todavía no hay vendedoras.</p>
+        <EmptyState
+          title="Todavía no hay vendedoras"
+          description="Creá la primera con el formulario de arriba y asignale un código de descuento."
+        />
       ) : (
         <ul className="grid gap-5">
           {sellers.map((s) => (
-            <li key={s.id} id={`v-${s.id}`} className="grid gap-4 rounded-2xl border bg-card p-5">
+            <li key={s.id} id={`v-${s.id}`} className={card}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h2 className="font-display text-2xl font-semibold">{s.full_name}</h2>
+                  <h2 className="font-display text-2xl font-semibold text-graphite">
+                    {s.full_name}
+                  </h2>
                   <p className="text-sm text-muted-foreground">
                     {s.email} · comisión {Number(s.commission_percent)} %
                   </p>
                 </div>
-                <div className="flex flex-wrap gap-2 text-xs font-medium">
-                  <span
-                    className={cn(
-                      "rounded-full px-3 py-1",
-                      s.is_active ? "bg-mist" : "bg-rose-soft",
-                    )}
-                  >
+                <div className="flex flex-wrap gap-2">
+                  <Pill tone={s.is_active ? "success" : "warning"}>
                     {s.is_active ? "Activa" : "Inactiva"}
-                  </span>
-                  <span
-                    className={cn("rounded-full px-3 py-1", s.linked ? "bg-mist" : "bg-rose-soft")}
-                  >
+                  </Pill>
+                  <Pill tone={s.linked ? "neutral" : "warning"}>
                     {s.linked ? "Ya ingresó" : "Sin usuario todavía"}
-                  </span>
+                  </Pill>
                 </div>
               </div>
 
@@ -327,18 +330,14 @@ async function Sellers({ search }: { search: Promise<{ ok?: string; error?: stri
 
 export default function VendedorasPage({ searchParams }: PageProps<"/admin/vendedoras">) {
   return (
-    <div className="grid gap-6">
-      <header>
-        <h1 className="font-display text-4xl font-semibold">Vendedoras</h1>
-        <p className="mt-1 text-muted-foreground">
-          Cada vendedora tiene códigos de descuento: cuando una clienta compra con su código, el
-          pedido queda a su nombre y gana comisión por cada producto. Se liquida cuando el pedido
-          está entregado.
-        </p>
-      </header>
+    <>
+      <PageHeader
+        title="Vendedoras"
+        description="Cada vendedora tiene códigos de descuento: cuando una clienta compra con su código, el pedido queda a su nombre y gana comisión por cada producto. Se liquida cuando el pedido está entregado."
+      />
       <Suspense fallback={<div className="h-96 rounded-2xl bg-mist/60" aria-hidden="true" />}>
         <Sellers search={searchParams as Promise<{ ok?: string; error?: string }>} />
       </Suspense>
-    </div>
+    </>
   );
 }

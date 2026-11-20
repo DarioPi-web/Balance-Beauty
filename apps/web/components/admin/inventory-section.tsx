@@ -84,12 +84,12 @@ export function InventorySection({
   return (
     <section
       id="inventario"
-      className="grid gap-5 rounded-2xl border bg-card p-5"
+      className="grid scroll-mt-24 gap-5 rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:p-6"
       aria-labelledby="inv-t"
     >
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 id="inv-t" className="font-display text-2xl font-semibold">
+          <h2 id="inv-t" className="font-display text-2xl font-semibold text-graphite">
             Inventario
           </h2>
           <p className="text-sm text-muted-foreground">

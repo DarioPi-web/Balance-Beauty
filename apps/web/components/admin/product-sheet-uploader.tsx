@@ -34,7 +34,10 @@ export function ProductSheetUploader() {
 
   return (
     <div className="grid gap-5">
-      <form action={upload} className="grid gap-3 rounded-2xl border bg-card p-5">
+      <form
+        action={upload}
+        className="grid gap-3 rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:p-6"
+      >
         <h2 className="font-display text-2xl font-semibold">2. Subí la planilla editada</h2>
         <label className="grid gap-1 text-sm font-medium">
           Archivo Excel (.xlsx, hasta 4 MB)

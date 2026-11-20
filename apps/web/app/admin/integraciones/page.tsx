@@ -6,7 +6,9 @@ import {
   saveIntegrationGroup,
   testIntegration,
 } from "@/actions/admin-integrations";
+import { Flash, PageHeader, adminField, btnPrimary, btnSecondary } from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/admin/server";
+import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Integraciones" };
@@ -105,8 +107,9 @@ const SECTIONS: {
   },
 ];
 
-const input = "mt-1 block min-h-11 w-full rounded-xl border bg-background px-3 text-base";
-const btn = "inline-flex min-h-11 items-center justify-center rounded-full px-5 font-medium";
+const input = adminField;
+const card =
+  "grid scroll-mt-24 gap-4 rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:p-6";
 
 function Badge({ ok }: { ok: boolean }) {
   return ok ? (
@@ -134,39 +137,64 @@ async function Integraciones({
   if (statusRes.error) throw statusRes.error;
   const status = (statusRes.data ?? {}) as Status;
   const bank = (bankRes.data?.value ?? {}) as Record<string, string>;
-  const notice = (g: string) =>
-    group === g && (ok || error) ? (
-      <p
-        role={error ? "alert" : "status"}
-        className={`rounded-xl border px-4 py-3 ${error ? "border-alert/40 bg-rose-soft" : "border-leaf/40 bg-mist"}`}
-      >
-        {error ?? ok}
-      </p>
-    ) : null;
+  const notice = (g: string) => (group === g ? <Flash ok={ok} error={error} /> : null);
+  const isConfigured = (sec: (typeof SECTIONS)[number]) =>
+    sec.fields
+      .filter((f) => f.name !== "andreani_origin_branch")
+      .every((f) => status[f.name]?.configured);
+  const bankOk = Boolean(bank.holder && (bank.cbu || bank.alias));
+  const overview = [
+    ...SECTIONS.map((sec) => ({ id: `h-${sec.group}`, title: sec.title, ok: isConfigured(sec) })),
+    { id: "h-bank", title: "Transferencias", ok: bankOk },
+  ];
+  const done = overview.filter((o) => o.ok).length;
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="font-display text-4xl font-semibold">Integraciones</h1>
-        <p className="mt-2 text-muted-foreground">
-          Las claves se guardan cifradas y nunca se vuelven a mostrar: solo los últimos 4
-          caracteres. Para cambiar una, escribí el valor nuevo; si dejás un campo vacío, se conserva
-          el guardado.
-        </p>
-      </div>
+    <>
+      <PageHeader
+        title="Integraciones"
+        description="Las claves se guardan cifradas y nunca se vuelven a mostrar: solo los últimos 4 caracteres. Para cambiar una, escribí el valor nuevo; si dejás un campo vacío, se conserva el guardado."
+      />
+
+      <nav aria-label={`Estado de las integraciones: ${done} de ${overview.length} listas`}>
+        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {overview.map((o) => (
+            <li key={o.id}>
+              <a
+                href={`#${o.id}`}
+                className={cn(
+                  "flex min-h-14 items-center gap-3 rounded-2xl border p-4 transition-colors hover:border-leaf",
+                  o.ok ? "bg-card" : "border-alert/30 bg-rose-soft/50",
+                )}
+              >
+                {o.ok ? (
+                  <CheckCircle2 aria-hidden="true" className="size-5 shrink-0 text-leaf" />
+                ) : (
+                  <CircleDashed aria-hidden="true" className="size-5 shrink-0" />
+                )}
+                <span className="min-w-0">
+                  <span className="block truncate font-medium">{o.title}</span>
+                  <span className="block text-xs text-muted-foreground">
+                    {o.ok ? "Lista" : "Falta configurar"}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {SECTIONS.map((s) => {
-        const configured = s.fields
-          .filter((f) => f.name !== "andreani_origin_branch")
-          .every((f) => status[f.name]?.configured);
+        const configured = isConfigured(s);
         return (
           <section
             key={s.group}
-            aria-labelledby={`h-${s.group}`}
-            className="grid gap-4 rounded-2xl border bg-card p-5"
+            id={`h-${s.group}`}
+            aria-labelledby={`t-${s.group}`}
+            className={card}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 id={`h-${s.group}`} className="font-display text-2xl font-semibold">
+              <h2 id={`t-${s.group}`} className="font-display text-2xl font-semibold text-graphite">
                 {s.title}
               </h2>
               <Badge ok={configured} />
@@ -240,27 +268,23 @@ async function Integraciones({
                 );
               })}
               <div className="flex flex-wrap gap-3 sm:col-span-2">
-                <button className={`${btn} bg-leaf text-clinical hover:bg-leaf-hover`}>
-                  Guardar
-                </button>
+                <button className={btnPrimary}>Guardar</button>
               </div>
             </form>
-            <form action={testIntegration}>
+            <form action={testIntegration} className="border-t pt-4">
               <input type="hidden" name="group" value={s.group} />
-              <button className={`${btn} border border-leaf text-leaf hover:bg-mist`}>
-                Probar conexión
-              </button>
+              <button className={btnSecondary}>Probar conexión</button>
             </form>
           </section>
         );
       })}
 
-      <section aria-labelledby="h-bank" className="grid gap-4 rounded-2xl border bg-card p-5">
+      <section id="h-bank" aria-labelledby="t-bank" className={card}>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 id="h-bank" className="font-display text-2xl font-semibold">
+          <h2 id="t-bank" className="font-display text-2xl font-semibold text-graphite">
             Datos para transferencias
           </h2>
-          <Badge ok={Boolean(bank.holder && (bank.cbu || bank.alias))} />
+          <Badge ok={bankOk} />
         </div>
         <p className="text-sm text-muted-foreground">
           Se muestran al cliente en el email del pedido cuando elige pagar por transferencia.
@@ -285,13 +309,11 @@ async function Integraciones({
             </label>
           ))}
           <div className="sm:col-span-2">
-            <button className={`${btn} bg-leaf text-clinical hover:bg-leaf-hover`}>
-              Guardar datos bancarios
-            </button>
+            <button className={btnPrimary}>Guardar datos bancarios</button>
           </div>
         </form>
       </section>
-    </div>
+    </>
   );
 }
 
